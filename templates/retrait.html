@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retrait</title>
+
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    background: #f5f5f5;
+}
+
+/* 🔝 HEADER IMAGE */
+.header-img {
+    position: relative;
+    height: 220px;
+    background: url("{{ url_for('static', filename='images/fed5.jpg') }}") center/cover no-repeat;
+    color: white;
+}
+
+.header-img::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+}
+
+.header-content {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.balance-box {
+    margin-top: 40px;
+}
+
+.balance-box small {
+    color: #ddd;
+}
+
+.balance-box h1 {
+    margin: 5px 0 0;
+    font-size: 34px;
+}
+
+/* 🧾 CARDS */
+.card {
+    background: white;
+    margin: 15px;
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.card h3 {
+    margin-top: 0;
+    font-size: 16px;
+}
+
+/* 📥 INPUT */
+input {
+    width: 100%;
+    padding: 14px;
+    margin-top: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+/* 💼 PORTEFEUILLE */
+.portefeuille {
+    border: 1px solid #ddd;
+    padding: 14px;
+    border-radius: 12px;
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.portefeuille span {
+    color: #777;
+}
+
+/* 📊 FEES */
+.fees {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+.fees span:last-child {
+    color: red;
+}
+
+/* 🔘 BUTTON */
+.btn {
+    background: #ccc;
+    color: white;
+    padding: 16px;
+    width: 90%;
+    margin: 25px auto;
+    text-align: center;
+    display: block;
+    border-radius: 30px;
+    font-weight: bold;
+    border: none;
+    font-size: 16px;
+}
+
+.btn.active {
+    background: black;
+}
+
+/* 📌 RULES */
+.rules {
+    background: white;
+    margin: 15px;
+    padding: 16px;
+    border-radius: 14px;
+}
+
+.rules h4 {
+    margin-top: 0;
+}
+.rules p {
+    font-size: 14px;
+    color: #555;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔝 HEADER -->
+<div class="header-img">
+    <div class="header-content">
+        <div class="header-title">Retrait</div>
+
+        <div class="balance-box">
+            <small>Solde de retrait</small>
+            <h1>{{ "{:,.0f}".format(solde_retraitable).replace(",", " ") }} XOF</h1>
+        </div>
+    </div>
+</div>
+
+<form method="POST">
+
+    <!-- 💼 PORTEFEUILLE -->
+    <div class="card">
+        <h3>Sélectionnez un portefeuille de retrait</h3>
+
+        <div class="portefeuille" onclick="window.location.href='/ajouter_portefeuille'">
+            <div>
+                <strong>{{ user.wallet_operator }}</strong><br>
+                <small>{{ user.wallet_number }}</small>
+            </div>
+            <span>›</span>
+        </div>
+    </div>
+
+    <!-- 💰 MONTANT -->
+    <div class="card">
+        <h3>Montant du retrait</h3>
+
+        <input type="number" name="montant" id="montant" placeholder="XOF  Minimum 1 500" required>
+
+        <div class="fees">
+            <span>Montant reçu :</span>
+            <span id="netAmount">0 XOF</span>
+        </div>
+
+        <div class="fees">
+            <span>Frais (15%) :</span>
+            <span id="feesAmount">0 XOF</span>
+        </div>
+    </div>
+
+    <button class="btn" id="withdrawBtn" type="submit">Retirer maintenant</button>
+</form>
+
+<!-- 📌 RULES -->
+<div class="rules">
+    <h4>Règles de retrait</h4>
+    <p>1. Le montant minimum de retrait est défini par la plateforme.</p>
+    <p>2. Une taxe de <strong>15%</strong> est automatiquement appliquée.</p>
+    <p>3. Assurez-vous que votre compte de retrait est correct.</p>
+    <p>4. Les retraits sont traités après vérification.</p>
+    <p>5. Un retrait incorrect peut entraîner un rejet.</p>
+</div>
+
+<!-- 🧮 SCRIPT -->
+<script>
+document.getElementById("montant").addEventListener("input", function () {
+    let montant = parseFloat(this.value);
+    let btn = document.getElementById("withdrawBtn");
+
+    if (isNaN(montant) || montant <= 0) {
+        document.getElementById("netAmount").innerText = "0 XOF";
+        document.getElementById("feesAmount").innerText = "0 XOF";
+        btn.classList.remove("active");
+        return;
+    }
+
+    let fees = montant * 0.15;
+    let net = montant - fees;
+
+    document.getElementById("netAmount").innerText =
+        net.toLocaleString("fr-FR") + " XOF";
+
+    document.getElementById("feesAmount").innerText =
+        fees.toLocaleString("fr-FR") + " XOF";
+
+    btn.classList.add("active");
+});
+</script>
+
+</body>
+</html>

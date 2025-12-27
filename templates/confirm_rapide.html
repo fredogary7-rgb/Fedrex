@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirmer l'achat</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+}
+
+/* 🌫 OVERLAY */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+/* 🪟 BOX */
+.modal-box {
+    position: relative;
+    background: #fff;
+    width: 90%;
+    max-width: 420px;
+    border-radius: 14px;
+    padding: 22px;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+/* ❌ CLOSE */
+.close {
+    position: absolute;
+    right: 16px;
+    top: 14px;
+    font-size: 20px;
+    color: #888;
+    text-decoration: none;
+}
+
+/* 🧾 TEXT */
+.modal-box h2 {
+    text-align: center;
+    margin: 8px 0 10px;
+}
+
+.modal-box p {
+    text-align: center;
+    color: #666;
+    margin: 0;
+}
+
+/* 📊 INFO */
+.info {
+    margin-top: 22px;
+    font-size: 16px;
+}
+
+.info div {
+    margin-bottom: 12px;
+}
+
+.green { color: #16a34a; font-weight: bold; }
+.bold  { font-weight: bold; }
+
+/* ⚠️ ERREUR */
+.error {
+    margin-top: 10px;
+    color: #dc2626;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* 🔘 BUTTONS */
+.actions {
+    margin-top: 26px;
+}
+
+.btn-confirm {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    padding: 14px;
+    border-radius: 30px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-confirm.disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-cancel {
+    width: 100%;
+    background: #fff;
+    color: #000;
+    padding: 14px;
+    border-radius: 30px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    margin-top: 12px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="modal">
+    <div class="modal-box">
+
+        <a href="{{ url_for('produits_rapide_page') }}" class="close">✕</a>
+
+        <h2>Confirmer l'achat</h2>
+        <p>
+            Voulez-vous acheter <strong>{{ p.nom }}</strong>
+            pour <strong>{{ "{:,.0f}".format(p.prix).replace(",", " ") }} XOF</strong> ?
+        </p>
+
+        <div class="info">
+            <div>
+                Gain journalier :
+                <span class="green">
+                    {{ "{:,.0f}".format(p.revenu_journalier).replace(",", " ") }} XOF
+                </span>
+            </div>
+
+            <div>
+                Durée : <span class="bold">35 jours</span>
+            </div>
+
+            <div>
+                Gain total :
+                <span class="bold">
+                    {{ "{:,.0f}".format(revenu_total).replace(",", " ") }} XOF
+                </span>
+            </div>
+
+            <div style="color:#999;">
+                Votre solde actuel :
+                {{ "{:,.0f}".format(user.solde_total).replace(",", " ") }} XOF
+            </div>
+        </div>
+
+        {% set solde_ok = user.solde_total >= p.prix %}
+
+        {% if not solde_ok %}
+            <div class="error">
+                Solde insuffisant pour effectuer cet achat
+            </div>
+        {% endif %}
+
+        <form method="POST" class="actions">
+            <button
+                type="submit"
+                class="btn-confirm {% if not solde_ok %}disabled{% endif %}"
+                {% if not solde_ok %}disabled{% endif %}
+            >
+                Confirmer
+            </button>
+        </form>
+
+        <a href="{{ url_for('produits_rapide_page') }}" class="btn-cancel">
+            Annuler
+        </a>
+
+    </div>
+</div>
+
+</body>
+</html>

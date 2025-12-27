@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion</title>
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        min-height: 100vh;
+        background: url("{{ url_for('static', filename='images/fed5.jpg') }}") no-repeat center center/cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* OVERLAY plus clair */
+    .overlay {
+        background: rgba(255, 255, 255, 0.47); /* augmenté de 0.44 à 0.47 */
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 420px;
+        text-align: center;
+    }
+
+    .logo {
+        width: 120px;
+        margin: 30px auto;
+    }
+
+    .label {
+        text-align: left;
+        font-size: 14px;
+        color: #555;
+        margin-top: 18px;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .input-field,
+    select {
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        padding: 12px 6px;
+        font-size: 15px;
+        outline: none;
+        background: transparent;
+    }
+
+    .btn-login {
+        width: 100%;
+        background: #000;
+        color: #fff;
+        padding: 14px;
+        font-size: 16px;
+        border: none;
+        border-radius: 6px;
+        margin-top: 30px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .bottom-text {
+        margin-top: 18px;
+        font-size: 14px;
+    }
+
+    .bottom-text a {
+        color: #000;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .remember-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 12px;
+        font-size: 13px;
+        color: #555;
+    }
+
+    .remember-row input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+    }
+</style>
+</head>
+
+<body>
+<div class="overlay">
+
+    <div class="container">
+
+
+        <form action="/connexion" method="POST">
+
+            <label class="label">Pays</label>
+            <select name="country_code" required>
+                <option value="+228">🇹🇬 +228 Togo</option>
+                <option value="+229">🇧🇯 +229 Bénin</option>
+                <option value="+225">🇨🇮 +225 Côte d’Ivoire</option>
+                <option value="+237">🇨🇲 +237 Cameroun</option>
+                <option value="+223">🇲🇱 +223 Mali</option>
+                <option value="+241">🇬🇦 +241 Gabon</option>
+                <option value="+221">🇸🇳 +221 Sénégal</option>
+                <option value="+227">🇳🇪 +227 Niger</option>
+                <option value="+226">🇧🇫 +226 Burkina Faso</option>
+                <option value="+243">🇨🇩 +243 Congo kinshasa</option>
+                <option value="+242">🇨🇬 +242 Congo Brazzaville</option>
+            </select>
+
+            <label class="label">Numéro de téléphone</label>
+            <input type="tel" name="phone" class="input-field" placeholder="Votre numéro" required>
+
+            <label class="label">Mot de passe</label>
+            <input type="password" name="password" class="input-field" placeholder="Mot de passe" required>
+
+            <div class="remember-row">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">Mémoriser votre mot de passe</label>
+            </div>
+
+            <button class="btn-login">Connexion</button>
+        </form>
+
+        <p class="bottom-text">
+            Vous n'avez pas de compte ?
+            <a href="{{ url_for('inscription_page') }}">Créer un compte >></a>
+        </p>
+
+    </div>
+</div>
+
+</body>
+</html>

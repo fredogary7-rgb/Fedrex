@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes Produits</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f5f5f5;
+}
+
+/* 🔝 HEADER */
+.header {
+    background: #000;
+    color: #fff;
+    padding: 18px 16px 30px;
+    border-radius: 0 0 20px 20px;
+}
+
+.header-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.back {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+/* 📊 STATS */
+.stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 22px;
+    text-align: center;
+}
+
+.stat {
+    flex: 1;
+}
+
+.stat small {
+    color: #aaa;
+    font-size: 13px;
+}
+
+.stat strong {
+    display: block;
+    margin-top: 6px;
+    font-size: 22px;
+}
+
+.divider {
+    width: 1px;
+    background: #333;
+    margin: 0 12px;
+}
+
+/* 🧾 CONTENT */
+.container {
+    padding: 16px;
+}
+
+/* 📦 CARD PRODUIT */
+.card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    gap: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.status {
+    color: #16a34a;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.card p {
+    margin: 4px 0 10px;
+    color: #666;
+    font-size: 14px;
+}
+
+/* 📊 DETAILS */
+.details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.details span {
+    color: #666;
+}
+
+.details strong {
+    display: block;
+    margin-top: 4px;
+    font-size: 16px;
+    color: #000;
+}
+
+/* 🔘 BUTTON */
+.btn {
+    background: #000;
+    color: #fff;
+    padding: 12px;
+    border-radius: 30px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔝 HEADER -->
+<div class="header">
+    <div class="header-top">
+        <a href="javascript:history.back()" class="back">←</a>
+        <h2>Mes Produits</h2>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <small>Sortie quotidienne</small>
+            <strong>{{ "{:,.0f}".format(revenus_totaux).replace(",", " ") }} XOF</strong>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="stat">
+            <small>Produits actifs</small>
+            <strong>{{ actifs|length }}</strong>
+        </div>
+    </div>
+</div>
+
+<!-- 📦 CONTENT -->
+<div class="container">
+
+{% if actifs %}
+    {% for a in actifs %}
+    <div class="card" style="margin-bottom:16px;">
+        <img src="{{ url_for('static', filename='images/fed5.jpg') }}" alt="Produit">
+
+        <div class="card-content">
+            <div class="card-top">
+                <h3>VIP</h3>
+                <span class="status">Actif</span>
+            </div>
+
+            <p>Prix : {{ "{:,.0f}".format(a.montant).replace(",", " ") }} XOF</p>
+
+            <div class="details">
+                <div>
+                    <span>Cycle</span>
+                    <strong>{{ a.duree }}</strong>
+                </div>
+
+                <div>
+                    <span>Gain/jour</span>
+                    <strong>{{ "{:,.0f}".format(a.revenu_journalier).replace(",", " ") }}</strong>
+                </div>
+
+                <div>
+                    <span>Revenu total</span>
+                    <strong>
+                        {{ "{:,.0f}".format(a.revenu_journalier * a.duree).replace(",", " ") }}
+                    </strong>
+                </div>
+            </div>
+
+            <a href="{{ url_for('produits_rapide_page') }}" class="btn">
+                Investir plus
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <p style="text-align:center;color:#777;">
+        Aucun produit actif pour le moment.
+    </p>
+{% endif %}
+
+</div>
+
+</body>
+</html>

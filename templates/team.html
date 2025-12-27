@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon équipe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f6f8;
+            color: #111;
+        }
+
+        .container {
+            padding: 16px;
+            max-width: 480px;
+            margin: auto;
+        }
+
+        /* ----- HEADER COMMISSION ----- */
+        .commission-box {
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .commission-box h2 {
+            margin: 0;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .commission-box .amount {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .commission-box img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        /* ----- LIEN INVITATION ----- */
+        .invite-box {
+            background: #fff;
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .invite-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .invite-left span {
+            font-size: 20px;
+        }
+
+        .invite-text {
+            font-size: 13px;
+            color: #555;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .copy-btn {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* ----- TITRE ----- */
+        .section-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .section-title h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .section-title a {
+            font-size: 13px;
+            color: #777;
+            text-decoration: none;
+        }
+
+        /* ----- CARTE NIVEAU ----- */
+        .level-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+        .level-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .level-header h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .badge {
+            width: 42px;
+            height: 42px;
+        }
+
+        .level-stats {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .stat {
+            flex: 1;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 20px;
+        }
+
+        .stat span {
+            font-size: 12px;
+            color: #777;
+        }
+
+/* ===== BONUS CARD ===== */
+
+.bonus-card {
+    background:#fff;
+    padding:15px 18px;
+    border-radius:12px;
+    margin:10px;
+    margin-top:20px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.08);
+    line-height:20px;
+    font-size:14px;
+    color:#444;
+}
+
+.bonus-title {
+    font-size:17px;
+    font-weight:700;
+    margin-bottom:10px;
+    position:relative;
+    padding-left:10px;
+}
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <!-- COMMISSION -->
+    <div class="commission-box">
+        <div>
+            <h2>Commission</h2>
+            <div class="amount">{{ stats.commissions_total }} XOF</div>
+        </div>
+        <img src="/static/images/fed5.jpg" alt="banner">
+    </div>
+
+    <!-- LIEN INVITATION -->
+    <div class="invite-box">
+        <div class="invite-left">
+            <span>🎁</span>
+            <div class="invite-text" id="refLink">{{ referral_link }}</div>
+        </div>
+        <button class="copy-btn" onclick="copyLink()">Copier</button>
+    </div>
+
+    <!-- NIVEAU DE L'ÉQUIPE -->
+    <div class="section-title">
+        <h3>Niveau de l'équipe</h3>
+        <a href="#">Détails de l'équipe ></a>
+    </div>
+
+    <!-- NIVEAU 1 -->
+    <div class="level-card">
+        <div class="level-header">
+            <h4>Niveau 1</h4>
+            <img src="/static/images/level1.png" class="badge">
+        </div>
+        <div class="level-stats">
+            <div class="stat">
+                <strong>25%</strong>
+                <span>Remise Niveau 1</span>
+            </div>
+            <div class="stat">
+                <strong>{{ stats.level1 }}</strong>
+                <span>Total invités</span>
+            </div>
+            <div class="stat">
+                <strong>0</strong>
+                <span>Actifs</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- NIVEAU 2 -->
+    <div class="level-card">
+        <div class="level-header">
+            <h4>Niveau 2</h4>
+            <img src="/static/images/level2.png" class="badge">
+        </div>
+        <div class="level-stats">
+            <div class="stat">
+                <strong>3%</strong>
+                <span>Remise Niveau 2</span>
+            </div>
+            <div class="stat">
+                <strong>{{ stats.level2 }}</strong>
+                <span>Total invités</span>
+            </div>
+            <div class="stat">
+                <strong>0</strong>
+                <span>Actifs</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- NIVEAU 3 -->
+    <div class="level-card">
+        <div class="level-header">
+            <h4>Niveau 3</h4>
+            <img src="/static/images/level3.png" class="badge">
+        </div>
+        <div class="level-stats">
+            <div class="stat">
+                <strong>2%</strong>
+                <span>Remise Niveau 3</span>
+            </div>
+            <div class="stat">
+                <strong>{{ stats.level3 }}</strong>
+                <span>Total invités</span>
+            </div>
+            <div class="stat">
+                <strong>0</strong>
+                <span>Actifs</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== BONUS INVITATION ===== -->
+<div class="bonus-card">
+    <div class="bonus-title">Bonus d'invitation</div>
+
+    <p>
+        Lorsque vos amis invités s'inscrivent et investissent.
+        Lorsque les membres de votre équipe de niveau 1 investissent, vous recevez une récompense en espèces de 25 %.
+        Lorsque les membres de votre équipe de niveau 2 investissent, vous recevez une récompense en espèces de 3 %.
+        Lorsque les membres de votre équipe de niveau 3 investissent, vous recevez une récompense en espèces de 2 %.
+    </p>
+
+    <p>
+        Les membres de votre équipe peuvent obtenir des récompenses en espèces lors de leur premier investissement.
+    </p>
+</div>
+
+<script>
+    function copyLink() {
+        const text = document.getElementById("refLink").innerText;
+        navigator.clipboard.writeText(text);
+        alert("Lien copié !");
+    }
+</script>
+
+</body>
+</html>

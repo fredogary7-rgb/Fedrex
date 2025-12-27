@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:#f5f5f5;
+}
+
+/* ===== MODAL ANNONCE ===== */
+.modal-bg{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.65);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+}
+
+.modal{
+    width:90%;
+    max-width:420px;
+    background:#fff;
+    border-radius:16px;
+    padding:22px;
+}
+
+.modal h2{
+    color:red;
+    text-align:center;
+    margin-top:0;
+}
+
+.modal p{
+    font-size:14px;
+    color:#333;
+}
+
+.modal ol{
+    padding-left:18px;
+    font-size:14px;
+}
+
+.modal-btns{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.modal-btns a,
+.modal-btns button{
+    flex:1;
+    padding:12px;
+    border-radius:8px;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+    text-align:center;
+}
+
+.telegram{
+    background:#ddd;
+    color:#000;
+    text-decoration:none;
+}
+
+.close-btn{
+    background:#000;
+    color:#fff;
+}
+
+/* ===== APP ===== */
+.app{
+    max-width:480px;
+    margin:auto;
+    background:#fff;
+    min-height:100vh;
+}
+
+.header img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.balance-box{
+    display:flex;
+    justify-content:space-between;
+    padding:15px;
+    background:#eee;
+    border-bottom:1px solid #ddd;
+}
+
+.balance-item{
+    text-align:center;
+}
+
+.balance-item strong{
+    font-size:18px;
+}
+
+.balance-item small{
+    display:block;
+    color:#555;
+}
+
+.notification{
+    padding:10px 15px;
+    border-bottom:1px solid #ddd;
+    font-size:14px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.menu{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    padding:25px 15px;
+    text-align:center;
+}
+
+.menu-item{
+    font-size:13px;
+    color:#000;
+}
+
+.menu-item .icon{
+    width:48px;
+    height:48px;
+    background:#000;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:auto auto 6px auto;
+    color:#fff;
+    font-size:20px;
+}
+
+.promo img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+}
+
+/* NAV BAS */
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#000;
+    display:flex;
+    justify-content:space-around;
+    padding:8px 0;
+}
+
+.bottom-nav a{
+    color:#777;
+    font-size:12px;
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.bottom-nav a.active{
+    color:#f5c842;
+}
+
+/* ===== BONUS CARD ===== */
+.bonus-card{
+    background:#fff;
+    padding:15px 18px;
+    border-radius:12px;
+    margin:20px 10px 90px;
+    box-shadow:0 3px 8px rgba(0,0,0,0.08);
+    line-height:20px;
+    font-size:14px;
+    color:#444;
+}
+
+.bonus-title{
+    font-size:17px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔥 MODAL -->
+<div class="modal-bg" id="popup">
+    <div class="modal">
+        <h2>Notification de la plateforme</h2>
+
+        <p>
+            Bienvenue chez FedEx, la marque automobile numéro un au monde pour vos colis.
+            Investissez dans votre propre chaîne de production FedEx et
+            générez des profits quotidiens.
+        </p>
+
+        <ol>
+            <li>Bonus d'inscription : <strong>500 FCFA</strong>.</li>
+            <li>Montant minimum de retrait : <strong>1 500 FCFA</strong>.</li>
+            <li>Commissions sur 3 niveaux : <strong>25% / 3% / 2%</strong>.</li>
+            <li>Retrait disponible à tout moment.</li>
+            <li>Rejoignez nos canaux officiels.</li>
+        </ol>
+
+        <div class="modal-btns">
+            <a href="https://t.me/CyberAgence" class="telegram">Chaîne Telegram</a>
+            <button class="close-btn" onclick="closePopup()">Désactiver</button>
+        </div>
+    </div>
+</div>
+
+<div class="app">
+
+    <div class="header">
+        <img src="{{ url_for('static', filename='images/fed5.jpg') }}">
+    </div>
+
+    <div class="balance-box">
+        <div class="balance-item">
+            <strong>{{ user.solde_total or 0 }} XOF</strong>
+            <small>Solde du compte</small>
+        </div>
+        <div class="balance-item">
+            <strong>{{ user.solde_revenu or 0 }} XOF</strong>
+            <small>Revenu total</small>
+        </div>
+    </div>
+
+    <div class="notification">
+        <i class="fa-solid fa-bell"></i>
+        Bonus d'inscription 500 XOF
+    </div>
+
+    <div class="menu">
+        <div class="menu-item" onclick="location.href='/deposit'">
+            <div class="icon"><i class="fa-solid fa-wallet"></i></div>
+            Recharger
+        </div>
+
+        <div class="menu-item" onclick="location.href='/retrait'">
+            <div class="icon"><i class="fa-solid fa-arrow-up"></i></div>
+            Retrait
+        </div>
+
+        <div class="menu-item" onclick="location.href='https://t.me/CyberAgence'">
+            <div class="icon"><i class="fa-solid fa-comment"></i></div>
+            Service client
+        </div>
+    </div>
+
+    <div class="promo">
+        <img src="{{ url_for('static', filename='images/fed4.jpg') }}">
+    </div>
+
+    <!-- ===== BONUS INVESTISSEMENT ===== -->
+    <div class="bonus-card">
+        <div class="bonus-title">Conseil d’investissement</div>
+
+        <p>
+            Pour optimiser vos gains sur la plateforme <b>FedEx</b>, commencez
+            par un investissement adapté à votre budget.
+            Une progression maîtrisée permet une meilleure stabilité.
+        </p>
+
+        <p>
+            Plus vos investissements sont réguliers,
+            plus vos revenus journaliers augmentent durablement.
+        </p>
+
+        <p>
+            💡 <b>Astuce :</b> Réinvestir une partie des gains accélère
+            la croissance de votre capital.
+        </p>
+    </div>
+
+</div>
+
+<!-- NAVIGATION -->
+<div class="bottom-nav">
+    <a href="/dashboard" class="active"><i class="fa-solid fa-house"></i>Maison</a>
+    <a href="/produits_rapide"><i class="fa-solid fa-cart-shopping"></i>Commande</a>
+    <a href="/team"><i class="fa-solid fa-star"></i>Team</a>
+    <a href="/profile"><i class="fa-solid fa-user"></i>Le mien</a>
+</div>
+
+<script>
+function closePopup(){
+    document.getElementById("popup").style.display = "none";
+}
+</script>
+
+</body>
+</html>

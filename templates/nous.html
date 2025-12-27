@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>À propos de nous</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f4f4f4;
+}
+
+/* IMAGE HEADER */
+.hero img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+/* CARD */
+.card {
+    background: #fff;
+    margin: 14px;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+
+.card h2 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.card p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* GRID IMAGES */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.grid img {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* LIST */
+.list-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.icon {
+    font-size: 18px;
+}
+
+/* TAGS */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    background: #f1f1f1;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- IMAGE HEADER -->
+<div class="hero">
+    <img src="{{ url_for('static', filename='images/fed4.jpg') }}" alt="FedEx">
+</div>
+
+<!-- INTRO -->
+<div class="card">
+    <h2>FedEx Corporation</h2>
+    <p>
+        Fondée en <strong>1971</strong> par <strong>Frederick W. Smith</strong>,
+        FedEx (Federal Express) est un leader mondial du transport et de la
+        logistique. L’entreprise a révolutionné la livraison express en
+        reliant les entreprises et les particuliers à travers le monde
+        grâce à des solutions rapides, fiables et sécurisées.
+    </p>
+</div>
+
+<!-- IMAGES GRID -->
+<div class="card">
+    <div class="grid">
+        <img src="{{ url_for('static', filename='images/fed3.jpg') }}">
+        <img src="{{ url_for('static', filename='images/fed4.jpg') }}">
+        <img src="{{ url_for('static', filename='images/fed2.jpg') }}">
+        <img src="{{ url_for('static', filename='images/fed1.jpg') }}">
+    </div>
+</div>
+
+<!-- ATTRIBUTIONS -->
+<div class="card">
+    <h2>Nos Attributions</h2>
+
+    <div class="list-item">
+        <div class="icon">📦</div>
+        <div>Livraison express nationale et internationale</div>
+    </div>
+
+    <div class="list-item">
+        <div class="icon">✈️</div>
+        <div>Transport aérien de fret mondial</div>
+    </div>
+
+    <div class="list-item">
+        <div class="icon">🚚</div>
+        <div>Solutions logistiques et e-commerce</div>
+    </div>
+
+    <div class="list-item">
+        <div class="icon">🌍</div>
+        <div>Présence dans plus de 220 pays et territoires</div>
+    </div>
+</div>
+
+<!-- SERVICES -->
+<div class="card">
+    <h2>Nos Services</h2>
+    <div class="tags">
+        <div class="tag">FedEx Express</div>
+        <div class="tag">FedEx Ground</div>
+        <div class="tag">FedEx Freight</div>
+        <div class="tag">FedEx Logistics</div>
+        <div class="tag">E-commerce</div>
+    </div>
+</div>
+
+<!-- MISSION -->
+<div class="card">
+    <h2>Notre Mission</h2>
+    <p>
+        FedEx s’engage à connecter le monde de manière responsable,
+        innovante et durable. Sa mission est de fournir des solutions
+        logistiques de classe mondiale tout en réduisant son impact
+        environnemental et en créant de la valeur pour ses clients.
+    </p>
+</div>
+
+</body>
+</html>

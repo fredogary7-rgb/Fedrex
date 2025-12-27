@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profil</title>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body{
+    margin:0;
+    font-family:'Poppins', sans-serif;
+    background:#f3f4f6;
+    padding-bottom:80px;
+}
+
+/* ---------- HEADER PROFIL ---------- */
+.profile-header{
+    text-align:center;
+    padding:30px 20px 20px;
+    background:#fff;
+}
+
+.avatar{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    object-fit:cover;
+    margin-bottom:10px;
+}
+
+.phone{
+    font-size:20px;
+    font-weight:600;
+}
+
+.role{
+    display:inline-block;
+    margin-top:8px;
+    padding:6px 14px;
+    background:#000;
+    color:#fff;
+    border-radius:20px;
+    font-size:13px;
+}
+
+/* ---------- SOLDE ---------- */
+.balance-card{
+    margin:20px;
+    border-radius:18px;
+    background:
+        linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)),
+        url("{{ url_for('static', filename='images/fed5.jpg') }}");
+    background-size:cover;
+    background-position:center;
+    color:#fff;
+    padding:30px 20px;
+    text-align:center;
+}
+
+.balance-amount{
+    font-size:34px;
+    font-weight:700;
+}
+
+.balance-label{
+    font-size:14px;
+    opacity:.9;
+}
+
+/* ---------- ACTIONS ---------- */
+.actions{
+    margin:20px;
+    background:#000;
+    border-radius:18px;
+    display:flex;
+    justify-content:space-around;
+    padding:18px 10px;
+}
+
+.action{
+    text-align:center;
+    color:#fff;
+    font-size:13px;
+    text-decoration:none;
+}
+
+.action-circle{
+    width:52px;
+    height:52px;
+    background:#fff;
+    color:#000;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 8px;
+    font-size:20px;
+}
+
+/* ---------- MENU ---------- */
+.menu{
+    margin:20px;
+    background:#fff;
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.menu-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px;
+    border-bottom:1px solid #eee;
+    font-size:15px;
+    text-decoration:none;
+    color:#000;
+}
+
+.menu-item:last-child{
+    border-bottom:none;
+}
+
+.menu-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.menu-left img{
+    width:22px;
+}
+
+.menu-item .arrow{
+    color:#aaa;
+}
+
+.logout{
+    font-weight:bold;
+}
+
+/* ---------- NAVIGATION BAS ---------- */
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#000;
+    display:flex;
+    justify-content:space-around;
+    padding:8px 0 6px;
+    z-index:1000;
+}
+
+.bottom-nav a{
+    flex:1;
+    text-align:center;
+    text-decoration:none;
+    color:#888;
+    font-size:12px;
+}
+
+.bottom-nav a i{
+    display:block;
+    font-size:20px;
+    margin-bottom:4px;
+}
+
+.bottom-nav a.active{
+    color:#ffd700;
+}
+
+.bottom-nav a.active i{
+    color:#ffd700;
+}
+
+.bottom-nav a:active{
+    opacity:.6;
+}
+</style>
+</head>
+
+<body>
+
+<!-- PROFIL -->
+<div class="profile-header">
+    <img src="{{ url_for('static', filename='images/fed4.jpg') }}" class="avatar">
+    <div class="phone">{{ user.phone }}</div>
+    <div class="role">User</div>
+</div>
+
+<!-- SOLDE -->
+<div class="balance-card">
+    <div class="balance-amount">
+        {{ "{:,.0f}".format(user.solde_total or 0) }} XOF
+    </div>
+    <div class="balance-label">Solde du compte</div>
+</div>
+
+<!-- ACTIONS -->
+<div class="actions">
+    <a href="/deposit" class="action">
+        <div class="action-circle"><i class="fa-solid fa-credit-card"></i></div>
+        Recharger
+    </a>
+
+    <a href="/retrait" class="action">
+        <div class="action-circle"><i class="fa-solid fa-arrow-up"></i></div>
+        Retirer
+    </a>
+
+    <a href="/historique" class="action">
+        <div class="action-circle"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        Historique
+    </a>
+</div>
+
+<!-- MENU -->
+<div class="menu">
+
+    <a href="/finance" class="menu-item">
+        <div class="menu-left">
+            <img src="https://cdn-icons-png.flaticon.com/512/679/679720.png">
+            Finance
+        </div>
+        <span class="arrow">›</span>
+    </a>
+
+    <a href="/change_password" class="menu-item">
+        <div class="menu-left">
+            <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png">
+            Telegram
+        </div>
+        <span class="arrow">›</span>
+    </a>
+
+    <a href="/nous" class="menu-item">
+        <div class="menu-left">
+            <img src="https://cdn-icons-png.flaticon.com/512/1828/1828817.png">
+            À propos
+        </div>
+        <span class="arrow">›</span>
+    </a>
+
+    <a href="https://whatsapp.com/channel/0029VbBgd3d6LwHihOlGHK0S" class="menu-item" target="_blank">
+        <div class="menu-left">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png">
+            WhatsApp
+        </div>
+        <span class="arrow">›</span>
+    </a>
+
+    <a href="/support" class="menu-item">
+        <div class="menu-left">
+            <img src="https://cdn-icons-png.flaticon.com/512/5974/5974636.png">
+            Support
+        </div>
+        <span class="arrow">›</span>
+    </a>
+
+    <a href="/logout" class="menu-item logout">
+        <div class="menu-left">
+            <img src="https://cdn-icons-png.flaticon.com/512/4400/4400828.png">
+            Déconnexion
+        </div>
+        <span class="arrow">›</span>
+    </a>
+
+</div>
+
+<!-- NAVIGATION BAS -->
+<div class="bottom-nav">
+
+    <a href="/dashboard">
+        <i class="fa-solid fa-house"></i>
+        Maison
+    </a>
+
+    <a href="/investissements">
+        <i class="fa-solid fa-cart-shopping"></i>
+        Commande
+    </a>
+
+    <a href="/team">
+        <i class="fa-solid fa-star"></i>
+        Team
+    </a>
+
+    <a href="/profile" class="active">
+        <i class="fa-solid fa-user"></i>
+        Le mien
+    </a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recharger</title>
+
+    <style>
+        body{
+            margin:0;
+            font-family: 'Poppins', Arial, sans-serif;
+            background:#f5f7fa;
+            color:#000;
+        }
+
+        .header{
+            background:#000;
+            color:#fff;
+            padding:14px 16px;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .top-banner{
+            width:100%;
+            height:240px;
+            background:url("/static/images/fed3.jpg") center/cover no-repeat;
+            position:relative;
+        }
+
+        .balance-overlay{
+            position:absolute;
+            bottom:0;
+            left:0;
+            right:0;
+            background:#e6e7ea;
+            padding:14px 16px;
+        }
+
+        .balance-overlay h2{
+            margin:0;
+            font-size:28px;
+            font-weight:700;
+        }
+
+        .balance-overlay p{
+            margin:4px 0 0;
+            font-size:14px;
+            color:#555;
+        }
+
+        .container{
+            padding:18px;
+        }
+
+        h3{
+            margin:12px 0 6px;
+            font-size:18px;
+        }
+
+        .info-box{
+            background:#000;
+            color:#fff;
+            padding:12px;
+            border-radius:8px;
+            text-align:center;
+            margin-top:10px;
+            font-size:14px;
+        }
+
+        .amount-grid{
+            display:flex;
+            flex-wrap:wrap;
+            gap:10px;
+            margin-top:14px;
+        }
+
+        .amount-btn{
+            width:30%;
+            padding:12px 0;
+            border-radius:20px;
+            text-align:center;
+            background:#fff;
+            border:1px solid #ddd;
+            cursor:pointer;
+            font-weight:600;
+        }
+
+        .amount-btn:hover{
+            background:#0b66ff;
+            color:#fff;
+        }
+
+        .form-row{
+            margin-top:14px;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            border-radius:8px;
+            border:1px solid #ccc;
+            font-size:15px;
+            box-sizing:border-box;
+        }
+
+        .btns{
+            display:flex;
+            gap:10px;
+            margin-top:20px;
+        }
+
+        .btn-pay{
+            width:100%;
+            background:#0b66ff;
+            color:#fff;
+            padding:14px;
+            border:none;
+            border-radius:26px;
+            font-size:16px;
+            font-weight:700;
+            cursor:pointer;
+        }
+
+        .btn-pay:disabled{
+            background:#999;
+            cursor:not-allowed;
+        }
+
+        .rules{
+            margin-top:22px;
+            background:#fff;
+            padding:14px;
+            border-radius:10px;
+            font-size:14px;
+        }
+
+        .rules h4{
+            margin-top:0;
+        }
+
+        .rules p{
+            margin:6px 0;
+            color:#555;
+        }
+
+        @media(max-width:480px){
+            .amount-btn{
+                width:47%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        ← <span>Recharger</span>
+    </div>
+
+    <!-- BANNIÈRE + SOLDE -->
+    <div class="top-banner">
+        <div class="balance-overlay">
+            <h2>{{ "{:,.0f}".format(user.solde_total or 0) }} XOF</h2>
+            <p>Solde du compte</p>
+        </div>
+    </div>
+
+    <!-- CONTENU -->
+    <div class="container">
+
+        <h3>Montant du dépôt <small>(Minimum 3 000 FCFA)</small></h3>
+
+        <div class="info-box">
+            Paiement sécurisé via MoneyFusion
+        </div>
+
+        <!-- MONTANTS RAPIDES -->
+        <div class="amount-grid">
+            <div class="amount-btn" onclick="setAmount(3000)">3 000</div>
+            <div class="amount-btn" onclick="setAmount(5000)">5 000</div>
+            <div class="amount-btn" onclick="setAmount(10000)">10 000</div>
+            <div class="amount-btn" onclick="setAmount(25000)">25 000</div>
+            <div class="amount-btn" onclick="setAmount(50000)">50 000</div>
+            <div class="amount-btn" onclick="setAmount(100000)">100 000</div>
+        </div>
+
+        <!-- SAISIE -->
+        <div class="form-row">
+            <input type="number" id="montant" placeholder="Entrer le montant" min="3000">
+        </div>
+
+        <div class="form-row">
+            <input type="tel" id="phone" placeholder="Numéro Mobile Money du payeur">
+        </div>
+
+        <!-- BOUTON -->
+        <div class="btns">
+            <button class="btn-pay" onclick="payerEnLigne()">Aller payer</button>
+        </div>
+
+        <!-- RÈGLES -->
+        <div class="rules">
+            <h4>Règles de dépôt</h4>
+            <p>1. Le montant minimum est de 3 000 FCFA.</p>
+            <p>2. Le paiement se fait via Mobile Money.</p>
+            <p>3. Le compte est crédité automatiquement après confirmation.</p>
+            <p>4. En cas de problème, contactez le support.</p>
+        </div>
+
+    </div>
+
+    <!-- SCRIPT -->
+    <script>
+        function setAmount(val){
+            document.getElementById("montant").value = val;
+        }
+
+        function payerEnLigne(){
+            const montant = document.getElementById("montant").value;
+            const phone = document.getElementById("phone").value;
+            const btn = document.querySelector(".btn-pay");
+
+            if(!montant || montant < 3000){
+                alert("Le montant minimum est de 3 000 FCFA");
+                return;
+            }
+
+            if(!phone){
+                alert("Veuillez entrer le numéro du payeur");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "Redirection...";
+
+            fetch("/deposit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: `montant=${montant}&phone=${phone}`
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.url){
+                    window.location.href = data.url;
+                }else{
+                    alert("Erreur de paiement");
+                    btn.disabled = false;
+                    btn.innerText = "Aller payer";
+                }
+            })
+            .catch(() => {
+                alert("Erreur réseau");
+                btn.disabled = false;
+                btn.innerText = "Aller payer";
+            });
+        }
+    </script>
+
+</body>
+</html>
