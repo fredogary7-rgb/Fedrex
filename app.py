@@ -12,8 +12,11 @@ from urllib.parse import urlencode
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.secret_key = "ma_cle_ultra_secrete"
+
 load_dotenv()
 MONEYFUSION_API_KEY = os.getenv("MONEYFUSION_API_KEY")
+MONEYFUSION_API_URL = os.getenv("MONEYFUSION_API_URL")
+
 UPLOAD_FOLDER = "static/vlogs"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -28,6 +31,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 }
 
 db = SQLAlchemy(app)
+
 
 from sqlalchemy import text
 from flask_migrate import Migrate
@@ -71,12 +75,25 @@ class User(db.Model):
 
 class Depot(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+
+    # 📱 utilisateur (téléphone du compte)
     phone = db.Column(db.String(30))
+
+    # 📲 infos paiement
+    phone_paiement = db.Column(db.String(30))      # numéro Mobile Money
+    fullname = db.Column(db.String(100))           # nom du compte
+    operator = db.Column(db.String(50))            # MTN, Orange, Moov...
+    country = db.Column(db.String(50))              # pays
+
+    # 💰 dépôt
     montant = db.Column(db.Float)
     reference = db.Column(db.String(200), nullable=True)
-    statut = db.Column(db.String(20), default="en_attente")  #  NEW
-    date = db.Column(db.DateTime, default=datetime.utcnow)
 
+    # 📌 statut
+    statut = db.Column(db.String(20), default="pending")
+
+    # ⏱ date
+    date = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Investissement(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -259,22 +276,35 @@ def connexion_page():
         password = request.form.get("password", "").strip()
 
         if not phone or not password:
-            flash("⚠️ Veuillez remplir tous les champs.", "danger")
+            flash({
+                "title": "Erreur",
+                "message": "Veuillez remplir tous les champs."
+            }, "danger")
             return redirect(url_for("connexion_page"))
 
         user = User.query.filter_by(phone=phone).first()
 
         if not user:
-            flash("❌ Numéro introuvable.", "danger")
+            flash({
+                "title": "Erreur",
+                "message": "Numéro introuvable."
+            }, "danger")
             return redirect(url_for("connexion_page"))
 
         if user.password != password:
-            flash("❌ Mot de passe incorrect.", "danger")
+            flash({
+                "title": "Erreur",
+                "message": "Mot de passe incorrect."
+            }, "danger")
             return redirect(url_for("connexion_page"))
 
         session["phone"] = user.phone
 
-        flash("Connexion réussie ✅", "success")
+        flash({
+            "title": "Connexion réussie",
+            "message": "Bienvenue sur Volta Trucks !"
+        }, "success")
+
         return redirect(url_for("dashboard_page"))
 
     return render_template("connexion.html")
@@ -319,25 +349,44 @@ def dashboard_page():
         total_invested=total_invested,
     )
 
-from flask import jsonify, url_for, flash, redirect, render_template, request
-from apiMoneyFusion import PaymentClient
+import requests
+from flask import jsonify
 
-# GET /deposit : affiche la page
-from flask import jsonify, url_for, flash, redirect, render_template, request
+def login_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if "phone" not in session:
+            return redirect(url_for("connexion_page"))
+        return f(*args, **kwargs)
+    return wrapper
 
-# GET /deposit
+def get_logged_in_user_phone():
+    return session.get("phone")
+
+
+# ===============================
+# PAGE DEPOT (GET)
+# ===============================
 @app.route("/deposit", methods=["GET"])
 @login_required
 def deposit_page():
     phone = get_logged_in_user_phone()
     user = User.query.filter_by(phone=phone).first()
+
     if not user:
         flash("Utilisateur introuvable", "danger")
         return redirect(url_for("connexion_page"))
+
     return render_template("deposit.html", user=user)
 
 
-# POST /deposit
+# ===============================
+# CREATION DEPOT (POST)
+# ===============================
+
+# ===============================
+# CREATION DEPOT (POST) - VERSION REDIRECTION
+# ===============================
 @app.route("/deposit", methods=["POST"])
 @login_required
 def create_deposit():
@@ -346,43 +395,79 @@ def create_deposit():
     if not user:
         return jsonify({"error": "Utilisateur introuvable"}), 400
 
-    montant = request.form.get("montant")
-    numero = request.form.get("phone")
-
-    if not montant or int(montant) < 3000:
+    try:
+        montant = int(request.form.get("montant", 0))
+    except ValueError:
         return jsonify({"error": "Montant invalide"}), 400
 
-    # Client MoneyFusion
-    client = PaymentClient(api_key_url="https://api.moneyfusion.net")
+    phone_paiement = request.form.get("phone")
+    country = request.form.get("country")
+    operator = request.form.get("operator")
+    fullname = request.form.get("fullname")
 
-    # Crée le paiement en ajoutant webhook_url obligatoire
-    payment = client.create_payment(
-        total_price=str(montant),
-        articles=[{"name": "Depot FedEx", "price": str(montant), "quantity": 1}],
-        numero_send=numero,
-        nom_client=user.phone,
-        user_id=user.id,
-        order_id=user.id,
-        return_url=url_for("moneyfusion_callback", _external=True),
-        webhook_url=url_for("moneyfusion_webhook", _external=True)  # 🔥 Obligatoire
+    if montant < 3000:
+        return jsonify({"error": "Montant minimum 3000 FCFA"}), 400
+
+    if not all([phone_paiement, country, operator, fullname]):
+        return jsonify({"error": "Tous les champs sont requis"}), 400
+
+    # 🔗 Lien MoneyFusion
+    payment_link = (
+        f"https://www.pay.moneyfusion.net/presto-cash-_1762687066538/"
+        f"?amount={montant}&phone={phone_paiement.strip()}&userId={user.id}"
     )
 
-    if not payment.get("statut"):
-        return jsonify({"error": "Erreur paiement"}), 500
-
+    # 💾 SAUVEGARDE DU DEPOT
     depot = Depot(
-        phone=phone,
+        phone=phone,                  # téléphone du compte utilisateur
+        phone_paiement=phone_paiement,
+        fullname=fullname,
+        operator=operator,
+        country=country,
         montant=montant,
-        token=payment["token"],
         statut="pending"
     )
+
     db.session.add(depot)
     db.session.commit()
 
-    return jsonify({"url": payment["url"]})
+    return jsonify({"url": payment_link})
 
+# ===============================
+# WEBHOOK MONEYFUSION
+# ===============================
+@app.route("/webhook/moneyfusion", methods=["POST"])
+def moneyfusion_webhook():
+    data = request.get_json(silent=True)
+    if not data:
+        return "no data", 400
 
-# Route webhook (vide pour l'instant)
+    if data.get("event") != "payin.session.completed":
+        return "ignored", 200
+
+    token = data.get("tokenPay")
+    if not token:
+        return "no token", 400
+
+    depot = Depot.query.filter_by(token=token).first()
+    if not depot:
+        return "depot not found", 200
+    if depot.statut == "paid":
+        return "already processed", 200
+
+    user = User.query.filter_by(phone=depot.phone).first()
+    if not user:
+        return "user not found", 200
+
+    # ===============================
+    # CREDIT DU SOLDE
+    # ===============================
+    depot.statut = "paid"
+    user.solde_total += depot.montant
+    db.session.commit()
+
+    return "ok", 200
+
 
 @app.route("/submit_reference", methods=["POST"])
 @login_required
@@ -405,47 +490,6 @@ def submit_reference():
         montant=montant,
         reference=reference
     )
-
-@app.route("/callback/moneyfusion")
-def moneyfusion_callback():
-    token = request.args.get("token")
-    if not token:
-        return "Token manquant", 400
-
-    depot = Depot.query.filter_by(token=token).first()
-    if not depot:
-        return "Paiement introuvable", 404
-
-    if depot.statut == "paid":
-        return "Paiement déjà traité"
-
-    # Ici, tu peux juste rediriger vers le dashboard
-    return redirect("/dashboard")
-
-@app.route("/webhook/moneyfusion", methods=["POST"])
-def moneyfusion_webhook():
-    data = request.json  # MoneyFusion envoie un JSON
-
-    token = data.get("token")
-    statut = data.get("statut")  # 'paid' ou autre
-
-    if not token or not statut:
-        return "Données invalides", 400
-
-    depot = Depot.query.filter_by(token=token).first()
-    if not depot or depot.statut == "paid":
-        return "Déjà traité ou paiement introuvable", 200
-
-    user = User.query.filter_by(phone=depot.phone).first()
-    if not user:
-        return "Utilisateur introuvable", 404
-
-    if statut == "paid":
-        user.solde_total += depot.montant
-        depot.statut = "paid"
-        db.session.commit()
-
-    return "OK", 200
 
 @app.route("/ajouter_portefeuille", methods=["GET", "POST"])
 @login_required

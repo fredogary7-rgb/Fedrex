@@ -6,94 +6,132 @@
 <title>Connexion</title>
 
 <style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        margin: 0;
-        min-height: 100vh;
-        background: url("{{ url_for('static', filename='images/fed5.jpg') }}") no-repeat center center/cover;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    background: url("{{ url_for('static', filename='images/fed5.jpg') }}") no-repeat center center fixed;
+    background-size: cover;
+}
 
-    /* OVERLAY plus clair */
-    .overlay {
-        background: rgba(255, 255, 255, 0.47); /* augmenté de 0.44 à 0.47 */
-        width: 100%;
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+/* 🌫 Overlay dégradé FedEx */
+.overlay {
+    background: linear-gradient(
+        rgba(77,20,140,0.45),
+        rgba(255,102,0,0.35)
+    );
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    .container {
-        width: 90%;
-        max-width: 420px;
-        text-align: center;
-    }
+/* 📦 Carte blanche */
+.container {
+    width: 90%;
+    max-width: 420px;
+    background: #ffffff;
+    padding: 35px 28px;
+    border-radius: 18px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+    text-align: center;
+}
 
-    .logo {
-        width: 120px;
-        margin: 30px auto;
-    }
+/* 🏷 Titre */
+.title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #4D148C;
+    margin-bottom: 6px;
+}
 
-    .label {
-        text-align: left;
-        font-size: 14px;
-        color: #555;
-        margin-top: 18px;
-        margin-bottom: 5px;
-        display: block;
-    }
+.subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 25px;
+}
 
-    .input-field,
-    select {
-        width: 100%;
-        border: none;
-        border-bottom: 1px solid #ccc;
-        padding: 12px 6px;
-        font-size: 15px;
-        outline: none;
-        background: transparent;
-    }
+/* Labels */
+.label {
+    text-align: left;
+    font-size: 13px;
+    color: #333;
+    margin-top: 15px;
+    display: block;
+}
 
-    .btn-login {
-        width: 100%;
-        background: #000;
-        color: #fff;
-        padding: 14px;
-        font-size: 16px;
-        border: none;
-        border-radius: 6px;
-        margin-top: 30px;
-        font-weight: bold;
-        cursor: pointer;
-    }
+/* Inputs */
+.input-field,
+select {
+    width: 100%;
+    padding: 13px 14px;
+    margin-top: 6px;
+    font-size: 14px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    outline: none;
+    background: #fff;
+}
 
-    .bottom-text {
-        margin-top: 18px;
-        font-size: 14px;
-    }
+.input-field:focus,
+select:focus {
+    border-color: #4D148C;
+}
 
-    .bottom-text a {
-        color: #000;
-        font-weight: bold;
-        text-decoration: none;
-    }
+/* Ligne mémoriser */
+.remember-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: #555;
+}
 
-    .remember-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-top: 12px;
-        font-size: 13px;
-        color: #555;
-    }
+.remember-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+}
 
-    .remember-row input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-    }
+/* Bouton */
+.btn-login {
+    width: 100%;
+    background: linear-gradient(135deg, #4D148C, #FF6600);
+    color: #fff;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    margin-top: 28px;
+    cursor: pointer;
+}
+
+.btn-login:hover {
+    opacity: 0.92;
+}
+
+/* Texte bas */
+.bottom-text {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #444;
+}
+
+.bottom-text a {
+    color: #FF6600;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* Sécurité */
+.security {
+    margin-top: 18px;
+    font-size: 12px;
+    color: #777;
+}
+
 </style>
 </head>
 
@@ -102,6 +140,8 @@
 
     <div class="container">
 
+        <div class="title">Fed<span style="color:#FF6600;">Ex</span>
+        <div class="subtitle">Connexion sécurisée à votre compte</div>
 
         <form action="/connexion" method="POST">
 
@@ -116,7 +156,7 @@
                 <option value="+221">🇸🇳 +221 Sénégal</option>
                 <option value="+227">🇳🇪 +227 Niger</option>
                 <option value="+226">🇧🇫 +226 Burkina Faso</option>
-                <option value="+243">🇨🇩 +243 Congo kinshasa</option>
+                <option value="+243">🇨🇩 +243 Congo Kinshasa</option>
                 <option value="+242">🇨🇬 +242 Congo Brazzaville</option>
             </select>
 
@@ -131,16 +171,19 @@
                 <label for="remember">Mémoriser votre mot de passe</label>
             </div>
 
-            <button class="btn-login">Connexion</button>
+            <button class="btn-login">Se connecter</button>
         </form>
 
         <p class="bottom-text">
             Vous n'avez pas de compte ?
-            <a href="{{ url_for('inscription_page') }}">Créer un compte >></a>
+            <a href="{{ url_for('inscription_page') }}">Créer un compte</a>
         </p>
+
+        <div class="security">🔒 Vos données sont protégées et sécurisées</div>
 
     </div>
 </div>
+
 
 </body>
 </html>

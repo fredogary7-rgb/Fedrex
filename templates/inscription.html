@@ -9,71 +9,88 @@
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-
-    /* 🔥 IMAGE EN ARRIÈRE-PLAN */
     background: url("{{ url_for('static', filename='images/fed5.jpg') }}") no-repeat center center fixed;
     background-size: cover;
 }
 
-/* 🧊 Overlay blanc */
+/* 🌫 Overlay */
 .overlay {
     min-height: 100vh;
-    background: rgba(255, 255, 255, 0.43);
+    background: linear-gradient(
+        rgba(77,20,140,0.45),
+        rgba(255,102,0,0.35)
+    );
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* 📦 Conteneur */
+/* 📦 Carte */
 .container {
     width: 90%;
     max-width: 420px;
-    padding: 30px 25px;
-    border-radius: 12px;
+    background: #ffffff;
+    padding: 35px 28px;
+    border-radius: 18px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.25);
     text-align: center;
 }
 
-/* 🖼 Logo */
-.logo {
-    width: 120px;
+/* 🏷 Titre */
+.title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #4D148C;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: #666;
     margin-bottom: 25px;
 }
 
 /* Labels */
 .label {
     text-align: left;
-    font-size: 14px;
-    color: #555;
-    margin-top: 18px;
+    font-size: 13px;
+    color: #333;
+    margin-top: 15px;
     display: block;
 }
 
 /* Inputs */
 .input-field, select {
     width: 100%;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    padding: 12px 5px;
-    font-size: 15px;
+    padding: 13px 14px;
+    margin-top: 6px;
+    font-size: 14px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
     outline: none;
-    background: transparent;
+    background: #fff;
 }
 
-.input-field::placeholder {
-    color: #aaa;
+.input-field:focus, select:focus {
+    border-color: #4D148C;
 }
 
 /* Bouton */
 .btn-register {
     width: 100%;
-    background: #000;
+    background: linear-gradient(135deg, #4D148C, #FF6600);
     color: #fff;
-    padding: 14px;
+    padding: 15px;
     font-size: 16px;
+    font-weight: 600;
     border: none;
-    border-radius: 8px;
-    margin-top: 35px;
+    border-radius: 12px;
+    margin-top: 30px;
     cursor: pointer;
+}
+
+.btn-register:hover {
+    opacity: 0.92;
 }
 
 /* Texte connexion */
@@ -84,9 +101,16 @@ body {
 }
 
 .login-text a {
-    color: #000;
-    font-weight: bold;
+    color: #FF6600;
+    font-weight: 600;
     text-decoration: none;
+}
+
+/* Sécurité */
+.security {
+    margin-top: 18px;
+    font-size: 12px;
+    color: #777;
 }
 </style>
 </head>
@@ -96,6 +120,8 @@ body {
 <div class="overlay">
 <div class="container">
 
+    <div class="title">Fed<span style="color:#FF6600;">Ex</span>
+    <div class="subtitle">Plateforme d’investissement logistique sécurisée</div>
 
     <form action="/inscription" method="POST" onsubmit="return verifierFormulaire()">
 
@@ -132,13 +158,15 @@ body {
                placeholder="Code d’invitation"
                {% if code_ref %} readonly style="background:#f2f2f2;" {% endif %}>
 
-        <button class="btn-register">S’inscrire</button>
+        <button class="btn-register">Créer mon compte</button>
     </form>
 
     <p class="login-text">
-        Vous avez déjà un compte ?
+        Déjà inscrit ?
         <a href="{{ url_for('connexion_page') }}">Se connecter</a>
     </p>
+
+    <div class="security">🔒 Vos données sont protégées et sécurisées</div>
 
 </div>
 </div>
