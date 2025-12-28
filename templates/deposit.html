@@ -97,13 +97,14 @@
             margin-top:14px;
         }
 
-        input{
+        input, select{
             width:100%;
             padding:12px;
             border-radius:8px;
             border:1px solid #ccc;
             font-size:15px;
             box-sizing:border-box;
+            background:#fff;
         }
 
         .btns{
@@ -156,111 +157,141 @@
 
 <body>
 
-    <!-- HEADER -->
-    <div class="header">
-        ← <span>Recharger</span>
+<div class="header">
+    ← <span>Recharger</span>
+</div>
+
+<div class="top-banner">
+    <div class="balance-overlay">
+        <h2>{{ "{:,.0f}".format(user.solde_total or 0) }} XOF</h2>
+        <p>Solde du compte</p>
+    </div>
+</div>
+
+<div class="container">
+
+    <h3>Montant du dépôt <small>(Minimum 3 000 FCFA)</small></h3>
+
+    <div class="info-box">
+        Paiement sécurisé via MoneyFusion
     </div>
 
-    <!-- BANNIÈRE + SOLDE -->
-    <div class="top-banner">
-        <div class="balance-overlay">
-            <h2>{{ "{:,.0f}".format(user.solde_total or 0) }} XOF</h2>
-            <p>Solde du compte</p>
-        </div>
+    <div class="amount-grid">
+        <div class="amount-btn" onclick="setAmount(3000)">3 000</div>
+        <div class="amount-btn" onclick="setAmount(5000)">5 000</div>
+        <div class="amount-btn" onclick="setAmount(10000)">10 000</div>
+        <div class="amount-btn" onclick="setAmount(25000)">25 000</div>
+        <div class="amount-btn" onclick="setAmount(50000)">50 000</div>
+        <div class="amount-btn" onclick="setAmount(100000)">100 000</div>
     </div>
 
-    <!-- CONTENU -->
-    <div class="container">
-
-        <h3>Montant du dépôt <small>(Minimum 3 000 FCFA)</small></h3>
-
-        <div class="info-box">
-            Paiement sécurisé via MoneyFusion
-        </div>
-
-        <!-- MONTANTS RAPIDES -->
-        <div class="amount-grid">
-            <div class="amount-btn" onclick="setAmount(3000)">3 000</div>
-            <div class="amount-btn" onclick="setAmount(5000)">5 000</div>
-            <div class="amount-btn" onclick="setAmount(10000)">10 000</div>
-            <div class="amount-btn" onclick="setAmount(25000)">25 000</div>
-            <div class="amount-btn" onclick="setAmount(50000)">50 000</div>
-            <div class="amount-btn" onclick="setAmount(100000)">100 000</div>
-        </div>
-
-        <!-- SAISIE -->
-        <div class="form-row">
-            <input type="number" id="montant" placeholder="Entrer le montant" min="3000">
-        </div>
-
-        <div class="form-row">
-            <input type="tel" id="phone" placeholder="Numéro Mobile Money du payeur">
-        </div>
-
-        <!-- BOUTON -->
-        <div class="btns">
-            <button class="btn-pay" onclick="payerEnLigne()">Aller payer</button>
-        </div>
-
-        <!-- RÈGLES -->
-        <div class="rules">
-            <h4>Règles de dépôt</h4>
-            <p>1. Le montant minimum est de 3 000 FCFA.</p>
-            <p>2. Le paiement se fait via Mobile Money.</p>
-            <p>3. Le compte est crédité automatiquement après confirmation.</p>
-            <p>4. En cas de problème, contactez le support.</p>
-        </div>
-
+    <!-- Montant -->
+    <div class="form-row">
+        <input type="number" id="montant" placeholder="Entrer le montant" min="3000">
     </div>
 
-    <!-- SCRIPT -->
-    <script>
-        function setAmount(val){
-            document.getElementById("montant").value = val;
+    <!-- Pays -->
+    <div class="form-row">
+        <select id="country" required>
+            <option value="">Sélectionnez votre pays</option>
+            <option value="Togo">🇹🇬 Togo</option>
+            <option value="Bénin">🇧🇯 Bénin</option>
+            <option value="Côte d'Ivoire">🇨🇮 Côte d'Ivoire</option>
+            <option value="Cameroun">🇨🇲 Cameroun</option>
+            <option value="Mali">🇲🇱 Mali</option>
+            <option value="Gabon">🇬🇦 Gabon</option>
+            <option value="Sénégal">🇸🇳 Sénégal</option>
+            <option value="Niger">🇳🇪 Niger</option>
+            <option value="Burkina Faso">🇧🇫 Burkina Faso</option>
+            <option value="Congo Kinshasa">🇨🇩 Congo Kinshasa</option>
+            <option value="Congo Brazzaville">🇨🇬 Congo Brazzaville</option>
+        </select>
+    </div>
+
+    <!-- Moyen de paiement -->
+    <div class="form-row">
+        <select id="operator" required>
+            <option value="">Moyen de paiement</option>
+            <option value="Moov Money">Moov Money</option>
+            <option value="TMoney">TMoney</option>
+            <option value="Orange Money">Orange Money</option>
+            <option value="MTN Money">MTN Money</option>
+            <option value="Momo CI">Momo CI</option>
+            <option value="Airtel Money">Airtel Money</option>
+        </select>
+    </div>
+
+    <!-- Numéro -->
+    <div class="form-row">
+        <input type="tel" id="phone" placeholder="Numéro de paiement">
+    </div>
+
+    <!-- Nom -->
+    <div class="form-row">
+        <input type="text" id="fullname" placeholder="Nom sur le compte Mobile Money">
+    </div>
+
+    <div class="btns">
+        <button class="btn-pay" onclick="payerEnLigne()">Procéder au paiement</button>
+    </div>
+
+    <div class="rules">
+        <h4>Instructions</h4>
+        <p>• Minimum de dépôt : 3 000 FCFA</p>
+        <p>• Remplissez le formulaire puis cliquez sur "Procéder au paiement"</p>
+        <p>• Vous serez redirigé vers la page de paiement</p>
+        <p>• Validation sous 24h après paiement</p>
+    </div>
+
+</div>
+
+<script>
+function setAmount(val){
+    document.getElementById("montant").value = val;
+}
+
+function payerEnLigne(){
+    const montant = document.getElementById("montant").value;
+    const phone = document.getElementById("phone").value;
+    const country = document.getElementById("country").value;
+    const operator = document.getElementById("operator").value;
+    const fullname = document.getElementById("fullname").value;
+    const btn = document.querySelector(".btn-pay");
+
+    if(!montant || montant < 3000){
+        alert("Montant minimum : 3 000 FCFA");
+        return;
+    }
+    if(!country || !operator || !phone || !fullname){
+        alert("Veuillez remplir tous les champs");
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerText = "Redirection...";
+
+    fetch("/deposit", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: `montant=${montant}&phone=${phone}&country=${country}&operator=${operator}&fullname=${fullname}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.url){
+            window.location.href = data.url;
+        }else{
+            alert("Erreur de paiement");
+            btn.disabled = false;
+            btn.innerText = "Procéder au paiement";
         }
-
-        function payerEnLigne(){
-            const montant = document.getElementById("montant").value;
-            const phone = document.getElementById("phone").value;
-            const btn = document.querySelector(".btn-pay");
-
-            if(!montant || montant < 3000){
-                alert("Le montant minimum est de 3 000 FCFA");
-                return;
-            }
-
-            if(!phone){
-                alert("Veuillez entrer le numéro du payeur");
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerText = "Redirection...";
-
-            fetch("/deposit", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: `montant=${montant}&phone=${phone}`
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.url){
-                    window.location.href = data.url;
-                }else{
-                    alert("Erreur de paiement");
-                    btn.disabled = false;
-                    btn.innerText = "Aller payer";
-                }
-            })
-            .catch(() => {
-                alert("Erreur réseau");
-                btn.disabled = false;
-                btn.innerText = "Aller payer";
-            });
-        }
-    </script>
+    })
+    .catch(() => {
+        alert("Erreur réseau");
+        btn.disabled = false;
+        btn.innerText = "Procéder au paiement";
+    });
+}
+</script>
 
 </body>
 </html>
