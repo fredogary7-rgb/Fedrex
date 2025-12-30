@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - FedEx Invest</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f5f5f5;
+    color: #333;
+}
+
+/* ===== HEADER ===== */
+header {
+    background: #4D148C;
+    color: #fff;
+    padding: 20px 25px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    color: #FFD700;
+}
+
+header .stats {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+header .stat {
+    background: #fff;
+    color: #4D148C;
+    padding: 10px 15px;
+    border-radius: 10px;
+    text-align: center;
+    min-width: 100px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+header .stat span {
+    display: block;
+    font-weight: 700;
+    font-size: 18px;
+    margin-top: 4px;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+    padding: 25px;
+}
+
+/* ===== TABLEAU ===== */
+.table-container {
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #4D148C;
+    color: #fff;
+}
+
+thead th {
+    padding: 14px;
+    text-align: left;
+}
+
+tbody tr {
+    border-bottom: 1px solid #eee;
+    transition: background 0.3s;
+}
+
+tbody tr:hover {
+    background: #f9f2ff;
+}
+
+td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+/* ===== BUTTONS ===== */
+button, a.btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    margin: 2px 0;
+    font-size: 13px;
+}
+
+.credit-btn { background: #28a745; color: #fff; }
+.debit-btn { background: #dc2626; color: #fff; }
+.ban-btn { background: #FF6600; color: #fff; }
+.invest-btn { background: #4D148C; color: #FFD700; }
+
+/* ===== MODAL ===== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+}
+
+.modal-header {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* ===== INPUTS ===== */
+input[type="number"] {
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width: 900px){
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>FedEx Invest - Admin</h1>
+    <div class="stats">
+        <div class="stat">Utilisateurs<br><span>{{ stats.users }}</span></div>
+        <div class="stat">Dépôts<br><span>{{ stats.depots }}</span></div>
+        <div class="stat">Retraits<br><span>{{ stats.retraits }}</span></div>
+        <div class="stat">Investissements<br><span>{{ stats.investissements }}</span></div>
+        <div class="stat">Staking<br><span>{{ stats.staking }}</span></div>
+        <div class="stat">Commissions<br><span>{{ stats.commissions }}</span></div>
+        <div class="stat">Solde Total<br><span>{{ "{:,.0f}".format(stats.solde_total) }} XOF</span></div>
+    </div>
+</header>
+
+<div class="container">
+    <h2>Liste des utilisateurs</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Téléphone</th>
+                    <th>Solde</th>
+                    <th>Revenu</th>
+                    <th>Parrain</th>
+                    <th>Date Création</th>
+                    <th>Banni</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>{{ "{:,.0f}".format(user.solde_total) }} XOF</td>
+                    <td>{{ "{:,.0f}".format(user.solde_revenu) }} XOF</td>
+                    <td>{{ user.parrain or '-' }}</td>
+                    <td>{{ user.date_creation.strftime("%d/%m/%Y") }}</td>
+                    <td>{{ "Oui" if user.is_banned else "Non" }}</td>
+                    <td>
+                        <button class="credit-btn" onclick="openModal('credit-{{ user.id }}')">Créditer</button>
+                        <button class="debit-btn" onclick="openModal('debit-{{ user.id }}')">Débiter</button>
+                        <a href="{{ url_for('toggle_ban', user_id=user.id) }}" class="ban-btn">{{ "Réactiver" if user.is_banned else "Bannir" }}</a>
+                        <button class="invest-btn" onclick="openModal('invest-{{ user.id }}')">Invest Rapid</button>
+                    </td>
+                </tr>
+
+                <!-- MODAL CRÉDIT -->
+                <div id="credit-{{ user.id }}" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal('credit-{{ user.id }}')">&times;</span>
+                        <div class="modal-header">Créditer {{ user.phone }}</div>
+                        <form method="POST" action="{{ url_for('admin_balance', user_id=user.id) }}">
+                            <input type="number" name="montant" placeholder="Montant XOF" required>
+                            <input type="hidden" name="action" value="credit">
+                            <button type="submit" class="credit-btn">Valider</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- MODAL DÉBIT -->
+                <div id="debit-{{ user.id }}" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal('debit-{{ user.id }}')">&times;</span>
+                        <div class="modal-header">Débiter {{ user.phone }}</div>
+                        <form method="POST" action="{{ url_for('admin_balance', user_id=user.id) }}">
+                            <input type="number" name="montant" placeholder="Montant XOF" required>
+                            <input type="hidden" name="action" value="debit">
+                            <button type="submit" class="debit-btn">Valider</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- MODAL INVEST -->
+                <div id="invest-{{ user.id }}" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal('invest-{{ user.id }}')">&times;</span>
+                        <div class="modal-header">Investissement rapide {{ user.phone }}</div>
+                        <form method="POST" action="{{ url_for('quick_invest', user_id=user.id) }}">
+                            <input type="number" name="montant" placeholder="Montant XOF" required>
+                            <input type="number" name="duree" placeholder="Durée (jours)" required>
+                            <input type="number" name="revenu_journalier" placeholder="Revenu journalier" required>
+                            <button type="submit" class="invest-btn">Valider</button>
+                        </form>
+                    </div>
+                </div>
+
+            {% else %}
+                <tr><td colspan="8" style="text-align:center;">Aucun utilisateur trouvé</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function openModal(id){
+    document.getElementById(id).style.display = "block";
+}
+function closeModal(id){
+    document.getElementById(id).style.display = "none";
+}
+window.onclick = function(event) {
+    document.querySelectorAll('.modal').forEach(modal => {
+        if(event.target == modal){
+            modal.style.display = "none";
+        }
+    });
+}
+</script>
+
+</body>
+</html>

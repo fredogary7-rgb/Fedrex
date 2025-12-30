@@ -58,7 +58,7 @@ class User(db.Model):
     phone = db.Column(db.String(30), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
 
-    parrain = db.Column(db.String(30), nullable=True)   # 🔥 colonne correcte
+    parrain = db.Column(db.String(30), nullable=True)
     commission_total = db.Column(db.Float, default=0.0)
 
     wallet_country = db.Column(db.String(50))
@@ -69,7 +69,11 @@ class User(db.Model):
     solde_depot = db.Column(db.Float, default=0.0)
     solde_parrainage = db.Column(db.Float, default=0.0)
     solde_revenu = db.Column(db.Float, default=0.0)
+
     premier_depot = db.Column(db.Boolean, default=False)
+
+    is_admin = db.Column(db.Boolean, default=False)   # 🔐 ADMIN
+    is_banned = db.Column(db.Boolean, default=False)  # ⛔ BANNI
 
     date_creation = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -349,19 +353,118 @@ def dashboard_page():
         total_invested=total_invested,
     )
 
-import requests
-from flask import jsonify
-
-def login_required(f):
+# ===== Décorateur admin =====
+def admin_required(f):
     @wraps(f)
-    def wrapper(*args, **kwargs):
-        if "phone" not in session:
-            return redirect(url_for("connexion_page"))
+    def decorated(*args, **kwargs):
+        if not current_user.is_authenticated or not getattr(current_user, "is_admin", False):
+            abort(403)
         return f(*args, **kwargs)
-    return wrapper
+    return decorated
 
+# ===== Dashboard admin =====
+@app.route("/admin")
+@login_required
+def admin_dashboard():
+    stats = {
+        "users": User.query.count(),
+        "depots": Depot.query.count(),
+        "retraits": Retrait.query.count(),
+        "investissements": Investissement.query.count(),
+        "staking": Staking.query.count(),
+        "commissions": Commission.query.count(),
+        "solde_total": db.session.query(db.func.sum(User.solde_total)).scalar() or 0
+    }
+    return render_template("admin/dashboard.html", stats=stats)
+
+# ===== Liste utilisateurs =====
+@app.route("/admin/users")
+@login_required
+def admin_users():
+    users = User.query.order_by(User.date_creation.desc()).all()
+    return render_template("admin/users.html", users=users)
+
+# ===== Crédit / débit utilisateur =====
+@app.route("/admin/user/<int:user_id>/balance", methods=["POST"])
+@login_required
+def admin_balance(user_id):
+    user = User.query.get_or_404(user_id)
+    action = request.form.get("action")   # credit | debit
+    try:
+        montant = float(request.form.get("montant", 0))
+    except ValueError:
+        flash("Montant invalide", "danger")
+        return redirect(request.referrer)
+
+    if montant <= 0:
+        flash("Montant invalide", "danger")
+        return redirect(request.referrer)
+
+    if action == "credit":
+        user.solde_total += montant
+    elif action == "debit":
+        if user.solde_total < montant:
+            flash("Solde insuffisant", "danger")
+            return redirect(request.referrer)
+        user.solde_total -= montant
+
+    db.session.commit()
+    flash("Opération réussie ✅", "success")
+    return redirect(request.referrer)
+
+# ===== Activer / désactiver bannissement =====
+@app.route("/admin/user/<int:user_id>/toggle-ban")
+@login_required
+def toggle_ban(user_id):
+    user = User.query.get_or_404(user_id)
+    user.is_banned = not getattr(user, "is_banned", False)
+    db.session.commit()
+    flash(
+        "Compte suspendu ⛔" if user.is_banned else "Compte réactivé ✅",
+        "warning" if user.is_banned else "success"
+    )
+    return redirect(request.referrer)
+
+# ===== Quick invest =====
+@app.route("/admin/user/<int:user_id>/quick-invest", methods=["POST"])
+@login_required
+def quick_invest(user_id):
+    user = User.query.get_or_404(user_id)
+    try:
+        montant = float(request.form.get("montant"))
+        duree = int(request.form.get("duree"))
+        revenu_journalier = float(request.form.get("revenu_journalier"))
+    except (ValueError, TypeError):
+        flash("Valeurs invalides", "danger")
+        return redirect(request.referrer)
+
+    inv = Investissement(
+        phone=user.phone,
+        montant=montant,
+        revenu_journalier=revenu_journalier,
+        duree=duree
+    )
+    db.session.add(inv)
+    db.session.commit()
+    flash("Investissement activé ✅", "success")
+    return redirect(request.referrer)
+
+# ===== Vérification des utilisateurs bannis à chaque connexion =====
+@app.before_request
+def check_banned_user():
+    if "phone" in session:
+        user = User.query.filter_by(phone=session["phone"]).first()
+        if user and getattr(user, "is_banned", False):
+            flash("⛔ Votre compte est suspendu", "danger")
+            session.pop("phone", None)
+            return redirect(url_for("connexion_page"))
+
+# ===== Helpers =====
 def get_logged_in_user_phone():
     return session.get("phone")
+
+
+
 
 
 # ===============================
@@ -414,7 +517,7 @@ def create_deposit():
     # 🔗 Lien MoneyFusion
     payment_link = (
         f"https://www.pay.moneyfusion.net/presto-cash-_1762687066538/"
-        f"?amount={montant}&phone={phone_paiement.strip()}&userId={user.id}"
+        f"?{montant}{phone_paiement.strip()}&userId={user.id}"
     )
 
     # 💾 SAUVEGARDE DU DEPOT
@@ -708,7 +811,6 @@ def get_image(montant):
     return mapping.get(int(montant), "fed1.jpg")
 
 
-
 @app.route("/historique")
 @login_required
 def historique_page():
@@ -719,6 +821,11 @@ def historique_page():
 
     # 🔹 Retraits
     retraits = Retrait.query.filter_by(phone=phone).order_by(Retrait.date.desc()).all()
+
+    # 🔹 Commissions reçues
+    commissions = Commission.query.filter_by(
+        parrain_phone=phone
+    ).order_by(Commission.date.desc()).all()
 
     # 🔹 Revenus (investissements)
     investissements = []
@@ -739,7 +846,8 @@ def historique_page():
         "historique.html",
         depots=depots,
         retraits=retraits,
-        investissements=investissements
+        investissements=investissements,
+        commissions=commissions   # 👈 IMPORTANT
     )
 
 @app.route('/team')
@@ -985,13 +1093,6 @@ def retrait_confirmation_page(montant):
         db.session.commit()
 
         # 👉 On renvoie une page spéciale avec chargement + succès + redirection
-        return render_template(
-            "retrait_confirmation_loading.html",
-            montant=montant,
-            taxe=taxe,
-            net=net,
-            user=user
-        )
 
     # GET → afficher la page de confirmation normale
     return render_template(
