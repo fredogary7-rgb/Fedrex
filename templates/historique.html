@@ -116,10 +116,10 @@ body{
 
 <!-- TABS -->
 <div class="tabs">
-    <div class="tab active" onclick="showTab('tout')">Tout</div>
-    <div class="tab" onclick="showTab('depots')">Dépôts</div>
-    <div class="tab" onclick="showTab('retraits')">Retraits</div>
-    <div class="tab" onclick="showTab('revenus')">Revenus</div>
+    <div class="tab active" onclick="showTab('tout', this)">Tout</div>
+    <div class="tab" onclick="showTab('depots', this)">Dépôts</div>
+    <div class="tab" onclick="showTab('retraits', this)">Retraits</div>
+    <div class="tab" onclick="showTab('revenus', this)">Revenus</div>
 </div>
 
 <div class="container">
@@ -147,6 +147,18 @@ body{
         </div>
         <div class="amount red">
             -{{ "{:,.0f}".format(r.montant) }} XOF
+        </div>
+    </div>
+    {% endfor %}
+
+    {% for c in commissions %}
+    <div class="item">
+        <div class="left">
+            <h4>Commission niveau {{ c.niveau }}</h4>
+            <p>Filleul : {{ c.filleul_phone }}</p>
+        </div>
+        <div class="amount orange">
+            +{{ "{:,.0f}".format(c.montant) }} XOF
         </div>
     </div>
     {% endfor %}
@@ -189,6 +201,7 @@ body{
 
 <!-- REVENUS -->
 <div id="revenus" class="section">
+
     {% for inv in investissements %}
     <div class="item">
         <div class="left">
@@ -199,19 +212,34 @@ body{
             +{{ "{:,.0f}".format(inv.montant) }} XOF
         </div>
     </div>
-    {% else %}
-    <p>Aucun revenu.</p>
     {% endfor %}
+
+    {% for c in commissions %}
+    <div class="item">
+        <div class="left">
+            <h4>Commission parrainage</h4>
+            <p>Niveau {{ c.niveau }} • {{ c.filleul_phone }}</p>
+        </div>
+        <div class="amount orange">
+            +{{ "{:,.0f}".format(c.montant) }} XOF
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if investissements|length == 0 and commissions|length == 0 %}
+    <p>Aucun revenu.</p>
+    {% endif %}
+
 </div>
 
 </div>
 
 <script>
-function showTab(id){
+function showTab(id, el){
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
 
-    event.target.classList.add('active');
+    el.classList.add('active');
     document.getElementById(id).classList.add('active');
 }
 </script>
