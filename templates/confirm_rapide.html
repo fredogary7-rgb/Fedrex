@@ -32,6 +32,7 @@ body {
     border-radius: 14px;
     padding: 22px;
     animation: fadeIn 0.2s ease-in-out;
+    text-align: center;
 }
 
 @keyframes fadeIn {
@@ -51,12 +52,10 @@ body {
 
 /* 🧾 TEXT */
 .modal-box h2 {
-    text-align: center;
     margin: 8px 0 10px;
 }
 
 .modal-box p {
-    text-align: center;
     color: #666;
     margin: 0;
 }
@@ -65,6 +64,7 @@ body {
 .info {
     margin-top: 22px;
     font-size: 16px;
+    text-align: left;
 }
 
 .info div {
@@ -76,11 +76,11 @@ body {
 
 /* ⚠️ ERREUR */
 .error {
-    margin-top: 10px;
+    margin-top: 12px;
     color: #dc2626;
     font-size: 14px;
-    text-align: center;
     font-weight: bold;
+    text-align: center;
 }
 
 /* 🔘 BUTTONS */
@@ -119,6 +119,36 @@ body {
     text-align: center;
 }
 
+/* 🔄 LOADER */
+.loader {
+    margin: 25px auto 12px;
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #000;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 📢 MESSAGES */
+.message {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.success {
+    font-size: 16px;
+    color: #16a34a;
+    font-weight: bold;
+    display: none;
+    margin-top: 8px;
+}
 </style>
 </head>
 
@@ -126,6 +156,8 @@ body {
 
 <div class="modal">
     <div class="modal-box">
+
+        {% if not submitted %}
 
         <a href="{{ url_for('produits_rapide_page') }}" class="close">✕</a>
 
@@ -182,9 +214,35 @@ body {
             Annuler
         </a>
 
+        {% else %}
+
+        <!-- 🔄 LOADING + SUCCÈS -->
+        <h2>Commande en cours</h2>
+
+        <div class="loader"></div>
+ 
+       <div class="message">
+
+        </div>
+
+        <div class="success" id="successMsg">
+            Commande reusi
+        </div>
+
+        <script>
+            setTimeout(() => {
+                document.getElementById("successMsg").style.display = "block";
+            }, 1000);
+
+            setTimeout(() => {
+                window.location.href = "/dashboard";
+            }, 2200);
+        </script>
+
+        {% endif %}
+
     </div>
 </div>
-
 
 </body>
 </html>

@@ -663,7 +663,7 @@ def confirmer_produit_rapide(vip_id):
     phone = get_logged_in_user_phone()
     user = User.query.filter_by(phone=phone).first()
 
-    # retrouver le produit
+    # Produit
     produit = next((p for p in PRODUITS_VIP if p["id"] == vip_id), None)
     if not produit:
         flash("Produit introuvable.", "danger")
@@ -671,15 +671,16 @@ def confirmer_produit_rapide(vip_id):
 
     montant = produit["prix"]
     revenu_journalier = produit["revenu_journalier"]
-    revenu_total = revenu_journalier * 35  # durée fixe 14 jours
+    revenu_total = revenu_journalier * 35
 
-    # GET → afficher la page de confirmation
+    # GET → affichage normal
     if request.method == "GET":
         return render_template(
             "confirm_rapide.html",
             p=produit,
             revenu_total=revenu_total,
-            user=user
+            user=user,
+            submitted=False
         )
 
     # POST → vérifier solde
@@ -687,10 +688,10 @@ def confirmer_produit_rapide(vip_id):
         flash("Solde insuffisant.", "danger")
         return redirect(url_for("produits_rapide_page"))
 
-    # Débiter le solde
+    # Débit
     user.solde_total -= montant
 
-    # Créer l’investissement
+    # Création investissement
     inv = Investissement(
         phone=phone,
         montant=montant,
@@ -701,13 +702,14 @@ def confirmer_produit_rapide(vip_id):
     db.session.add(inv)
     db.session.commit()
 
-    # afficher animation de succès
+    # POST → afficher loader + succès
     return render_template(
-        "confirm_rapide_loading.html",
-        montant=montant,
-        produit=produit
+        "confirm_rapide.html",
+        p=produit,
+        revenu_total=revenu_total,
+        user=user,
+        submitted=True
     )
-
 
 # ============================
 # VALIDATION DIRECTE (ancienne route)
