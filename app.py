@@ -1056,29 +1056,19 @@ def retrait_confirmation_page(montant):
         flash("Session expirée.", "danger")
         return redirect(url_for("connexion_page"))
 
-    # Vérification des fonds
     solde_retraitable = (user.solde_parrainage or 0) + (user.solde_revenu or 0)
     if montant > solde_retraitable:
         flash("Solde insuffisant.", "danger")
         return redirect(url_for("retrait_page"))
 
-    # Calcul taxe et montant net
     taxe = int(montant * 0.15)
     net = montant - taxe
 
-    # Si l'utilisateur clique sur "Confirmer"
     if request.method == "POST":
-
-        retrait = Retrait(
-            phone=phone,
-            montant=montant,
-            statut="en_attente"
-        )
+        retrait = Retrait(phone=phone, montant=montant, statut="en_attente")
         db.session.add(retrait)
 
-        # Déduction du solde
         reste = montant
-
         if user.solde_parrainage >= reste:
             user.solde_parrainage -= reste
             reste = 0
@@ -1089,19 +1079,12 @@ def retrait_confirmation_page(montant):
         if reste > 0:
             user.solde_revenu -= reste
 
-
         db.session.commit()
+        # Indiquer au template que le retrait est soumis
+        return render_template("retrait_confirmation.html", montant=montant, taxe=taxe, net=net, user=user, submitted=True)
 
-        # 👉 On renvoie une page spéciale avec chargement + succès + redirection
-
-    # GET → afficher la page de confirmation normale
-    return render_template(
-        "retrait_confirmation.html",
-        montant=montant,
-        taxe=taxe,
-        net=net,
-        user=user
-    )
+    # GET → formulaire normal
+    return render_template("retrait_confirmation.html", montant=montant, taxe=taxe, net=net, user=user, submitted=False)
 
 @app.route("/cron/pay_invests")
 def cron_pay_invests():

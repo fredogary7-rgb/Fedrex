@@ -81,21 +81,11 @@ body {
     border-bottom: 1px solid #ddd;
 }
 
-.row:last-child {
-    border-bottom: none;
-}
+.row:last-child { border-bottom: none; }
 
-.value {
-    font-weight: 600;
-}
-
-.orange {
-    color: #FF6600;
-}
-
-.green {
-    color: #28a745;
-}
+.value { font-weight: 600; }
+.orange { color: #FF6600; }
+.green { color: #28a745; }
 
 /* Boutons */
 .btn {
@@ -108,69 +98,69 @@ body {
     cursor: pointer;
 }
 
-.btn-confirm {
-    background: linear-gradient(135deg, #4D148C, #FF6600);
-    color: #fff;
-}
-
-.btn-back {
-    background: #eee;
-    color: #333;
-    margin-top: 12px;
-}
+.btn-confirm { background: linear-gradient(135deg, #4D148C, #FF6600); color: #fff; }
+.btn-back { background: #eee; color: #333; margin-top: 12px; }
 
 /* Sécurité */
-.security {
-    margin-top: 18px;
-    font-size: 12px;
-    color: #777;
+.security { margin-top: 18px; font-size: 12px; color: #777; }
+
+/* Loader circulaire animé */
+.loader {
+  margin: 20px auto 10px auto;
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #FF6600;
+  border-radius: 50%;
+  width: 60px; height: 60px;
+  animation: spin 1s linear infinite;
 }
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* Message et succès */
+.message { text-align: center; font-size: 16px; color: #4D148C; margin-top: 12px; font-weight: 600; }
+.success { text-align: center; font-size: 16px; color: #28a745; margin-top: 12px; font-weight: 600; display:none; margin-top:10px; }
+
 </style>
 </head>
-
 <body>
 
 <div class="overlay">
     <div class="card">
 
-        <div class="title">Fed<span style="color:#FF6600;">Ex</span> </div>
+        <div class="title">Fed<span style="color:#FF6600;">Ex</span></div>
         <div class="subtitle">Confirmation de retrait</div>
 
         <div class="icon">✓</div>
 
         <div class="info-box">
-            <div class="row">
-                <span>Montant demandé</span>
-                <span class="value">{{ montant }} FCFA</span>
-            </div>
-
-            <div class="row">
-                <span>Taxe (15%)</span>
-                <span class="value orange">{{ taxe }} FCFA</span>
-            </div>
-
-            <div class="row">
-                <span>Montant net</span>
-                <span class="value green">{{ net }} FCFA</span>
-            </div>
-
-            <div class="row">
-                <span>Téléphone</span>
-                <span class="value">{{ user.phone }}</span>
-            </div>
+            <div class="row"><span>Montant demandé</span><span class="value">{{ montant }} FCFA</span></div>
+            <div class="row"><span>Taxe (15%)</span><span class="value orange">{{ taxe }} FCFA</span></div>
+            <div class="row"><span>Montant net</span><span class="value green">{{ net }} FCFA</span></div>
+            <div class="row"><span>Téléphone</span><span class="value">{{ user.phone }}</span></div>
         </div>
 
-        <!-- POST = confirmer -->
-        <form method="POST">
-            <button class="btn btn-confirm">Confirmer le retrait</button>
-        </form>
+        {% if not submitted %}
+            <!-- Formulaire de confirmation -->
+            <form method="POST">
+                <button class="btn btn-confirm">Confirmer le retrait</button>
+            </form>
 
-        <!-- Retour -->
-        <a href="{{ url_for('retrait_page') }}">
-            <button class="btn btn-back">Annuler</button>
-        </a>
+            <a href="{{ url_for('retrait_page') }}">
+                <button class="btn btn-back">Annuler</button>
+            </a>
 
-        <div class="security">🔒 Transaction sécurisée</div>
+            <div class="security">🔒 Transaction sécurisée</div>
+        {% else %}
+            <!-- Loader + message succès -->
+            <div class="loader"></div>
+            <div class="message">Traitement...</div>
+            <div class="success" id="successMsg">Demande envoyer !</div>
+
+            <script>
+            setTimeout(() => { document.getElementById("successMsg").style.display = "block"; }, 1000);
+            setTimeout(() => { window.location.href = "/dashboard"; }, 2000);
+            </script>
+        {% endif %}
 
     </div>
 </div>
