@@ -544,6 +544,9 @@ def create_deposit():
 
     return jsonify({"url": payment_link})
 
+@app.route("/boutique")
+def boutique_page():
+    return render_template("boutique.html")
 
 @app.route("/support", methods=["GET", "POST"])
 @login_required
