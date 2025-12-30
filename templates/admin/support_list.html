@@ -1,0 +1,11 @@
+<h2>Messages support</h2>
+
+<ul>
+{% for u in users %}
+    <li>
+        <a href="/admin/support/{{ u[0] }}">
+            {{ u[0] }}
+        </a>
+    </li>
+{% endfor %}
+</ul>

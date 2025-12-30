@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Support - FedEx</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Poppins,sans-serif;
+    background:#f5f5f5;
+}
+
+/* HEADER */
+.header{
+    background:#000;
+    color:#fff;
+    padding:14px;
+    text-align:center;
+    font-weight:bold;
+}
+
+/* LAYOUT */
+.container{
+    max-width:900px;
+    margin:20px auto;
+    display:grid;
+    grid-template-columns:260px 1fr;
+    gap:15px;
+}
+
+/* USERS LIST */
+.users{
+    background:#fff;
+    border-radius:10px;
+    padding:10px;
+}
+
+.users h3{
+    margin:10px;
+    font-size:15px;
+}
+
+.users a{
+    display:block;
+    padding:10px;
+    border-bottom:1px solid #eee;
+    text-decoration:none;
+    color:#000;
+    font-size:14px;
+}
+
+.users a:hover{
+    background:#f2f2f2;
+}
+
+/* CHAT */
+.chat{
+    background:#fff;
+    border-radius:10px;
+    display:flex;
+    flex-direction:column;
+}
+
+.chat-header{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+    font-weight:700;
+}
+
+.chat-messages{
+    flex:1;
+    padding:15px;
+    overflow-y:auto;
+    background:#fafafa;
+}
+
+.msg{
+    max-width:70%;
+    padding:10px 14px;
+    margin-bottom:10px;
+    border-radius:14px;
+    font-size:14px;
+}
+
+.msg.user{
+    background:#e5e5e5;
+    margin-right:auto;
+}
+
+.msg.admin{
+    background:#000;
+    color:#fff;
+    margin-left:auto;
+}
+
+/* FORM */
+.chat-form{
+    display:flex;
+    border-top:1px solid #ddd;
+}
+
+.chat-form input{
+    flex:1;
+    border:none;
+    padding:14px;
+    outline:none;
+}
+
+.chat-form button{
+    background:#FF6600;
+    color:#fff;
+    border:none;
+    padding:0 18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    Support Admin Fed<span style="color:#FF6600">Ex</span>
+</div>
+
+<div class="container">
+
+    <!-- LISTE UTILISATEURS -->
+    <div class="users">
+        <h3>Conversations</h3>
+        {% for u in users %}
+            <a href="/admin/support/{{ u[0] }}">
+                📩 {{ u[0] }}
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- CHAT -->
+    <div class="chat">
+        <div class="chat-header">
+            Discussion avec {{ phone }}
+        </div>
+
+        <div class="chat-messages">
+            {% for m in messages %}
+                <div class="msg {{ m.sender }}">
+                    {{ m.message }}
+                </div>
+            {% else %}
+                <p style="color:#777;font-size:13px;text-align:center;">
+                    Aucun message
+                </p>
+            {% endfor %}
+        </div>
+
+        <form method="POST" class="chat-form">
+            <input type="text" name="message" placeholder="Répondre..." required>
+            <button>Envoyer</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>
