@@ -144,6 +144,14 @@ class Vlog(db.Model):
     statut = db.Column(db.String(20), default="en_attente") # en_attente / valide / rejete
     date = db.Column(db.DateTime, default=datetime.utcnow)
 
+class SupportMessage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_phone = db.Column(db.String(20), nullable=False)
+    sender = db.Column(db.String(10))  # "user" ou "admin"
+    message = db.Column(db.Text, nullable=False)
+    is_read = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
 def donner_commission(filleul_phone, montant):
     # Niveaux : 30% – 5% – 3%
     COMMISSIONS = {1: 0.20, 2: 0.03, 3: 0.01}
@@ -536,6 +544,71 @@ def create_deposit():
 
     return jsonify({"url": payment_link})
 
+
+@app.route("/support", methods=["GET", "POST"])
+@login_required
+def support_page():
+    phone = get_logged_in_user_phone()
+
+    if request.method == "POST":
+        msg = request.form.get("message")
+        if msg:
+            new_msg = SupportMessage(
+                user_phone=phone,
+                sender="user",
+                message=msg
+            )
+            db.session.add(new_msg)
+            db.session.commit()
+        return redirect("/support")
+
+    messages = SupportMessage.query.filter_by(
+        user_phone=phone
+    ).order_by(SupportMessage.created_at.asc()).all()
+
+    return render_template("support/chat.html", messages=messages)
+
+
+@app.route("/admin/support")
+def admin_support_list():
+    users = db.session.query(
+        SupportMessage.user_phone
+    ).distinct().all()
+
+    return render_template("admin/support_list.html", users=users)
+
+@app.route("/admin/support/<phone>", methods=["GET", "POST"])
+def admin_support_chat(phone):
+
+    if request.method == "POST":
+        msg = request.form.get("message")
+        if msg:
+            reply = SupportMessage(
+                user_phone=phone,
+                sender="admin",
+                message=msg,
+                is_read=True
+            )
+            db.session.add(reply)
+            db.session.commit()
+
+    messages = SupportMessage.query.filter_by(
+        user_phone=phone
+    ).order_by(SupportMessage.created_at.asc()).all()
+
+    # Marquer comme lus
+    SupportMessage.query.filter_by(
+        user_phone=phone,
+        sender="user",
+        is_read=False
+    ).update({"is_read": True})
+    db.session.commit()
+
+    return render_template(
+        "admin/support_chat.html",
+        messages=messages,
+        phone=phone
+    )
 # ===============================
 # WEBHOOK MONEYFUSION
 # ===============================

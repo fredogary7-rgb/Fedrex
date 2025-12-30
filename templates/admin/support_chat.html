@@ -1,0 +1,15 @@
+<h3>Discussion avec {{ phone }}</h3>
+
+<div style="max-width:600px">
+{% for m in messages %}
+    <p>
+        <b>{{ "Client" if m.sender=="user" else "Admin" }} :</b>
+        {{ m.message }}
+    </p>
+{% endfor %}
+</div>
+
+<form method="POST">
+    <input type="text" name="message" required>
+    <button>Répondre</button>
+</form>
