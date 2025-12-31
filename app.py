@@ -1,3 +1,4 @@
+from flask import jsonify
 import os
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
