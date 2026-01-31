@@ -157,20 +157,21 @@ class SupportMessage(db.Model):
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-def donner_commission(filleul_phone, montant):
-    # Niveaux : 30% – 5% – 3%
-    COMMISSIONS = {1: 0.20, 2: 0.03, 3: 0.01}
+def donner_commission(filleul, montant):
+    COMMISSIONS = {
+        1: 0.20,  # parrain direct
+        2: 0.03,
+        3: 0.01
+    }
 
-    current_phone = filleul_phone
+    current_user = filleul
 
     for niveau in range(1, 4):
-        user = User.query.filter_by(phone=current_phone).first()
 
-        # si pas de parrain → stop
-        if not user or not user.parrain:
+        if not current_user.parrain:
             break
 
-        parrain = User.query.filter_by(phone=user.parrain).first()
+        parrain = User.query.filter_by(phone=current_user.parrain).first()
         if not parrain:
             break
 
@@ -178,7 +179,7 @@ def donner_commission(filleul_phone, montant):
 
         commission = Commission(
             parrain_phone=parrain.phone,
-            filleul_phone=filleul_phone,
+            filleul_phone=filleul.phone,
             montant=gain,
             niveau=niveau
         )
@@ -187,9 +188,8 @@ def donner_commission(filleul_phone, montant):
         parrain.solde_revenu += gain
         parrain.solde_parrainage += gain
         parrain.commission_total += gain
-        db.session.commit()
 
-        current_phone = parrain.phone
+        current_user = parrain  # 🔥 on remonte la chaîne
 
 def t(key):
     lang = session.get("lang", "fr")
@@ -1008,7 +1008,6 @@ def admin_deposits():
     depots = Depot.query.order_by(Depot.date.desc()).all()
     return render_template("admin_deposits.html", depots=depots)
 
-
 @app.route("/admin/deposits/valider/<int:depot_id>")
 def valider_depot(depot_id):
     depot = Depot.query.get_or_404(depot_id)
@@ -1018,25 +1017,28 @@ def valider_depot(depot_id):
         flash("Utilisateur introuvable.", "danger")
         return redirect("/admin/deposits")
 
-    if hasattr(depot, "statut") and depot.statut == "valide":
+    if depot.statut == "valide":
         flash("Ce dépôt est déjà validé.", "warning")
         return redirect("/admin/deposits")
 
-    # 🔥 VÉRIFIER SI C'EST SON PREMIER DÉPÔT VALIDÉ
-    premier_depot = Depot.query.filter_by(phone=user.phone, statut="valide").first()
+    # ✅ Vérifier AVANT s'il existe déjà un dépôt validé
+    deja_un_depot_valide = Depot.query.filter(
+        Depot.phone == user.phone,
+        Depot.statut == "valide"
+    ).count()
 
-    # 🔥 Créditer le dépôt
+    # Créditer
     user.solde_depot += depot.montant
     user.solde_total += depot.montant
     depot.statut = "valide"
 
-    # 🔥 SI C’EST SON PREMIER DÉPÔT → COMMISSIONS
-    if not premier_depot and user.parrain:
-        donner_commission(user.phone, depot.montant)
+    # ✅ Premier dépôt UNIQUEMENT
+    if deja_un_depot_valide == 0 and user.parrain:
+        donner_commission(user, depot.montant)
 
     db.session.commit()
 
-    flash("Dépôt validé et crédité avec succès !", "success")
+    flash("Dépôt validé + commissions attribuées.", "success")
     return redirect("/admin/deposits")
 
 @app.route("/admin/deposits/rejeter/<int:depot_id>")
