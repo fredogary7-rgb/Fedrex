@@ -21,7 +21,11 @@ MONEYFUSION_API_URL = os.getenv("MONEYFUSION_API_URL")
 UPLOAD_FOLDER = "static/vlogs"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-DEFAULT_DB = "postgresql://neondb_owner:npg_y1NWvdsLagE4@ep-misty-term-abgn4ktn-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require"
+DEFAULT_DB = (
+    "postgresql+psycopg2://neondb_owner:npg_URKL0fbG6ITH@"
+    "ep-calm-butterfly-abfj6bdp-pooler.eu-west-2.aws.neon.tech:5432/"
+    "neondb?sslmode=require"
+)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = DEFAULT_DB
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -265,8 +269,8 @@ def inscription_page():
         new_user = User(
             phone=phone,
             password=password,
-            solde_total=500,
-            solde_depot=500,
+            solde_total=700,
+            solde_depot=700,
             solde_revenu=0,
             solde_parrainage=0,
             parrain=parrain_user.phone if parrain_user else None
@@ -276,7 +280,7 @@ def inscription_page():
         db.session.commit()
 
         flash("🎉 Inscription réussie ! Connectez-vous maintenant.", "success")
-        return redirect(url_for("connexion_page"))
+        return redirect(url_for("dashboard_page"))
 
     # 🔥 Passe le code au HTML
     return render_template("inscription.html", code_ref=code_ref)
@@ -525,7 +529,7 @@ def create_deposit():
 
     # 🔗 Lien MoneyFusion
     payment_link = (
-        f"https://www.pay.moneyfusion.net/presto-cash-_1762687066538/"
+        f"https://my.moneyfusion.net/696bede72e7cbfd744749db2"
     )
 
     # 💾 SAUVEGARDE DU DEPOT
@@ -704,14 +708,17 @@ def nous_page():
     return render_template("nous.html")
 
 PRODUITS_VIP = [
-    {"id": 1, "nom": "Fedex 1", "prix": 3000, "revenu_journalier": 360, "image": "fed1.jpg"},
-    {"id": 2, "nom": "Fedex 2", "prix": 8000, "revenu_journalier": 960, "image": "fed1.jpg"},
-    {"id": 3, "nom": "Fedex 3", "prix": 20000, "revenu_journalier": 2400, "image": "fed4.jpg"},
-    {"id": 4, "nom": "Fedex 4", "prix": 40000, "revenu_journalier": 4800, "image": "fed4.jpg"},
-    {"id": 5, "nom": "Fedex 5", "prix": 80000, "revenu_journalier": 9600, "image": "fed3.jpg"},
-    {"id": 6, "nom": "Fedex 6", "prix": 120000, "revenu_journalier": 14400, "image": "fed3.jpg"},
-    {"id": 7, "nom": "Fedex 7", "prix": 200000, "revenu_journalier": 24000, "image": "fed5.jpg"},
-    {"id": 8, "nom": "Fedex 8", "prix": 400000, "revenu_journalier": 48000, "image": "fed5.jpg"}
+    {"id": 1, "nom": "DHL 1", "prix": 4000, "revenu_journalier": 750, "image": "d3.jpg"},
+    {"id": 2, "nom": "DHL 2", "prix": 8000, "revenu_journalier": 1500, "image": "d3.jpg"},
+    {"id": 3, "nom": "DHL 3", "prix": 15000, "revenu_journalier": 2812, "image": "d3.jpg"},
+    {"id": 4, "nom": "DHL 4", "prix": 20000, "revenu_journalier": 3750, "image": "d3.jpg"},
+    {"id": 5, "nom": "DHL 5", "prix": 30000, "revenu_journalier": 5625, "image": "d3.jpg"},
+    {"id": 6, "nom": "DHL 6", "prix": 50000, "revenu_journalier": 9375, "image": "d3.jpg"},
+    {"id": 7, "nom": "DHL 7", "prix": 100000, "revenu_journalier": 18750, "image": "d3.jpg"},
+    {"id": 8, "nom": "DHL 8", "prix": 200000, "revenu_journalier": 37500, "image": "d3.jpg"},
+    {"id": 6, "nom": "DHL 9", "prix": 400000, "revenu_journalier": 75000, "image": "d3.jpg"},
+    {"id": 7, "nom": "DHL 10", "prix": 800000, "revenu_journalier": 150000, "image": "d3.jpg"},
+    {"id": 8, "nom": "DHL 11", "prix": 1000000, "revenu_journalier": 187500, "image": "d3.jpg"}
 ]
 
 
