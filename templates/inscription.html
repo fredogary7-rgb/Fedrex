@@ -3,112 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inscription</title>
+<title>Inscription – DHL Investo</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: url("{{ url_for('static', filename='images/d.jpg') }}") no-repeat center center fixed;
-    background-size: cover;
+    background: #F2F2F2;
 }
 
-/* 🌫 Overlay */
-.overlay {
-    min-height: 100vh;
-    background: linear-gradient(
-        rgba(77,20,140,0.45),
-        rgba(255,102,0,0.35)
-    );
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* 📦 Carte */
-.container {
-    width: 90%;
-    max-width: 420px;
-    background: #ffffff;
-    padding: 35px 28px;
-    border-radius: 18px;
-    box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+/* Bandeau DHL */
+.header {
+    background: #FFCC00;
+    padding: 20px;
     text-align: center;
 }
 
-/* 🏷 Titre */
-.title {
-    font-size: 26px;
+.header h1 {
+    margin: 0;
+    font-size: 28px;
     font-weight: 700;
-    color: #4D148C;
-    margin-bottom: 6px;
+    color: #D40511;
 }
 
+/* Conteneur */
+.wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 30px 15px;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    padding: 30px 24px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+/* Texte */
 .subtitle {
-    font-size: 13px;
-    color: #666;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
     margin-bottom: 25px;
 }
 
 /* Labels */
 .label {
-    text-align: left;
-    font-size: 13px;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
     color: #333;
     margin-top: 15px;
-    display: block;
 }
 
-/* Inputs */
-.input-field, select {
+/* Champs */
+.input-field,
+select {
     width: 100%;
-    padding: 13px 14px;
     margin-top: 6px;
-    font-size: 14px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    outline: none;
+    padding: 14px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
     background: #fff;
 }
 
-.input-field:focus, select:focus {
-    border-color: #4D148C;
+.input-field:focus,
+select:focus {
+    outline: none;
+    border-color: #D40511;
 }
 
 /* Bouton */
 .btn-register {
     width: 100%;
-    background: linear-gradient(135deg, #4D148C, #FF6600);
-    color: #fff;
+    margin-top: 25px;
     padding: 15px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
+    background: #D40511;
+    color: #fff;
     border: none;
-    border-radius: 12px;
-    margin-top: 30px;
+    border-radius: 6px;
     cursor: pointer;
 }
 
 .btn-register:hover {
-    opacity: 0.92;
+    background: #b4040e;
 }
 
-/* Texte connexion */
+/* Lien */
 .login-text {
-    margin-top: 20px;
+    margin-top: 18px;
+    text-align: center;
     font-size: 14px;
-    color: #444;
 }
 
 .login-text a {
-    color: #FF6600;
+    color: #D40511;
     font-weight: 600;
     text-decoration: none;
 }
 
 /* Sécurité */
 .security {
-    margin-top: 18px;
+    margin-top: 15px;
+    text-align: center;
     font-size: 12px;
     color: #777;
 }
@@ -117,11 +122,16 @@ body {
 
 <body>
 
-<div class="overlay">
+<div class="header">
+    <h1>DHL INVESTO</h1>
+</div>
+
+<div class="wrapper">
 <div class="container">
 
-    <div class="title">DHL<span style="color:#FF6600;">INVESTO</span>
-    <div class="subtitle">Plateforme d’investissement logistique sécurisée</div>
+    <div class="subtitle">
+        Inscription à la plateforme d’investissement logistique
+    </div>
 
     <form action="/inscription" method="POST" onsubmit="return verifierFormulaire()">
 
@@ -142,21 +152,21 @@ body {
         </select>
 
         <label class="label">Numéro de téléphone</label>
-        <input type="tel" name="phone" class="input-field" placeholder="Numéro de téléphone" required>
+        <input type="tel" name="phone" class="input-field" placeholder="Ex : +228 90 00 00 00" required>
 
         <label class="label">Mot de passe</label>
-        <input type="password" name="password" id="password" class="input-field" placeholder="Mot de passe" required>
+        <input type="password" name="password" id="password" class="input-field" required>
 
         <label class="label">Confirmer le mot de passe</label>
-        <input type="password" name="confirm_password" id="confirm_password" class="input-field" placeholder="Confirmer" required>
+        <input type="password" name="confirm_password" id="confirm_password" class="input-field" required>
 
         <label class="label">Code d’invitation (optionnel)</label>
-        <input type="text"
-               name="code_invitation"
-               class="input-field"
-               value="{{ code_ref }}"
-               placeholder="Code d’invitation"
-               {% if code_ref %} readonly style="background:#f2f2f2;" {% endif %}>
+        <input
+            type="text"
+            name="code_invitation"
+            class="input-field"
+            value="{{ code_ref }}"
+            {% if code_ref %} readonly style="background:#eee;" {% endif %}>
 
         <button class="btn-register">Créer mon compte</button>
     </form>
@@ -166,7 +176,9 @@ body {
         <a href="{{ url_for('connexion_page') }}">Se connecter</a>
     </p>
 
-    <div class="security">🔒 Vos données sont protégées et sécurisées</div>
+    <div class="security">
+        🔒 Informations protégées
+    </div>
 
 </div>
 </div>
