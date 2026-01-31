@@ -3,187 +3,193 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Connexion</title>
+<title>Connexion – DHL Investo</title>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
 body {
-    font-family: 'Poppins', sans-serif;
     margin: 0;
-    min-height: 100vh;
-    background: url("{{ url_for('static', filename='images/d.jpg') }}") no-repeat center center fixed;
-    background-size: cover;
+    font-family: 'Poppins', sans-serif;
+    background: #F2F2F2;
 }
 
-/* 🌫 Overlay dégradé FedEx */
-.overlay {
-    background: linear-gradient(
-        rgba(77,20,140,0.45),
-        rgba(255,102,0,0.35)
-    );
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* 📦 Carte blanche */
-.container {
-    width: 90%;
-    max-width: 420px;
-    background: #ffffff;
-    padding: 35px 28px;
-    border-radius: 18px;
-    box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+/* Bandeau DHL */
+.header {
+    background: #FFCC00;
+    padding: 20px;
     text-align: center;
 }
 
-/* 🏷 Titre */
-.title {
-    font-size: 26px;
+.header h1 {
+    margin: 0;
+    font-size: 28px;
     font-weight: 700;
-    color: #4D148C;
-    margin-bottom: 6px;
+    color: #D40511;
 }
 
+/* Conteneur */
+.wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 30px 15px;
+}
+
+.container {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    padding: 30px 24px;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+/* Texte */
 .subtitle {
-    font-size: 13px;
-    color: #666;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
     margin-bottom: 25px;
 }
 
 /* Labels */
 .label {
-    text-align: left;
-    font-size: 13px;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
     color: #333;
     margin-top: 15px;
-    display: block;
 }
 
-/* Inputs */
+/* Champs */
 .input-field,
 select {
     width: 100%;
-    padding: 13px 14px;
     margin-top: 6px;
-    font-size: 14px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    outline: none;
+    padding: 14px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
     background: #fff;
 }
 
 .input-field:focus,
 select:focus {
-    border-color: #4D148C;
+    outline: none;
+    border-color: #D40511;
 }
 
-/* Ligne mémoriser */
+/* Mémoriser */
 .remember-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     margin-top: 14px;
     font-size: 13px;
-    color: #555;
+    color: #444;
 }
 
-.remember-row input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+.remember-row input {
+    width: 16px;
+    height: 16px;
 }
 
 /* Bouton */
 .btn-login {
     width: 100%;
-    background: linear-gradient(135deg, #4D148C, #FF6600);
-    color: #fff;
+    margin-top: 25px;
     padding: 15px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
+    background: #D40511;
+    color: #fff;
     border: none;
-    border-radius: 12px;
-    margin-top: 28px;
+    border-radius: 6px;
     cursor: pointer;
 }
 
 .btn-login:hover {
-    opacity: 0.92;
+    background: #b4040e;
 }
 
-/* Texte bas */
+/* Bas */
 .bottom-text {
-    margin-top: 20px;
+    margin-top: 18px;
+    text-align: center;
     font-size: 14px;
-    color: #444;
 }
 
 .bottom-text a {
-    color: #FF6600;
+    color: #D40511;
     font-weight: 600;
     text-decoration: none;
 }
 
 /* Sécurité */
 .security {
-    margin-top: 18px;
+    margin-top: 15px;
+    text-align: center;
     font-size: 12px;
     color: #777;
 }
-
 </style>
 </head>
 
 <body>
-<div class="overlay">
 
-    <div class="container">
-
-        <div class="title">DHL<span style="color:#FF6600;">INVESTO</span>
-        <div class="subtitle">Connexion sécurisée à votre compte</div>
-
-        <form action="/connexion" method="POST">
-
-            <label class="label">Pays</label>
-            <select name="country_code" required>
-                <option value="+228">🇹🇬 +228 Togo</option>
-                <option value="+229">🇧🇯 +229 Bénin</option>
-                <option value="+225">🇨🇮 +225 Côte d’Ivoire</option>
-                <option value="+237">🇨🇲 +237 Cameroun</option>
-                <option value="+223">🇲🇱 +223 Mali</option>
-                <option value="+241">🇬🇦 +241 Gabon</option>
-                <option value="+221">🇸🇳 +221 Sénégal</option>
-                <option value="+227">🇳🇪 +227 Niger</option>
-                <option value="+226">🇧🇫 +226 Burkina Faso</option>
-                <option value="+243">🇨🇩 +243 Congo Kinshasa</option>
-                <option value="+242">🇨🇬 +242 Congo Brazzaville</option>
-            </select>
-
-            <label class="label">Numéro de téléphone</label>
-            <input type="tel" name="phone" class="input-field" placeholder="Votre numéro" required>
-
-            <label class="label">Mot de passe</label>
-            <input type="password" name="password" class="input-field" placeholder="Mot de passe" required>
-
-            <div class="remember-row">
-                <input type="checkbox" id="remember" name="remember">
-                <label for="remember">Mémoriser votre mot de passe</label>
-            </div>
-
-            <button class="btn-login">Se connecter</button>
-        </form>
-
-        <p class="bottom-text">
-            Vous n'avez pas de compte ?
-            <a href="{{ url_for('inscription_page') }}">Créer un compte</a>
-        </p>
-
-        <div class="security">🔒 Vos données sont protégées et sécurisées</div>
-
-    </div>
+<div class="header">
+    <h1>DHL INVESTO</h1>
 </div>
 
+<div class="wrapper">
+<div class="container">
+
+    <div class="subtitle">
+        Connexion sécurisée à votre compte
+    </div>
+
+    <form action="/connexion" method="POST">
+
+        <label class="label">Pays</label>
+        <select name="country_code" required>
+            <option value="+228">🇹🇬 +228 Togo</option>
+            <option value="+229">🇧🇯 +229 Bénin</option>
+            <option value="+225">🇨🇮 +225 Côte d’Ivoire</option>
+            <option value="+237">🇨🇲 +237 Cameroun</option>
+            <option value="+223">🇲🇱 +223 Mali</option>
+            <option value="+241">🇬🇦 +241 Gabon</option>
+            <option value="+221">🇸🇳 +221 Sénégal</option>
+            <option value="+227">🇳🇪 +227 Niger</option>
+            <option value="+226">🇧🇫 +226 Burkina Faso</option>
+            <option value="+243">🇨🇩 +243 Congo Kinshasa</option>
+            <option value="+242">🇨🇬 +242 Congo Brazzaville</option>
+        </select>
+
+        <label class="label">Numéro de téléphone</label>
+        <input type="tel" name="phone" class="input-field" placeholder="Votre numéro" required>
+
+        <label class="label">Mot de passe</label>
+        <input type="password" name="password" class="input-field" placeholder="Mot de passe" required>
+
+        <div class="remember-row">
+            <input type="checkbox" id="remember" name="remember">
+            <label for="remember">Mémoriser la connexion</label>
+        </div>
+
+        <button class="btn-login">Se connecter</button>
+    </form>
+
+    <p class="bottom-text">
+        Pas encore de compte ?
+        <a href="{{ url_for('inscription_page') }}">Créer un compte</a>
+    </p>
+
+    <div class="security">
+        🔒 Connexion sécurisée
+    </div>
+
+</div>
+</div>
 
 </body>
 </html>
