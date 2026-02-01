@@ -884,16 +884,16 @@ def profile_page():
 
 def get_image(montant):
     mapping = {
-        3000: "fed1.jpg",
-        8000: "fed1.jpg",
-        20000: "fed1.jpg",
-        40000: "fed1.jpg",
-        90000: "fed1.jpg",
-        180000: "fed1.jpg",
-        400000: "fed1.jpg",
-        800000: "fed1.jpg",
+        4000: "d.jpg",
+        8000: "d.jpg",
+        15000: "d.jpg",
+        20000: "d.jpg",
+        30000: "d.jpg",
+        50000: "d.jpg",
+        100000: "d.jpg",
+        200000: "d.jpg",
     }
-    return mapping.get(int(montant), "fed1.jpg")
+    return mapping.get(int(montant), "d.jpg")
 
 
 @app.route("/historique")
