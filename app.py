@@ -754,7 +754,7 @@ def confirmer_produit_rapide(vip_id):
 
     montant = produit["prix"]
     revenu_journalier = produit["revenu_journalier"]
-    revenu_total = revenu_journalier * 35
+    revenu_total = revenu_journalier * 50
 
     # GET → affichage normal
     if request.method == "GET":
@@ -779,7 +779,7 @@ def confirmer_produit_rapide(vip_id):
         phone=phone,
         montant=montant,
         revenu_journalier=revenu_journalier,
-        duree=35,
+        duree=50,
         actif=True
     )
     db.session.add(inv)
@@ -819,7 +819,7 @@ def valider_produit_rapide(vip_id):
         phone=phone,
         montant=montant,
         revenu_journalier=produit["revenu_journalier"],
-        duree=35,
+        duree=50,
         actif=True
     )
     db.session.add(inv)
