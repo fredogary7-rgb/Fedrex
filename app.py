@@ -1048,31 +1048,40 @@ def create_deposit():
         phone = request.form.get("phone", "").strip()
         montant = int(request.form.get("montant", 0))
 
-        # Validation des champs
+        # Validation
         if not fullname or not email or not phone:
             return jsonify({"success": False, "error": "Tous les champs sont requis."})
-        if montant < 4000:
-            return jsonify({"success": False, "error": "Montant minimum 4000 FCFA."})
+        if montant < 3000:
+            return jsonify({"success": False, "error": "Montant minimum 3000 FCFA."})
 
         # Génération de l'ID dépôt
         depot_id = generate_depot_id()
 
-        # 🔹 Lien SendavaPay (exemple statique)
-        # Tu peux générer dynamiquement un lien si nécessaire via ton API côté serveur
-        payment_url = "https://sendavapay.com/pay/SPYN7ENTPHP"
+        # Création du dépôt en base
+        depot = Depot(
+            id=depot_id,
+            fullname=fullname,
+            email=email,
+            phone=phone,
+            montant=montant,
+            statut="pending",
+            country=request.form.get("country"),
+            date=datetime.utcnow()
+        )
+        db.session.add(depot)
+        db.session.commit()
 
-        # Ici tu peux enregistrer le dépôt en base (status pending)
-        # save_deposit(fullname, email, phone, montant, depot_id, status="pending")
+        # 🔹 Lien SendavaPay (exemple statique)
+        payment_url = "https://sendavapay.com/pay/SPYN7ENTPHP"
 
         return jsonify({
             "success": True,
             "payment_url": payment_url,
-            "depot_id": depot_id  # utile pour traçabilité côté serveur
+            "depot_id": depot_id
         })
 
     except Exception as e:
         return jsonify({"success": False, "error": f"Erreur serveur: {str(e)}"})
-
 
 @app.route("/nous")
 def nous_page():
