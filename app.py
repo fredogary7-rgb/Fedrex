@@ -17,8 +17,6 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 app.secret_key = "ma_cle_ultra_secrete"
 
 load_dotenv()
-MONEYFUSION_API_KEY = os.getenv("MONEYFUSION_API_KEY")
-MONEYFUSION_API_URL = os.getenv("MONEYFUSION_API_URL")
 
 UPLOAD_FOLDER = "static/vlogs"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -608,38 +606,130 @@ def deposit_page():
 
     return render_template("deposit.html", user=user)
 
+
+import os
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
+import uuid
+
+WEBHOOK_SECRET = "whsec_e6e80f969ccba284bb7775b6aeca4273ca524d847d597f70"
+
+
+def generate_depot_id():
+    return str(uuid.uuid4()).replace("-", "")[:12]
+# =========================
+# 1️⃣ Créer un dépôt
+# =========================
 @app.route("/create-deposit", methods=["POST"])
-@login_required
 def create_deposit():
 
-    phone = get_logged_in_user_phone()
-    user = User.query.filter_by(phone=phone).first()
-
-    if not user:
-        return jsonify({"error": "Utilisateur introuvable"}), 400
-
-    try:
-        montant = float(request.form.get("montant"))
-    except:
-        return jsonify({"error": "Montant invalide"}), 400
+    fullname = request.form.get("fullname")
+    email = request.form.get("email")
+    phone = request.form.get("phone")
+    montant = int(request.form.get("montant"))
 
     if montant < 3000:
-        return jsonify({"error": "Montant minimum 3000 FCFA"}), 400
+        return jsonify({"success": False, "error": "Montant minimum 3000"})
 
-    depot = Depot(
-        phone=phone,
-        montant=montant,
-        statut="pending"
+    # 👉 Enregistre ton dépôt en base ici (status = pending)
+    depot_id = generate_depot_id()  # crée ta fonction
+
+    payload = {
+        "amount": montant,
+        "currency": "XOF",
+        "description": "Recharge compte Coris Max",
+        "externalReference": f"DEPOT-{depot_id}",
+        "customerEmail": email,
+        "customerPhone": phone,
+        "customerName": fullname,
+        "redirectUrl": "https://tonsite.com/dashboard"
+    }
+
+    headers = {
+        "Authorization": f"Bearer {SENDAVAPAY_API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(
+        f"{SENDAVAPAY_BASE_URL}/create-payment",
+        json=payload,
+        headers=headers
     )
 
-    db.session.add(depot)
-    db.session.commit()
+    data = response.json()
 
-    return jsonify({
-        "success": True,
-        "amount": montant,
-        "depot_id": depot.id
-    })
+    if data.get("success"):
+        payment_url = data["data"]["paymentUrl"]
+
+        return jsonify({
+            "success": True,
+            "payment_url": payment_url
+        })
+
+    return jsonify({"success": False, "error": "Erreur API paiement"})
+
+
+# =========================
+# 2️⃣ Webhook sécurisé
+# =========================
+@app.route("/webhook/sendavapay", methods=["POST"])
+def sendavapay_webhook():
+
+    signature = request.headers.get("X-SendavaPay-Signature")
+    event = request.headers.get("X-SendavaPay-Event")
+
+    payload = request.get_json()
+
+    # 🔐 Vérification HMAC plus fiable
+    expected_signature = hmac.new(
+        WEBHOOK_SECRET.encode(),
+        request.data,
+        hashlib.sha256
+    ).hexdigest()
+
+    if signature != expected_signature:
+        return jsonify({"error": "Invalid signature"}), 401
+
+    if event == "payment.completed":
+
+        reference = payload["data"]["reference"]
+        amount = float(payload["data"]["amount"])
+        phone = payload["data"]["customer"]["phone"]
+
+        # 🔎 Anti double traitement
+        transaction = Transaction.query.filter_by(reference=reference).first()
+
+        if transaction and transaction.status == "completed":
+            return jsonify({"message": "Déjà traité"}), 200
+
+        user = User.query.filter_by(phone=phone).first()
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        # 💰 Crédit utilisateur
+        user.solde_depot += amount
+        user.solde_total += amount
+
+        # 🎁 Donner commission parrain
+        donner_commission(user, amount)
+
+        # 📝 Sauvegarde transaction
+        if not transaction:
+            transaction = Transaction(
+                reference=reference,
+                user_id=user.id,
+                amount=amount,
+                status="completed"
+            )
+            db.session.add(transaction)
+        else:
+            transaction.status = "completed"
+
+        db.session.commit()
+
+        print("Paiement + commission confirmés :", reference)
+
+    return jsonify({"received": True})
 
 @app.route("/confirm-deposit", methods=["POST"])
 @login_required
