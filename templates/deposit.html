@@ -159,8 +159,8 @@ body{
 
         <!-- Montants rapides -->
         <div class="quick-amounts">
-            <button type="button" onclick="setQuickAmount(event,2000)">2000</button>
-            <button type="button" onclick="setQuickAmount(event,5000)">5000</button>
+            <button type="button" onclick="setQuickAmount(event,4000)">4000</button>
+            <button type="button" onclick="setQuickAmount(event,8000)">8000</button>
             <button type="button" onclick="setQuickAmount(event,10000)">10000</button>
             <button type="button" onclick="setQuickAmount(event,20000)">20000</button>
             <button type="button" onclick="setQuickAmount(event,50000)">50000</button>
@@ -241,8 +241,8 @@ function initDeposit(){
         return;
     }
 
-    if(!montant || montant < 3000){
-        alert("Montant minimum 3000 FCFA");
+    if(!montant || montant < 4000){
+        alert("Montant minimum 4000 FCFA");
         return;
     }
 
