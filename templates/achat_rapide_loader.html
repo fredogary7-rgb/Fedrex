@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Achat en cours</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f6fb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    padding:20px;
+}
+
+/* CARD */
+.loader-card{
+    background:#fff;
+    border-radius:20px;
+    padding:30px 20px;
+    box-shadow:0 5px 25px rgba(0,0,0,0.06);
+    text-align:center;
+    max-width:400px;
+}
+
+.loader-card h2{
+    font-size:20px;
+    margin-bottom:15px;
+    color:#3a5cb8;
+}
+
+.loader-card p{
+    font-size:14px;
+    color:#555;
+    margin-bottom:25px;
+}
+
+/* SPINNER */
+.spinner{
+    border:6px solid #f2f4ff;
+    border-top:6px solid #3a5cb8;
+    border-radius:50%;
+    width:60px;
+    height:60px;
+    margin:auto;
+    animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+    0%{transform:rotate(0deg);}
+    100%{transform:rotate(360deg);}
+}
+
+/* BOUTON ANNULER */
+.btn-cancel{
+    display:inline-block;
+    margin-top:25px;
+    padding:12px 25px;
+    border-radius:30px;
+    background:#eee;
+    color:#333;
+    font-weight:600;
+    text-decoration:none;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.btn-cancel:hover{
+    background:#ddd;
+}
+
+/* NAVIGATION BAS */
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    display:flex;
+    justify-content:space-around;
+    background: linear-gradient(to right, #3a5cb8, #5a7cd3);
+    padding:10px 0;
+    border-top-left-radius:20px;
+    border-top-right-radius:20px;
+}
+
+.bottom-nav a{
+    color:rgba(255,255,255,0.7);
+    font-size:12px;
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.bottom-nav a.active{
+    color:#fff;
+    font-weight:600;
+}
+
+.bottom-nav i{
+    margin-bottom:3px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="loader-card">
+    <div class="spinner"></div>
+    <h2>Traitement de votre achat</h2>
+    <p>Veuillez patienter, votre transaction est en cours de validation...</p>
+
+    <a href="{{ url_for('dashboard_page') }}" class="btn-cancel">Annuler</a>
+</div>
+
+<!-- NAV BAS -->
+<div class="bottom-nav">
+    <a href="/dashboard" class="active"><i class="fa-solid fa-house"></i>Accueil</a>
+    <a href="/produits_rapide"><i class="fa-solid fa-chart-line"></i>Investir</a>
+    <a href="/team"><i class="fa-solid fa-users"></i>Team</a>
+    <a href="/profile"><i class="fa-solid fa-user"></i>Compte</a>
+</div>
+
+<!-- ✅ Redirection automatique après 3 secondes -->
+<script>
+setTimeout(function() {
+    window.location.href = "{{ url_for('dashboard_page') }}";
+}, 3000);
+</script>
+
+</body>
+</html>

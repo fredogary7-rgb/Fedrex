@@ -3,204 +3,128 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inscription – DHL Investo</title>
-
+<title>Inscription - Coris Max</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
 body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: #F2F2F2;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color:#333;
 }
-
-/* Bandeau DHL */
-.header {
-    background: #FFCC00;
-    padding: 20px;
-    text-align: center;
-}
-
-.header h1 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 700;
-    color: #D40511;
-}
-
-/* Conteneur */
-.wrapper {
-    display: flex;
-    justify-content: center;
-    padding: 30px 15px;
-}
-
 .container {
     width: 100%;
-    max-width: 400px;
-    background: #fff;
-    padding: 30px 24px;
-    border-radius: 10px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    max-width: 450px;
+    background: rgba(255,255,255,0.95);
+    padding: 35px 30px;
+    border-radius: 20px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+    animation: fadeIn 1s ease;
 }
-
-/* Texte */
-.subtitle {
-    text-align: center;
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 25px;
-}
-
-/* Labels */
-.label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    margin-top: 15px;
-}
-
-/* Champs */
-.input-field,
-select {
-    width: 100%;
-    margin-top: 6px;
-    padding: 14px;
-    font-size: 15px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    background: #fff;
-}
-
-.input-field:focus,
-select:focus {
-    outline: none;
-    border-color: #D40511;
-}
-
-/* Bouton */
-.btn-register {
-    width: 100%;
-    margin-top: 25px;
-    padding: 15px;
-    font-size: 16px;
-    font-weight: 700;
-    background: #D40511;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.btn-register:hover {
-    background: #b4040e;
-}
-
-/* Lien */
-.login-text {
-    margin-top: 18px;
-    text-align: center;
+h2 { text-align:center; margin-bottom: 20px; color: #0c2e4a; }
+label { display:block; margin-bottom:5px; font-weight:500; color:#555; }
+input, select {
+    width:100%;
+    padding:12px 15px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    outline:none;
+    transition: all 0.3s ease;
     font-size: 14px;
 }
-
-.login-text a {
-    color: #D40511;
-    font-weight: 600;
-    text-decoration: none;
+input:focus, select:focus { border-color:#3498db; box-shadow: 0 0 8px rgba(52,152,219,0.3); }
+.otp-container { display:flex; }
+.otp-container input { flex:2; margin-right:10px; }
+.otp-container button {
+    flex:1;
+    background:#3498db;
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    transition: background 0.3s ease;
 }
-
-/* Sécurité */
-.security {
-    margin-top: 15px;
-    text-align: center;
-    font-size: 12px;
-    color: #777;
+.otp-container button:hover { background:#2980b9; }
+button.submit-btn {
+    width:100%; padding:12px; background:#3498db; color:#fff; border:none;
+    border-radius:10px; font-size:16px; cursor:pointer; transition: background 0.3s ease;
 }
+button.submit-btn:hover { background:#2980b9; }
+p.login-link { text-align:center; margin-top:15px; font-size:14px; }
+p.login-link a { color:#3498db; font-weight:600; text-decoration:none; }
+p.login-link a:hover { color:#2980b9; }
+@keyframes fadeIn { from {opacity:0; transform: translateY(-20px);} to {opacity:1; transform: translateY(0);} }
+.flash-message { background:#f8d7da; color:#721c24; padding:10px 15px; border-radius:10px; margin-bottom:15px; text-align:center; }
+.flash-success { background:#d4edda; color:#155724; }
 </style>
 </head>
-
 <body>
-
-<div class="header">
-    <h1>DHL INVESTO</h1>
-</div>
-
-<div class="wrapper">
 <div class="container">
+    <h2>Inscription</h2>
 
-    <div class="subtitle">
-        Inscription à la plateforme d’investissement logistique
-    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="flash-message {% if category == 'success' %}flash-success{% endif %}">
+            {% if msg.title %}<strong>{{ msg.title }}</strong><br>{% endif %}
+            {{ msg.message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
-    <form action="/inscription" method="POST" onsubmit="return verifierFormulaire()">
-
-        <label class="label">Pays</label>
-        <select name="country" required>
-            <option value="">Choisissez votre pays</option>
-            <option value="Togo">🇹🇬 Togo</option>
-            <option value="Bénin">🇧🇯 Bénin</option>
-            <option value="Côte d'Ivoire">🇨🇮 Côte d’Ivoire</option>
-            <option value="Cameroun">🇨🇲 Cameroun</option>
-            <option value="Mali">🇲🇱 Mali</option>
-            <option value="Gabon">🇬🇦 Gabon</option>
-            <option value="Sénégal">🇸🇳 Sénégal</option>
-            <option value="Niger">🇳🇪 Niger</option>
-            <option value="Burkina Faso">🇧🇫 Burkina Faso</option>
-            <option value="Congo Kinshasa">🇨🇩 Congo Kinshasa</option>
-            <option value="Congo Brazzaville">🇨🇬 Congo Brazzaville</option>
+    <form method="POST">
+        <label>Pays</label>
+        <select name="pays" required>
+            <option value="">Sélectionnez votre pays</option>
+            <option value="Burkina Faso">Burkina Faso</option>
+            <option value="Bénin">Bénin</option>
+            <option value="Togo">Togo</option>
+            <option value="Cameroun">Cameroun</option>
+            <option value="Côte d'Ivoire">Côte d'Ivoire</option>
         </select>
 
-        <label class="label">Numéro de téléphone</label>
-        <input type="tel" name="phone" class="input-field" placeholder="Ex : +228 90 00 00 00" required>
+        <label>Numéro de téléphone</label>
+        <input type="text" name="phone" placeholder="Entrez votre numéro" required>
 
-        <label class="label">Mot de passe</label>
-        <input type="password" name="password" id="password" class="input-field" required>
+        <label>Mot de passe</label>
+        <input type="password" name="password" placeholder="Mot de passe" required>
 
-        <label class="label">Confirmer le mot de passe</label>
-        <input type="password" name="confirm_password" id="confirm_password" class="input-field" required>
+        <label>Confirmer le mot de passe</label>
+        <input type="password" name="confirm_password" placeholder="Confirmez le mot de passe" required>
 
-        <label class="label">Code d’invitation (optionnel)</label>
-        <input
-            type="text"
-            name="code_invitation"
-            class="input-field"
-            value="{{ code_ref }}"
-            {% if code_ref %} readonly style="background:#eee;" {% endif %}>
+        <label>Code de parrainage (facultatif)</label>
+        <input type="text" name="code_invitation" placeholder="Entrez le code si vous avez un parrain" value="{{ code_ref }}">
 
-        <button class="btn-register">Créer mon compte</button>
+        <label>Code de vérification (OTP)</label>
+        <div class="otp-container">
+            <input type="text" id="otp" name="otp" placeholder="Code de vérification" required>
+            <button type="button" onclick="sendOTP()">Envoyer</button>
+        </div>
+
+        <button type="submit" class="submit-btn">S’inscrire</button>
     </form>
 
-    <p class="login-text">
-        Déjà inscrit ?
-        <a href="{{ url_for('connexion_page') }}">Se connecter</a>
+    <p class="login-link">
+        Déjà inscrit ? <a href="{{ url_for('connexion_page') }}">Se connecter</a>
     </p>
 
-    <div class="security">
-        🔒 Informations protégées
-    </div>
-
-</div>
 </div>
 
 <script>
-function verifierFormulaire() {
-    const p1 = document.getElementById("password").value.trim();
-    const p2 = document.getElementById("confirm_password").value.trim();
-
-    if (p1 !== p2) {
-        alert("❌ Les mots de passe ne correspondent pas !");
-        return false;
-    }
-
-    if (p1.length < 6) {
-        alert("⚠️ Le mot de passe doit contenir au moins 6 caractères.");
-        return false;
-    }
-
-    return true;
+function sendOTP() {
+    fetch('/generate-otp')
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('otp').value = data.otp; // pour test seulement
+        alert("Votre code OTP : " + data.otp);
+    })
+    .catch(err => console.error(err));
 }
 </script>
-
 </body>
 </html>

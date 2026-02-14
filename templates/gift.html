@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bonus Journalier - Coris Max</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f7ff;
+}
+
+/* HEADER */
+.header{
+    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
+    padding:30px 20px 60px;
+    color:white;
+    border-radius:0 0 40px 40px;
+    text-align:center;
+}
+
+.header h2{
+    font-size:20px;
+    font-weight:600;
+}
+
+/* CONTAINER */
+.container{
+    padding:20px;
+    margin-top:-40px;
+}
+
+/* CARD */
+.card{
+    background:white;
+    border-radius:25px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,0.05);
+}
+
+.card i{
+    font-size:40px;
+    margin-bottom:15px;
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.card h3{
+    font-size:18px;
+    margin-bottom:10px;
+}
+
+.card p{
+    font-size:14px;
+    color:#666;
+    margin-bottom:20px;
+}
+
+/* BUTTON */
+.btn{
+    padding:12px 25px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    color:white;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.btn:disabled{
+    background:#ccc;
+    cursor:not-allowed;
+}
+
+/* MESSAGE */
+.message{
+    margin-top:15px;
+    font-size:13px;
+    color:#3a5cb8;
+}
+
+/* NAV */
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:white;
+    display:flex;
+    justify-content:space-around;
+    padding:10px 0;
+    box-shadow:0 -5px 20px rgba(0,0,0,0.05);
+}
+
+.bottom-nav a{
+    text-decoration:none;
+    color:#777;
+    font-size:12px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.bottom-nav a.active{
+    color:#3a5cb8;
+    font-weight:600;
+}
+
+.bottom-nav i{
+    margin-bottom:4px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h2>🎁 Bonus Journalier</h2>
+</div>
+
+<div class="container">
+    <div class="card">
+        <i class="fa-solid fa-gift"></i>
+        <h3>Recevez 50 XOF chaque jour</h3>
+        <p>Appuyez sur le bouton ci-dessous pour récupérer votre bonus quotidien.</p>
+
+        <form method="POST">
+            <button class="btn"
+                {% if deja_recupere %}
+                    disabled
+                {% endif %}
+            >
+                {% if deja_recupere %}
+                    Déjà récupéré aujourd'hui
+                {% else %}
+                    Récupérer 50 XOF
+                {% endif %}
+            </button>
+        </form>
+
+        {% if message %}
+            <div class="message">{{ message }}</div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <a href="/dashboard"><i class="fa-solid fa-house"></i>Accueil</a>
+    <a href="/produits_rapide"><i class="fa-solid fa-chart-line"></i>Investir</a>
+    <a href="/team"><i class="fa-solid fa-users"></i>Team</a>
+    <a href="/profile"><i class="fa-solid fa-user"></i>Compte</a>
+</div>
+
+</body>
+</html>

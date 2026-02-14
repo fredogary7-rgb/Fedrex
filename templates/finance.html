@@ -3,174 +3,185 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mes Produits</title>
+<title>Mes Investissements</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: #f5f5f5;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
 }
 
-/* 🔝 HEADER */
-.header {
-    background: #000;
-    color: #fff;
-    padding: 18px 16px 30px;
-    border-radius: 0 0 20px 20px;
+body{
+    background:#f4f7ff;
 }
 
-.header-top {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+/* ===== HEADER ===== */
+.header{
+    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
+    padding:25px 20px 40px;
+    color:white;
+    border-radius:0 0 30px 30px;
 }
 
-.back {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #fff;
-    color: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    font-weight: bold;
+.header-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
-.header h2 {
-    margin: 0;
-    font-size: 20px;
+.back{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    color:white;
+    font-size:18px;
 }
 
-/* 📊 STATS */
-.stats {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 22px;
-    text-align: center;
+.header h2{
+    font-size:20px;
+    font-weight:600;
 }
 
-.stat {
-    flex: 1;
+/* ===== STATS BOX ===== */
+.stats-box{
+    margin-top:25px;
+    background:rgba(255,255,255,0.15);
+    padding:20px;
+    border-radius:20px;
+    backdrop-filter:blur(6px);
+    display:flex;
+    justify-content:space-between;
 }
 
-.stat small {
-    color: #aaa;
-    font-size: 13px;
+.stat{
+    text-align:center;
+    flex:1;
 }
 
-.stat strong {
-    display: block;
-    margin-top: 6px;
-    font-size: 22px;
+.stat small{
+    font-size:12px;
+    opacity:0.8;
 }
 
-.divider {
-    width: 1px;
-    background: #333;
-    margin: 0 12px;
+.stat strong{
+    display:block;
+    margin-top:6px;
+    font-size:22px;
+    font-weight:600;
 }
 
-/* 🧾 CONTENT */
-.container {
-    padding: 16px;
+/* ===== CONTENT ===== */
+.container{
+    padding:20px;
+    margin-top:-20px;
 }
 
-/* 📦 CARD PRODUIT */
-.card {
-    background: #fff;
-    border-radius: 16px;
-    padding: 14px;
-    display: flex;
-    gap: 14px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+/* ===== CARD ===== */
+.card{
+    background:white;
+    border-radius:22px;
+    padding:18px;
+    margin-bottom:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.05);
 }
 
-.card img {
-    width: 100px;
-    height: 100px;
-    border-radius: 12px;
-    object-fit: cover;
+.card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
-.card-content {
-    flex: 1;
+.card h3{
+    font-size:18px;
 }
 
-.card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.status{
+    background:#e6f9f0;
+    color:#16a34a;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
 }
 
-.card h3 {
-    margin: 0;
-    font-size: 18px;
+.price{
+    margin-top:8px;
+    color:#666;
+    font-size:14px;
 }
 
-.status {
-    color: #16a34a;
-    font-weight: bold;
-    font-size: 14px;
+/* ===== DETAILS GRID ===== */
+.details{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin-top:15px;
 }
 
-.card p {
-    margin: 4px 0 10px;
-    color: #666;
-    font-size: 14px;
+.detail-box{
+    background:#f4f7ff;
+    padding:10px;
+    border-radius:12px;
+    text-align:center;
 }
 
-/* 📊 DETAILS */
-.details {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    margin-bottom: 12px;
+.detail-box span{
+    font-size:11px;
+    color:#777;
 }
 
-.details span {
-    color: #666;
+.detail-box strong{
+    display:block;
+    margin-top:4px;
+    font-size:14px;
 }
 
-.details strong {
-    display: block;
-    margin-top: 4px;
-    font-size: 16px;
-    color: #000;
+/* ===== BUTTON ===== */
+.btn{
+    margin-top:18px;
+    display:block;
+    text-align:center;
+    padding:12px;
+    border-radius:30px;
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+    font-size:14px;
 }
 
-/* 🔘 BUTTON */
-.btn {
-    background: #000;
-    color: #fff;
-    padding: 12px;
-    border-radius: 30px;
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
-    display: block;
+/* EMPTY */
+.empty{
+    text-align:center;
+    margin-top:40px;
+    color:#777;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🔝 HEADER -->
+<!-- ===== HEADER ===== -->
 <div class="header">
     <div class="header-top">
         <a href="javascript:history.back()" class="back">←</a>
-        <h2>Mes Produits</h2>
+        <h2>Mes Investissements</h2>
     </div>
 
-    <div class="stats">
+    <div class="stats-box">
         <div class="stat">
-            <small>Sortie quotidienne</small>
+            <small>Revenu quotidien</small>
             <strong>{{ "{:,.0f}".format(revenus_totaux).replace(",", " ") }} XOF</strong>
         </div>
-
-        <div class="divider"></div>
 
         <div class="stat">
             <small>Produits actifs</small>
@@ -179,51 +190,54 @@ body {
     </div>
 </div>
 
-<!-- 📦 CONTENT -->
+<!-- ===== CONTENT ===== -->
 <div class="container">
 
 {% if actifs %}
     {% for a in actifs %}
-    <div class="card" style="margin-bottom:16px;">
-        <img src="{{ url_for('static', filename='images/d.jpg') }}" alt="Produit">
+    <div class="card">
 
-        <div class="card-content">
-            <div class="card-top">
-                <h3>VIP</h3>
-                <span class="status">Actif</span>
-            </div>
-
-            <p>Prix : {{ "{:,.0f}".format(a.montant).replace(",", " ") }} XOF</p>
-
-            <div class="details">
-                <div>
-                    <span>Cycle</span>
-                    <strong>{{ a.duree }}</strong>
-                </div>
-
-                <div>
-                    <span>Gain/jour</span>
-                    <strong>{{ "{:,.0f}".format(a.revenu_journalier).replace(",", " ") }}</strong>
-                </div>
-
-                <div>
-                    <span>Revenu total</span>
-                    <strong>
-                        {{ "{:,.0f}".format(a.revenu_journalier * a.duree).replace(",", " ") }}
-                    </strong>
-                </div>
-            </div>
-
-            <a href="{{ url_for('produits_rapide_page') }}" class="btn">
-                Investir plus
-            </a>
+        <div class="card-top">
+            <h3>Pack Investissement</h3>
+            <span class="status">Actif</span>
         </div>
+
+        <div class="price">
+            Investi : {{ "{:,.0f}".format(a.montant).replace(",", " ") }} XOF
+        </div>
+
+        <div class="details">
+            <div class="detail-box">
+                <span>Durée</span>
+                <strong>{{ a.duree }} j</strong>
+            </div>
+
+            <div class="detail-box">
+                <span>Gain / jour</span>
+                <strong>{{ "{:,.0f}".format(a.revenu_journalier).replace(",", " ") }}</strong>
+            </div>
+
+            <div class="detail-box">
+                <span>Gain total</span>
+                <strong>
+                    {{ "{:,.0f}".format(a.revenu_journalier * a.duree).replace(",", " ") }}
+                </strong>
+            </div>
+        </div>
+
+        <a href="{{ url_for('produits_rapide_page') }}" class="btn">
+            Investir davantage
+        </a>
+
     </div>
     {% endfor %}
 {% else %}
-    <p style="text-align:center;color:#777;">
-        Aucun produit actif pour le moment.
-    </p>
+
+    <div class="empty">
+        <h4>Aucun investissement actif</h4>
+        <p>Commencez à investir pour générer des revenus quotidiens.</p>
+    </div>
+
 {% endif %}
 
 </div>

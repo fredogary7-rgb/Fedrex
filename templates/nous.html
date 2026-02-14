@@ -3,160 +3,198 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>À propos de nous</title>
+<title>À propos - Coris Max</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: #f4f4f4;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
 }
 
-/* IMAGE HEADER */
-.hero img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
+body{
+    background:#f4f7ff;
 }
 
-/* CARD */
-.card {
-    background: #fff;
-    margin: 14px;
-    border-radius: 16px;
-    padding: 16px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+/* ===== HEADER ===== */
+.header{
+    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
+    padding:30px 20px 50px;
+    color:white;
+    border-radius:0 0 40px 40px;
+    text-align:center;
 }
 
-.card h2 {
-    margin-top: 0;
-    font-size: 20px;
+.header h1{
+    font-size:24px;
+    font-weight:700;
 }
 
-.card p {
-    font-size: 14px;
-    color: #555;
-    line-height: 1.6;
+.header p{
+    margin-top:10px;
+    font-size:14px;
+    opacity:0.9;
 }
 
-/* GRID IMAGES */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin-top: 10px;
+/* ===== CONTENT ===== */
+.container{
+    padding:20px;
+    margin-top:-30px;
 }
 
-.grid img {
-    width: 100%;
-    height: 110px;
-    object-fit: cover;
-    border-radius: 10px;
+/* ===== CARD ===== */
+.card{
+    background:white;
+    border-radius:25px;
+    padding:20px;
+    margin-bottom:25px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.05);
 }
 
-/* LIST */
-.list-item {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-    font-size: 14px;
+.card img{
+    width:100%;
+    border-radius:18px;
+    margin-bottom:15px;
 }
 
-.icon {
-    font-size: 18px;
+.card h2{
+    font-size:18px;
+    margin-bottom:10px;
+    color:#3a5cb8;
 }
 
-/* TAGS */
-.tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+.card p{
+    font-size:14px;
+    color:#555;
+    line-height:22px;
 }
 
-.tag {
-    background: #f1f1f1;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px;
+/* ===== FEATURE GRID ===== */
+.features{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:15px;
+}
+
+.feature-box{
+    background:#f4f7ff;
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+}
+
+.feature-box h4{
+    font-size:14px;
+    margin-bottom:5px;
+    color:#2ea78d;
+}
+
+.feature-box p{
+    font-size:12px;
+    color:#666;
+}
+
+/* ===== FOOTER ===== */
+.footer{
+    text-align:center;
+    padding:20px;
+    font-size:12px;
+    color:#888;
 }
 </style>
 </head>
 
 <body>
 
-<!-- IMAGE HEADER -->
-<div class="hero">
-    <img src="{{ url_for('static', filename='images/fed4.jpg') }}" alt="FedEx">
+<!-- HEADER -->
+<div class="header">
+    <h1>À propos de Coris Max</h1>
+    <p>Une solution bancaire moderne, sécurisée et innovante</p>
 </div>
 
-<!-- INTRO -->
-<div class="card">
-    <h2>FedEx Corporation</h2>
-    <p>
-        Fondée en <strong>1971</strong> par <strong>Frederick W. Smith</strong>,
-        FedEx (Federal Express) est un leader mondial du transport et de la
-        logistique. L’entreprise a révolutionné la livraison express en
-        reliant les entreprises et les particuliers à travers le monde
-        grâce à des solutions rapides, fiables et sécurisées.
-    </p>
+<div class="container">
+
+    <!-- PRESENTATION -->
+    <div class="card">
+        <img src="{{ url_for('static', filename='images/co2.jpg') }}" alt="Banque digitale">
+
+        <h2>Qui sommes-nous ?</h2>
+        <p>
+            Coris Max est une plateforme financière moderne inspirée des standards
+            bancaires internationaux comme Coris Bank. Notre mission est d’offrir
+            des services financiers simples, rapides et sécurisés à tous.
+            Nous combinons technologie digitale et expertise bancaire pour vous
+            permettre de gérer votre argent en toute confiance.
+        </p>
+    </div>
+
+    <!-- EPARGNE -->
+    <div class="card">
+        <img src="{{ url_for('static', filename='images/co3.jpg') }}" alt="Epargne">
+
+        <h2>Épargne intelligente</h2>
+        <p>
+            Avec Coris Max, vous pouvez épargner de manière automatique et
+            générer des revenus quotidiens sur vos investissements.
+            Notre système vous permet de planifier votre avenir financier
+            tout en gardant un contrôle total sur vos fonds.
+        </p>
+
+        <div class="features">
+            <div class="feature-box">
+                <h4>Épargne flexible</h4>
+                <p>Dépôts et retraits rapides</p>
+            </div>
+
+            <div class="feature-box">
+                <h4>Rendement sécurisé</h4>
+                <p>Gains journaliers fiables</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARTE BANCAIRE -->
+    <div class="card">
+        <img src="{{ url_for('static', filename='images/co1.jpg') }}" alt="Carte bancaire">
+
+        <h2>Carte bancaire internationale</h2>
+        <p>
+            Profitez d’une carte bancaire Coris Max acceptée partout.
+            Payez en ligne, retirez de l’argent aux distributeurs
+            et effectuez vos transactions en toute sécurité.
+        </p>
+
+        <div class="features">
+            <div class="feature-box">
+                <h4>Paiement sécurisé</h4>
+                <p>Protection contre la fraude</p>
+            </div>
+
+            <div class="feature-box">
+                <h4>Transactions rapides</h4>
+                <p>Acceptée à l’international</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECURITE -->
+    <div class="card">
+        <h2>Sécurité & Fiabilité</h2>
+        <p>
+            La sécurité est notre priorité. Coris Max utilise des technologies
+            avancées de cryptage et de protection des données afin de garantir
+            la confidentialité et la sécurité de vos transactions.
+        </p>
+    </div>
+
 </div>
 
-<!-- IMAGES GRID -->
-<div class="card">
-    <div class="grid">
-        <img src="{{ url_for('static', filename='images/fed3.jpg') }}">
-        <img src="{{ url_for('static', filename='images/fed4.jpg') }}">
-        <img src="{{ url_for('static', filename='images/fed2.jpg') }}">
-        <img src="{{ url_for('static', filename='images/fed1.jpg') }}">
-    </div>
-</div>
-
-<!-- ATTRIBUTIONS -->
-<div class="card">
-    <h2>Nos Attributions</h2>
-
-    <div class="list-item">
-        <div class="icon">📦</div>
-        <div>Livraison express nationale et internationale</div>
-    </div>
-
-    <div class="list-item">
-        <div class="icon">✈️</div>
-        <div>Transport aérien de fret mondial</div>
-    </div>
-
-    <div class="list-item">
-        <div class="icon">🚚</div>
-        <div>Solutions logistiques et e-commerce</div>
-    </div>
-
-    <div class="list-item">
-        <div class="icon">🌍</div>
-        <div>Présence dans plus de 220 pays et territoires</div>
-    </div>
-</div>
-
-<!-- SERVICES -->
-<div class="card">
-    <h2>Nos Services</h2>
-    <div class="tags">
-        <div class="tag">FedEx Express</div>
-        <div class="tag">FedEx Ground</div>
-        <div class="tag">FedEx Freight</div>
-        <div class="tag">FedEx Logistics</div>
-        <div class="tag">E-commerce</div>
-    </div>
-</div>
-
-<!-- MISSION -->
-<div class="card">
-    <h2>Notre Mission</h2>
-    <p>
-        FedEx s’engage à connecter le monde de manière responsable,
-        innovante et durable. Sa mission est de fournir des solutions
-        logistiques de classe mondiale tout en réduisant son impact
-        environnemental et en créant de la valeur pour ses clients.
-    </p>
+<div class="footer">
+    © 2026 Coris Max - Tous droits réservés
 </div>
 
 </body>

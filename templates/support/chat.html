@@ -3,91 +3,124 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Support DHL</title>
+<title>Support Coris Max</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-body{
+*{
     margin:0;
-    font-family:Poppins,sans-serif;
-    background:#f2f2f2;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
 }
 
-/* CONTENEUR */
+body{
+    background:#f4f7ff;
+}
+
+/* ===== CONTAINER ===== */
 .chat-container{
     max-width:480px;
     margin:auto;
-    background:#fff;
     min-height:100vh;
     display:flex;
     flex-direction:column;
 }
 
-/* HEADER */
+/* ===== HEADER ===== */
 .chat-header{
-    background:#000;
-    color:#fff;
-    padding:14px;
+    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
+    padding:25px 20px 35px;
+    color:white;
+    border-radius:0 0 30px 30px;
     text-align:center;
-    font-weight:700;
-    font-size:16px;
 }
 
-/* MESSAGES */
+.chat-header h2{
+    font-size:20px;
+    font-weight:600;
+}
+
+.chat-header span{
+    font-size:13px;
+    opacity:0.9;
+}
+
+/* ===== MESSAGES ===== */
 .chat-messages{
     flex:1;
-    padding:15px;
+    padding:20px;
+    margin-top:-20px;
     overflow-y:auto;
-    background:#f7f7f7;
 }
 
+/* MESSAGE CARD */
 .message{
     max-width:75%;
-    padding:10px 14px;
-    margin-bottom:10px;
-    border-radius:16px;
+    padding:12px 16px;
+    margin-bottom:12px;
+    border-radius:18px;
     font-size:14px;
-    line-height:18px;
+    line-height:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
 }
 
+/* USER MESSAGE */
 .message.user{
-    background:#000;
-    color:#fff;
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    color:white;
     margin-left:auto;
-    border-bottom-right-radius:4px;
+    border-bottom-right-radius:6px;
 }
 
+/* ADMIN MESSAGE */
 .message.admin{
-    background:#eaeaea;
-    color:#000;
+    background:white;
+    color:#333;
     margin-right:auto;
-    border-bottom-left-radius:4px;
+    border-bottom-left-radius:6px;
 }
 
-/* FORMULAIRE */
+/* EMPTY */
+.empty{
+    text-align:center;
+    margin-top:40px;
+    color:#777;
+    font-size:13px;
+}
+
+/* ===== FORM ===== */
 .chat-form{
     display:flex;
-    border-top:1px solid #ddd;
+    gap:10px;
+    padding:15px 20px 20px;
+    background:#f4f7ff;
 }
 
 .chat-form input{
     flex:1;
     border:none;
     padding:14px;
+    border-radius:30px;
     font-size:14px;
     outline:none;
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
 }
 
 .chat-form button{
-    background:#FF6600;
-    color:#fff;
     border:none;
-    padding:0 20px;
-    font-weight:700;
+    padding:0 22px;
+    border-radius:30px;
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    color:white;
+    font-weight:600;
     cursor:pointer;
+    transition:0.3s;
 }
 
 .chat-form button:hover{
-    opacity:0.9;
+    transform:scale(1.05);
 }
 </style>
 </head>
@@ -96,22 +129,26 @@ body{
 
 <div class="chat-container">
 
+    <!-- HEADER -->
     <div class="chat-header">
-        Service client DHL<span style="color:#FF6600">INVESTO</span>
+        <h2>Support Coris Max</h2>
+        <span>Service client officiel</span>
     </div>
 
+    <!-- MESSAGES -->
     <div class="chat-messages">
         {% for m in messages %}
             <div class="message {{ m.sender }}">
                 {{ m.message }}
             </div>
         {% else %}
-            <p style="text-align:center;color:#777;font-size:13px;">
+            <div class="empty">
                 Aucun message pour le moment
-            </p>
+            </div>
         {% endfor %}
     </div>
 
+    <!-- FORM -->
     <form method="POST" class="chat-form">
         <input type="text" name="message" placeholder="Écrivez votre message..." required>
         <button>Envoyer</button>

@@ -3,193 +3,121 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Connexion – DHL Investo</title>
-
+<title>Connexion - Crois Max</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
 body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: #F2F2F2;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+    color:#333;
 }
-
-/* Bandeau DHL */
-.header {
-    background: #FFCC00;
-    padding: 20px;
-    text-align: center;
-}
-
-.header h1 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 700;
-    color: #D40511;
-}
-
-/* Conteneur */
-.wrapper {
-    display: flex;
-    justify-content: center;
-    padding: 30px 15px;
-}
-
 .container {
     width: 100%;
     max-width: 400px;
-    background: #fff;
-    padding: 30px 24px;
-    border-radius: 10px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    background: rgba(255,255,255,0.95);
+    padding: 30px 25px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    animation: fadeIn 1s ease;
 }
-
-/* Texte */
-.subtitle {
-    text-align: center;
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 25px;
-}
-
-/* Labels */
-.label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    color: #333;
-    margin-top: 15px;
-}
-
-/* Champs */
-.input-field,
-select {
-    width: 100%;
-    margin-top: 6px;
-    padding: 14px;
-    font-size: 15px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    background: #fff;
-}
-
-.input-field:focus,
-select:focus {
-    outline: none;
-    border-color: #D40511;
-}
-
-/* Mémoriser */
-.remember-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 14px;
-    font-size: 13px;
-    color: #444;
-}
-
-.remember-row input {
-    width: 16px;
-    height: 16px;
-}
-
-/* Bouton */
-.btn-login {
-    width: 100%;
-    margin-top: 25px;
-    padding: 15px;
-    font-size: 16px;
-    font-weight: 700;
-    background: #D40511;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.btn-login:hover {
-    background: #b4040e;
-}
-
-/* Bas */
-.bottom-text {
-    margin-top: 18px;
-    text-align: center;
+h2 { text-align:center; margin-bottom: 20px; color: #0c3d2e; }
+label { display:block; margin-bottom:5px; font-weight:500; color:#555; }
+input, select {
+    width:100%;
+    padding:12px 15px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    outline:none;
+    transition: all 0.3s ease;
     font-size: 14px;
 }
-
-.bottom-text a {
-    color: #D40511;
-    font-weight: 600;
-    text-decoration: none;
+input:focus, select:focus { border-color:#1abc9c; box-shadow: 0 0 8px rgba(26,188,156,0.3); }
+.otp-container { display:flex; }
+.otp-container input { flex:2; margin-right:10px; }
+.otp-container button {
+    flex:1;
+    background:#1abc9c;
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    transition: background 0.3s ease;
 }
-
-/* Sécurité */
-.security {
-    margin-top: 15px;
-    text-align: center;
-    font-size: 12px;
-    color: #777;
+.otp-container button:hover { background:#16a085; }
+button.submit-btn {
+    width:100%; padding:12px; background:#1abc9c; color:#fff; border:none;
+    border-radius:10px; font-size:16px; cursor:pointer; transition: background 0.3s ease;
 }
+button.submit-btn:hover { background:#16a085; }
+p.register-link { text-align:center; margin-top:15px; font-size:14px; }
+p.register-link a { color:#1abc9c; font-weight:600; text-decoration:none; }
+p.register-link a:hover { color:#16a085; }
+@keyframes fadeIn { from {opacity:0; transform: translateY(-20px);} to {opacity:1; transform: translateY(0);} }
+.flash-message { background:#f8d7da; color:#721c24; padding:10px 15px; border-radius:10px; margin-bottom:15px; text-align:center; }
+.flash-success { background:#d4edda; color:#155724; }
 </style>
 </head>
-
 <body>
-
-<div class="header">
-    <h1>DHL INVESTO</h1>
-</div>
-
-<div class="wrapper">
 <div class="container">
+    <h2>Connexion</h2>
 
-    <div class="subtitle">
-        Connexion sécurisée à votre compte
-    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="flash-message {% if category == 'success' %}flash-success{% endif %}">
+            {% if msg.title %}<strong>{{ msg.title }}</strong><br>{% endif %}
+            {{ msg.message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
-    <form action="/connexion" method="POST">
-
-        <label class="label">Pays</label>
-        <select name="country_code" required>
-            <option value="+228">🇹🇬 +228 Togo</option>
-            <option value="+229">🇧🇯 +229 Bénin</option>
-            <option value="+225">🇨🇮 +225 Côte d’Ivoire</option>
-            <option value="+237">🇨🇲 +237 Cameroun</option>
-            <option value="+223">🇲🇱 +223 Mali</option>
-            <option value="+241">🇬🇦 +241 Gabon</option>
-            <option value="+221">🇸🇳 +221 Sénégal</option>
-            <option value="+227">🇳🇪 +227 Niger</option>
-            <option value="+226">🇧🇫 +226 Burkina Faso</option>
-            <option value="+243">🇨🇩 +243 Congo Kinshasa</option>
-            <option value="+242">🇨🇬 +242 Congo Brazzaville</option>
+    <form method="POST">
+        <label>Pays</label>
+        <select name="pays" required>
+            <option value="">Veuillez sélectionner votre pays</option>
+            <option value="Burkina Faso">Burkina Faso</option>
+            <option value="Bénin">Bénin</option>
+            <option value="Togo">Togo</option>
+            <option value="Cameroun">Cameroun</option>
+            <option value="Côte d'Ivoire">Côte d'Ivoire</option>
         </select>
 
-        <label class="label">Numéro de téléphone</label>
-        <input type="tel" name="phone" class="input-field" placeholder="Votre numéro" required>
+        <label>Numéro de téléphone</label>
+        <input type="text" name="phone" placeholder="Entrez votre numéro" required>
 
-        <label class="label">Mot de passe</label>
-        <input type="password" name="password" class="input-field" placeholder="Mot de passe" required>
+        <label>Mot de passe</label>
+        <input type="password" name="password" placeholder="Mot de passe" required>
 
-        <div class="remember-row">
-            <input type="checkbox" id="remember" name="remember">
-            <label for="remember">Mémoriser la connexion</label>
+        <label>Code de vérification (OTP)</label>
+        <div class="otp-container">
+            <input type="text" id="otp" name="otp" placeholder="Code de vérification">
+            <button type="button" onclick="sendOTP()">Envoyer</button>
         </div>
 
-        <button class="btn-login">Se connecter</button>
+        <button type="submit" class="submit-btn">Se connecter</button>
     </form>
 
-    <p class="bottom-text">
-        Pas encore de compte ?
-        <a href="{{ url_for('inscription_page') }}">Créer un compte</a>
+    <p class="register-link">
+        Pas encore inscrit ? <a href="{{ url_for('inscription_page') }}">Créer un compte</a>
     </p>
-
-    <div class="security">
-        🔒 Connexion sécurisée
-    </div>
-
-</div>
 </div>
 
+<script>
+function sendOTP() {
+    fetch('/generate-otp')
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('otp').value = data.otp; // pour test seulement
+        alert("Votre code OTP : " + data.otp);
+    })
+    .catch(err => console.error(err));
+}
+</script>
 </body>
 </html>

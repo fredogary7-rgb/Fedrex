@@ -1,3 +1,5 @@
+import random
+import string
 from flask import jsonify
 import os
 from dotenv import load_dotenv
@@ -8,7 +10,7 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from urllib.parse import urlencode
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
@@ -21,15 +23,12 @@ MONEYFUSION_API_URL = os.getenv("MONEYFUSION_API_URL")
 UPLOAD_FOLDER = "static/vlogs"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-DEFAULT_DB = (
-    "postgresql+psycopg2://neondb_owner:npg_URKL0fbG6ITH@"
-    "ep-calm-butterfly-abfj6bdp-pooler.eu-west-2.aws.neon.tech:5432/"
-    "neondb?sslmode=require"
-)
+DATABASE_URL = "postgresql://neondb_owner:npg_bDg56LINYFhl@ep-long-sound-ahzwwd4s-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 
-app.config["SQLALCHEMY_DATABASE_URI"] = DEFAULT_DB
+# ⚡ Utilisation correcte dans Flask
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_pre_ping": True,      # Vérifie si la connexion est encore vivante
     "pool_recycle": 280,        # Recycle la connexion avant expiration
     "pool_timeout": 20          # Timeout raisonnable
@@ -56,6 +55,17 @@ def add_reference_column():
         """))
         conn.commit()
     print("✅ Colonne 'reference' ajoutée si elle n'existait pas.")
+
+
+def generate_unique_ref_code():
+    while True:
+        chiffres = ''.join(random.choices(string.digits, k=3))
+        lettres = ''.join(random.choices(string.ascii_uppercase, k=2))
+        code = chiffres + lettres
+
+        if not User.query.filter_by(code_parrainage=code).first():
+            return code
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     uid = db.Column(db.String(50), unique=True, nullable=False, default=lambda: str(uuid.uuid4()))
@@ -63,7 +73,10 @@ class User(db.Model):
     phone = db.Column(db.String(30), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
 
-    parrain = db.Column(db.String(30), nullable=True)
+    # 🔥 Nouveau système
+    code_parrainage = db.Column(db.String(5), unique=True, nullable=False, default=generate_unique_ref_code)
+    parrain = db.Column(db.String(5), nullable=True)  # stocke le code du parrain
+
     commission_total = db.Column(db.Float, default=0.0)
 
     wallet_country = db.Column(db.String(50))
@@ -76,32 +89,32 @@ class User(db.Model):
     solde_revenu = db.Column(db.Float, default=0.0)
 
     premier_depot = db.Column(db.Boolean, default=False)
-
-    is_admin = db.Column(db.Boolean, default=False)   # 🔐 ADMIN
-    is_banned = db.Column(db.Boolean, default=False)  # ⛔ BANNI
+    last_gift_date = db.Column(db.Date)
+    is_admin = db.Column(db.Boolean, default=False)
+    is_banned = db.Column(db.Boolean, default=False)
 
     date_creation = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Depot(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
-    # 📱 utilisateur (téléphone du compte)
-    phone = db.Column(db.String(30))
+    # 📱 utilisateur
+    phone = db.Column(db.String(30), nullable=False)
 
-    # 📲 infos paiement
-    phone_paiement = db.Column(db.String(30))      # numéro Mobile Money
-    fullname = db.Column(db.String(100))           # nom du compte
-    operator = db.Column(db.String(50))            # MTN, Orange, Moov...
-    country = db.Column(db.String(50))              # pays
+    # 📲 infos paiement (facultatif si paiement inline)
+    phone_paiement = db.Column(db.String(30), nullable=True)
+    fullname = db.Column(db.String(100), nullable=True)
+    operator = db.Column(db.String(50), nullable=True)
+    country = db.Column(db.String(50), nullable=True)
 
     # 💰 dépôt
-    montant = db.Column(db.Float)
+    montant = db.Column(db.Float, nullable=False)
     reference = db.Column(db.String(200), nullable=True)
 
     # 📌 statut
     statut = db.Column(db.String(20), default="pending")
 
-    # ⏱ date
+    # ⏱ date automatique
     date = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Investissement(db.Model):
@@ -157,10 +170,12 @@ class SupportMessage(db.Model):
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+
+
 def donner_commission(filleul, montant):
     COMMISSIONS = {
-        1: 0.20,  # parrain direct
-        2: 0.03,
+        1: 0.28,  # parrain direct
+        2: 0.02,
         3: 0.01
     }
 
@@ -238,93 +253,106 @@ def init_db():
 
 @app.route("/inscription", methods=["GET", "POST"])
 def inscription_page():
-
-    # 🔥 Récupère le code ref dans l'URL si présent
-    code_ref = request.args.get("ref", "").strip()
+    code_ref = request.args.get("ref", "").strip().upper()
 
     if request.method == "POST":
         phone = request.form.get("phone", "").strip()
         password = request.form.get("password", "").strip()
         confirm = request.form.get("confirm_password", "").strip()
-        code_invitation = request.form.get("code_invitation", "").strip()
+        code_invitation = request.form.get("code_invitation", "").strip().upper()
+        pays = request.form.get("pays", "").strip()
+        otp = request.form.get("otp", "").strip()
 
-        if not phone or not password:
-            flash("⚠️ Tous les champs obligatoires doivent être remplis.", "danger")
+        if not phone or not password or not pays or not otp:
+            flash({"title": "Erreur", "message": "Tous les champs sont obligatoires."}, "danger")
             return redirect(url_for("inscription_page"))
 
         if password != confirm:
-            flash("❌ Les mots de passe ne correspondent pas.", "danger")
+            flash({"title": "Erreur", "message": "Les mots de passe ne correspondent pas."}, "danger")
             return redirect(url_for("inscription_page"))
 
         if User.query.filter_by(phone=phone).first():
-            flash("⚠️ Ce numéro est déjà enregistré.", "danger")
+            flash({"title": "Erreur", "message": "Ce numéro est déjà enregistré."}, "danger")
             return redirect(url_for("inscription_page"))
 
+        # Vérification OTP
+        if "otp_code" not in session or otp != session["otp_code"]:
+            flash({"title": "Erreur", "message": "OTP incorrect."}, "danger")
+            return redirect(url_for("inscription_page"))
+
+        # Vérification du code parrainage
         parrain_user = None
         if code_invitation:
-            parrain_user = User.query.filter_by(phone=code_invitation).first()
+            parrain_user = User.query.filter_by(code_parrainage=code_invitation).first()
             if not parrain_user:
-                flash("⚠️ Code d'invitation invalide.", "warning")
+                flash({"title": "Erreur", "message": "Code d'invitation invalide."}, "warning")
+                return redirect(url_for("inscription_page"))
 
         new_user = User(
             phone=phone,
             password=password,
-            solde_total=700,
-            solde_depot=700,
+            solde_total=1500,
+            solde_depot=1500,
             solde_revenu=0,
             solde_parrainage=0,
-            parrain=parrain_user.phone if parrain_user else None
+            parrain=parrain_user.code_parrainage if parrain_user else None
         )
 
         db.session.add(new_user)
         db.session.commit()
+        session["phone"] = phone
+        session.pop("otp_code", None)  # Supprime l'OTP après validation
 
-        flash("🎉 Inscription réussie ! Connectez-vous maintenant.", "success")
+        flash({"title": "Succès", "message": "Inscription réussie ! Connectez-vous maintenant."}, "success")
         return redirect(url_for("dashboard_page"))
 
-    # 🔥 Passe le code au HTML
+    # Générer OTP **uniquement si pas déjà généré**
+    if "otp_code" not in session:
+        import random
+        session["otp_code"] = str(random.randint(100000, 999999))
+
     return render_template("inscription.html", code_ref=code_ref)
 
 @app.route("/connexion", methods=["GET", "POST"])
 def connexion_page():
     if request.method == "POST":
-
         phone = request.form.get("phone", "").strip()
         password = request.form.get("password", "").strip()
+        otp = request.form.get("otp", "").strip()
+        pays = request.form.get("pays", "").strip()
 
-        if not phone or not password:
-            flash({
-                "title": "Erreur",
-                "message": "Veuillez remplir tous les champs."
-            }, "danger")
+        if not phone or not password or not otp or not pays:
+            flash({"title": "Erreur", "message": "Veuillez remplir tous les champs."}, "danger")
             return redirect(url_for("connexion_page"))
 
         user = User.query.filter_by(phone=phone).first()
-
         if not user:
-            flash({
-                "title": "Erreur",
-                "message": "Numéro introuvable."
-            }, "danger")
+            flash({"title": "Erreur", "message": "Numéro introuvable."}, "danger")
             return redirect(url_for("connexion_page"))
 
         if user.password != password:
-            flash({
-                "title": "Erreur",
-                "message": "Mot de passe incorrect."
-            }, "danger")
+            flash({"title": "Erreur", "message": "Mot de passe incorrect."}, "danger")
             return redirect(url_for("connexion_page"))
 
+        # Vérification OTP
+        if "otp_code" not in session or otp != session["otp_code"]:
+            flash({"title": "Erreur", "message": "OTP incorrect."}, "danger")
+            return redirect(url_for("connexion_page"))
+
+        # Connexion réussie
         session["phone"] = user.phone
+        session.pop("otp_code", None)  # Supprime l'OTP après validation
 
-        flash({
-            "title": "Connexion réussie",
-            "message": "Bienvenue sur Volta Trucks !"
-        }, "success")
-
+        flash({"title": "Connexion réussie", "message": f"Bienvenue sur Coris Max !"}, "success")
         return redirect(url_for("dashboard_page"))
 
     return render_template("connexion.html")
+
+@app.route("/generate-otp")
+def generate_otp():
+    otp_code = str(random.randint(100000, 999999))
+    session["otp_code"] = otp_code
+    return {"otp": otp_code}  # juste pour test, normalement tu envoies par SMS/email
 
 @app.route("/logout")
 def logout_page():
@@ -476,16 +504,101 @@ def check_banned_user():
 def get_logged_in_user_phone():
     return session.get("phone")
 
+@app.route("/parametres", methods=["GET", "POST"])
+@login_required
+def parametres_page():
+    phone = get_logged_in_user_phone()
+    user = User.query.filter_by(phone=phone).first()
+
+    if not user:
+        flash("Utilisateur introuvable.", "danger")
+        return redirect(url_for("connexion_page"))
+
+    if request.method == "POST":
+
+        action = request.form.get("action")
+
+        # 🔐 CHANGEMENT MOT DE PASSE
+        if action == "password":
+
+            current_password = request.form.get("current_password")
+            new_password = request.form.get("new_password")
+            confirm_password = request.form.get("confirm_password")
+
+            # Vérifier mot de passe actuel
+            if user.password != current_password:
+                flash("Mot de passe actuel incorrect.", "danger")
+                return redirect(url_for("parametres_page"))
+
+            # Vérifier confirmation
+            if new_password != confirm_password:
+                flash("Les nouveaux mots de passe ne correspondent pas.", "danger")
+                return redirect(url_for("parametres_page"))
+
+            # Mettre à jour
+            user.password = new_password
+            db.session.commit()
+
+            flash("Mot de passe modifié avec succès.", "success")
+            return redirect(url_for("parametres_page"))
+
+        # 💳 MODIFICATION WALLET
+        if action == "wallet":
+
+            user.wallet_country = request.form.get("wallet_country")
+            user.wallet_operator = request.form.get("wallet_operator")
+            user.wallet_number = request.form.get("wallet_number")
+
+            db.session.commit()
+
+            flash("Informations wallet mises à jour.", "success")
+            return redirect(url_for("parametres_page"))
+
+    return render_template("parametres.html", user=user)
 
 
+@app.route("/gift", methods=["GET", "POST"])
+@login_required
+def gift():
 
+    phone = get_logged_in_user_phone()
+    user = User.query.filter_by(phone=phone).first()
+
+    message = None
+    deja_recupere = False
+    today = date.today()
+
+    # Vérifie si déjà récupéré aujourd'hui
+    if user.last_gift_date == today:
+        deja_recupere = True
+
+    if request.method == "POST":
+
+        if user.last_gift_date != today:
+            user.solde_total += 50
+            user.last_gift_date = today
+            db.session.commit()
+
+            message = "🎉 Bonus ajouté avec succès !"
+            deja_recupere = True
+        else:
+            message = "Vous avez déjà récupéré votre bonus aujourd'hui."
+
+    return render_template("gift.html",
+                           message=message,
+                           deja_recupere=deja_recupere)
 
 # ===============================
 # PAGE DEPOT (GET)
 # ===============================
+
+from datetime import datetime
+import requests
+
 @app.route("/deposit", methods=["GET"])
 @login_required
 def deposit_page():
+
     phone = get_logged_in_user_phone()
     user = User.query.filter_by(phone=phone).first()
 
@@ -495,50 +608,26 @@ def deposit_page():
 
     return render_template("deposit.html", user=user)
 
-
-# ===============================
-# CREATION DEPOT (POST)
-# ===============================
-
-# ===============================
-# CREATION DEPOT (POST) - VERSION REDIRECTION
-# ===============================
-@app.route("/deposit", methods=["POST"])
+@app.route("/create-deposit", methods=["POST"])
 @login_required
 def create_deposit():
+
     phone = get_logged_in_user_phone()
     user = User.query.filter_by(phone=phone).first()
+
     if not user:
         return jsonify({"error": "Utilisateur introuvable"}), 400
 
     try:
-        montant = int(request.form.get("montant", 0))
-    except ValueError:
+        montant = float(request.form.get("montant"))
+    except:
         return jsonify({"error": "Montant invalide"}), 400
-
-    phone_paiement = request.form.get("phone")
-    country = request.form.get("country")
-    operator = request.form.get("operator")
-    fullname = request.form.get("fullname")
 
     if montant < 3000:
         return jsonify({"error": "Montant minimum 3000 FCFA"}), 400
 
-    if not all([phone_paiement, country, operator, fullname]):
-        return jsonify({"error": "Tous les champs sont requis"}), 400
-
-    # 🔗 Lien MoneyFusion
-    payment_link = (
-        f"https://my.moneyfusion.net/696bede72e7cbfd744749db2"
-    )
-
-    # 💾 SAUVEGARDE DU DEPOT
     depot = Depot(
-        phone=phone,                  # téléphone du compte utilisateur
-        phone_paiement=phone_paiement,
-        fullname=fullname,
-        operator=operator,
-        country=country,
+        phone=phone,
         montant=montant,
         statut="pending"
     )
@@ -546,7 +635,39 @@ def create_deposit():
     db.session.add(depot)
     db.session.commit()
 
-    return jsonify({"url": payment_link})
+    return jsonify({
+        "success": True,
+        "amount": montant,
+        "depot_id": depot.id
+    })
+
+@app.route("/confirm-deposit", methods=["POST"])
+@login_required
+def confirm_deposit():
+
+    depot_id = request.json.get("depot_id")
+    transaction_id = request.json.get("transaction_id")
+
+    depot = Depot.query.get(depot_id)
+
+    if not depot or depot.statut != "pending":
+        return jsonify({"error": "Depot invalide"}), 400
+
+    user = User.query.filter_by(phone=depot.phone).first()
+
+    if not user:
+        return jsonify({"error": "Utilisateur introuvable"}), 400
+
+    # créditer solde
+    user.solde_total += depot.montant
+
+    # mettre à jour dépôt
+    depot.statut = "completed"
+    depot.reference = transaction_id
+
+    db.session.commit()
+
+    return jsonify({"success": True})
 
 @app.route("/boutique")
 def boutique_page():
@@ -619,60 +740,6 @@ def admin_support_chat(phone):
 # ===============================
 # WEBHOOK MONEYFUSION
 # ===============================
-@app.route("/webhook/moneyfusion", methods=["POST"])
-def moneyfusion_webhook():
-    data = request.get_json(silent=True)
-    if not data:
-        return "no data", 400
-
-    if data.get("event") != "payin.session.completed":
-        return "ignored", 200
-
-    token = data.get("tokenPay")
-    if not token:
-        return "no token", 400
-
-    depot = Depot.query.filter_by(token=token).first()
-    if not depot:
-        return "depot not found", 200
-    if depot.statut == "paid":
-        return "already processed", 200
-
-    user = User.query.filter_by(phone=depot.phone).first()
-    if not user:
-        return "user not found", 200
-
-    # ===============================
-    # CREDIT DU SOLDE
-    # ===============================
-    depot.statut = "paid"
-    user.solde_total += depot.montant
-    db.session.commit()
-
-    return "ok", 200
-
-
-@app.route("/submit_reference", methods=["POST"])
-@login_required
-def submit_reference():
-    phone = get_logged_in_user_phone()
-    montant = float(request.form["montant"])
-    reference = request.form["reference"]
-
-    depot = Depot(
-        phone=phone,
-        montant=montant,
-        reference=reference
-    )
-    db.session.add(depot)
-    db.session.commit()
-
-    # 👉 au lieu de redirect, on affiche une page avec loader + succès
-    return render_template(
-        "submit_reference_loading.html",
-        montant=montant,
-        reference=reference
-    )
 
 @app.route("/ajouter_portefeuille", methods=["GET", "POST"])
 @login_required
@@ -708,17 +775,14 @@ def nous_page():
     return render_template("nous.html")
 
 PRODUITS_VIP = [
-    {"id": 1, "nom": "DHL 1", "prix": 4000, "revenu_journalier": 750, "image": "d3.jpg"},
-    {"id": 2, "nom": "DHL 2", "prix": 8000, "revenu_journalier": 1500, "image": "d3.jpg"},
-    {"id": 3, "nom": "DHL 3", "prix": 15000, "revenu_journalier": 2812, "image": "d3.jpg"},
-    {"id": 4, "nom": "DHL 4", "prix": 20000, "revenu_journalier": 3750, "image": "d3.jpg"},
-    {"id": 5, "nom": "DHL 5", "prix": 30000, "revenu_journalier": 5625, "image": "d3.jpg"},
-    {"id": 6, "nom": "DHL 6", "prix": 50000, "revenu_journalier": 9375, "image": "d3.jpg"},
-    {"id": 7, "nom": "DHL 7", "prix": 100000, "revenu_journalier": 18750, "image": "d3.jpg"},
-    {"id": 8, "nom": "DHL 8", "prix": 200000, "revenu_journalier": 37500, "image": "d3.jpg"},
-    {"id": 6, "nom": "DHL 9", "prix": 400000, "revenu_journalier": 75000, "image": "d3.jpg"},
-    {"id": 7, "nom": "DHL 10", "prix": 800000, "revenu_journalier": 150000, "image": "d3.jpg"},
-    {"id": 8, "nom": "DHL 11", "prix": 1000000, "revenu_journalier": 187500, "image": "d3.jpg"}
+    {"id": 1, "nom": "Coris 1", "prix": 4000, "revenu_journalier": 700, "image": "co.jpg"},
+    {"id": 2, "nom": "Coris 2", "prix": 12000, "revenu_journalier": 2100, "image": "co.jpg"},
+    {"id": 3, "nom": "Coris 3", "prix": 20000, "revenu_journalier": 3500, "image": "co.jpg"},
+    {"id": 4, "nom": "Coris 4", "prix": 32000, "revenu_journalier": 5600, "image": "co.jpg"},
+    {"id": 5, "nom": "Coris 5", "prix": 100000, "revenu_journalier": 17500, "image": "co.jpg"},
+    {"id": 6, "nom": "Coris 6", "prix": 250000, "revenu_journalier": 43750, "image": "co.jpg"},
+    {"id": 7, "nom": "Coris 7", "prix": 500000, "revenu_journalier": 87500, "image": "co.jpg"},
+    {"id": 8, "nom": "Coris 8", "prix": 1000000, "revenu_journalier": 175000, "image": "co.jpg"}
 ]
 
 
@@ -754,7 +818,7 @@ def confirmer_produit_rapide(vip_id):
 
     montant = produit["prix"]
     revenu_journalier = produit["revenu_journalier"]
-    revenu_total = revenu_journalier * 50
+    revenu_total = revenu_journalier * 150
 
     # GET → affichage normal
     if request.method == "GET":
@@ -779,7 +843,7 @@ def confirmer_produit_rapide(vip_id):
         phone=phone,
         montant=montant,
         revenu_journalier=revenu_journalier,
-        duree=50,
+        duree=150,
         actif=True
     )
     db.session.add(inv)
@@ -819,7 +883,7 @@ def valider_produit_rapide(vip_id):
         phone=phone,
         montant=montant,
         revenu_journalier=produit["revenu_journalier"],
-        duree=50,
+        duree=150,
         actif=True
     )
     db.session.add(inv)
@@ -935,13 +999,19 @@ def historique_page():
         commissions=commissions   # 👈 IMPORTANT
     )
 
+
 @app.route('/team')
 @login_required
 def team_page():
     phone = get_logged_in_user_phone()
     user = User.query.filter_by(phone=phone).first()
 
-    referral_code = phone
+    # --- Assurer que l'utilisateur a un code de parrainage unique ---
+    if not user.code_parrainage:
+        user.code_parrainage = generate_unique_ref_code()
+        db.session.commit()
+
+    referral_code = user.code_parrainage
     referral_link = url_for('inscription_page', _external=True) + f'?ref={referral_code}'
 
     from sqlalchemy import func
@@ -953,7 +1023,7 @@ def team_page():
 
     # ----- NIVEAU 2 -----
     if level1_phones:
-        level2_users = User.query.filter(User.parrain.in_(level1_phones)).all()
+        level2_users = User.query.filter(User.parrain.in_([u.code_parrainage for u in level1_users])).all()
         level2_phones = [u.phone for u in level2_users]
         level2_count = len(level2_users)
     else:
@@ -962,8 +1032,8 @@ def team_page():
         level2_count = 0
 
     # ----- NIVEAU 3 -----
-    if level2_phones:
-        level3_users = User.query.filter(User.parrain.in_(level2_phones)).all()
+    if level2_users:
+        level3_users = User.query.filter(User.parrain.in_([u.code_parrainage for u in level2_users])).all()
         level3_phones = [u.phone for u in level3_users]
         level3_count = len(level3_users)
     else:
@@ -974,9 +1044,8 @@ def team_page():
     # ----- COMMISSIONS -----
     commissions_total = float(user.solde_parrainage or 0)
 
-    # ----- DÉPÔTS DE LA TEAM (NIVEAU 1 + 2 + 3) -----
+    # ----- DÉPÔTS DE LA TEAM -----
     all_team_phones = level1_phones + level2_phones + level3_phones
-
     if all_team_phones:
         team_deposits = float(
             db.session.query(func.coalesce(func.sum(Depot.montant), 0))
@@ -986,7 +1055,6 @@ def team_page():
     else:
         team_deposits = 0.0
 
-    # ----- STATISTIQUES -----
     stats = {
         "level1": level1_count,
         "level2": level2_count,
@@ -1001,7 +1069,6 @@ def team_page():
         referral_link=referral_link,
         stats=stats
     )
-
 
 @app.route("/admin/deposits")
 def admin_deposits():
@@ -1117,7 +1184,7 @@ def retrait_page():
             return redirect(url_for("retrait_page"))
 
         if montant < 1500:
-            flash("Montant minimum : 1000 XOF.", "warning")
+            flash("Montant minimum : 1500 XOF.", "warning")
             return redirect(url_for("retrait_page"))
 
         if montant > solde_retraitable:
@@ -1148,7 +1215,7 @@ def retrait_confirmation_page(montant):
         flash("Solde insuffisant.", "danger")
         return redirect(url_for("retrait_page"))
 
-    taxe = int(montant * 0.15)
+    taxe = int(montant * 0.18)
     net = montant - taxe
 
     if request.method == "POST":
