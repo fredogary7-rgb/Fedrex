@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compte</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    background:#f3f5f9;
+    padding-bottom:100px;
+}
+
+/* ===== TOP CARD ===== */
+.top-card{
+    margin:20px;
+    padding:20px;
+    border-radius:25px;
+    background:linear-gradient(135deg,#c8f1e7,#a8e6cf);
+    border:2px solid #39b59a;
+}
+
+.profile-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.profile-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.avatar{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.username{
+    font-size:20px;
+    font-weight:600;
+}
+
+.user-id{
+    margin-top:6px;
+    display:inline-block;
+    background:#4f74b8;
+    color:#fff;
+    padding:6px 12px;
+    border-radius:8px;
+    font-size:13px;
+}
+
+/* ✅ SETTINGS CLICKABLE */
+.settings{
+    width:45px;
+    height:45px;
+    background:#fff;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.settings a{
+    color:#555;
+    font-size:18px;
+    text-decoration:none;
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* ===== BALANCE ROW ===== */
+.balance-row{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+    text-align:center;
+}
+
+.balance-item strong{
+    display:block;
+    font-size:18px;
+}
+
+.balance-item span{
+    font-size:13px;
+    color:#555;
+}
+
+/* ===== RECHARGER / RETIRER ===== */
+.action-bar{
+    margin:0 20px 20px;
+    background:#fff;
+    border-radius:18px;
+    display:flex;
+    overflow:hidden;
+}
+
+.action-link{
+    flex:1;
+    padding:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    text-decoration:none;
+    font-size:16px;
+    font-weight:500;
+    color:#333;
+}
+
+.action-link:first-child{
+    border-right:1px solid #eee;
+}
+
+.action-link i{
+    font-size:18px;
+}
+
+/* ===== ICON GRID ===== */
+.grid{
+    margin:0 20px 20px;
+    background:#fff;
+    border-radius:18px;
+    padding:20px 10px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    text-align:center;
+    gap:10px;
+}
+
+.grid a{
+    text-decoration:none;
+    color:#333;
+    font-size:13px;
+}
+
+.grid i{
+    font-size:26px;
+    margin-bottom:8px;
+}
+
+/* ===== SECTION CARD ===== */
+.section{
+    margin:0 20px 20px;
+    background:#fff;
+    border-radius:18px;
+    padding:18px;
+}
+
+.section-title{
+    font-size:18px;
+    font-weight:600;
+    margin-bottom:15px;
+    position:relative;
+}
+
+.section-title::after{
+    content:"";
+    position:absolute;
+    bottom:-6px;
+    left:0;
+    width:50px;
+    height:4px;
+    background:#39b59a;
+    border-radius:4px;
+}
+
+.list-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid #eee;
+    text-decoration:none;
+    color:#333;
+}
+
+.list-item:last-child{
+    border-bottom:none;
+}
+
+.list-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+/* ===== AUTRES SERVICES GRID ===== */
+.services{
+    margin:0 20px 20px;
+    background:#fff;
+    border-radius:18px;
+    padding:20px 10px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    text-align:center;
+}
+
+.services a{
+    text-decoration:none;
+    color:#333;
+    font-size:13px;
+}
+
+.services i{
+    font-size:24px;
+    margin-bottom:8px;
+}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    display:flex;
+    justify-content:space-around;
+    padding:10px 0;
+    border-top-left-radius:20px;
+    border-top-right-radius:20px;
+}
+
+.bottom-nav a{
+    text-decoration:none;
+    color:rgba(255,255,255,0.7);
+    font-size:12px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.bottom-nav a.active{
+    color:#fff;
+    font-weight:600;
+}
+
+.bottom-nav i{
+    margin-bottom:4px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP PROFILE CARD -->
+<div class="top-card">
+
+    <div class="profile-row">
+        <div class="profile-left">
+            <img src="{{ url_for('static', filename='images/co.jpg') }}" class="avatar">
+            <div>
+                <div class="username">{{ user.username or "User" }}</div>
+                <div class="user-id">ID:{{ user.id }}</div>
+            </div>
+        </div>
+
+        <!-- ✅ ICÔNE PARAMÈTRES CLIQUABLE -->
+        <div class="settings">
+            <a href="/parametres">
+                <i class="fa-solid fa-gear"></i>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="balance-row">
+        <div class="balance-item">
+            <strong>FCFA {{ user.revenus_produits or 0 }}</strong>
+            <span>Revenu des produits</span>
+        </div>
+        <div class="balance-item">
+            <strong>FCFA {{ user.solde_recharge or 0 }}</strong>
+            <span>Solde de recharge</span>
+        </div>
+        <div class="balance-item">
+            <strong>FCFA {{ user.solde_retrait or 0 }}</strong>
+            <span>Solde de retrait</span>
+        </div>
+    </div>
+
+</div>
+
+<!-- RESTE DU CODE IDENTIQUE -->
+
+<div class="action-bar">
+    <a href="/deposit" class="action-link">
+        <i class="fa-solid fa-wallet"></i> Recharger
+    </a>
+    <a href="/retrait" class="action-link">
+        <i class="fa-solid fa-arrow-up-from-bracket"></i> Retirer
+    </a>
+</div>
+
+<div class="grid">
+    <a href="/finance"><i class="fa-solid fa-file-lines"></i>Mes commandes</a>
+    <a href="/team"><i class="fa-solid fa-users"></i>Mon équipe</a>
+</div>
+
+<div class="section">
+    <div class="section-title">Entrée de fonds</div>
+
+    <a href="/historique" class="list-item">
+        <div class="list-left">
+            <i class="fa-solid fa-money-bill-wave"></i>
+            Mes Transactions
+        </div>
+        <i class="fa-solid fa-chevron-right"></i>
+    </a>
+
+    <a href="/finance" class="list-item">
+        <div class="list-left">
+            <i class="fa-solid fa-gift"></i>
+            Historique
+        </div>
+        <i class="fa-solid fa-chevron-right"></i>
+    </a>
+</div>
+
+<div class="services">
+    <a href="nous">
+        <i class="fa-solid fa-building"></i>
+        About Us
+    </a>
+
+    <a href="https://t.me/coris_max">
+        <i class="fa-brands fa-telegram"></i>
+        Telegram
+    </a>
+
+    <a href="/logout">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+    </a>
+</div>
+
+<div class="bottom-nav">
+    <a href="/dashboard"><i class="fa-solid fa-house"></i>Accueil</a>
+    <a href="/produits_rapide"><i class="fa-solid fa-chart-line"></i>Investir</a>
+    <a href="/team"><i class="fa-solid fa-users"></i>Team</a>
+    <a href="/profile" class="active"><i class="fa-solid fa-user"></i>Compte</a>
+</div>
+
+</body>
+</html>

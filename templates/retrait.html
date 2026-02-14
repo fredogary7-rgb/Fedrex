@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retrait</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f6fb;
+}
+
+/* HEADER */
+.header{
+    padding:18px;
+    font-size:20px;
+    font-weight:600;
+    background:white;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* CONTAINER */
+.container{
+    padding:20px;
+}
+
+/* 💳 CARTE BANCAIRE */
+.bank-card{
+    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
+    border-radius:22px;
+    padding:25px;
+    color:white;
+    position:relative;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    margin-bottom:25px;
+}
+
+.bank-card .chip{
+    width:50px;
+    height:35px;
+    background:rgba(255,255,255,0.6);
+    border-radius:8px;
+    margin-bottom:30px;
+}
+
+.bank-card .bank-name{
+    position:absolute;
+    top:20px;
+    right:20px;
+    font-weight:600;
+    font-size:14px;
+}
+
+.bank-card .holder{
+    font-size:18px;
+    margin-top:15px;
+    font-weight:500;
+}
+
+.bank-card .number{
+    font-size:16px;
+    letter-spacing:2px;
+    margin-top:10px;
+}
+
+.bank-card .balance{
+    margin-top:15px;
+    font-size:14px;
+    opacity:0.9;
+}
+
+/* FORM CARD */
+.form-card{
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.05);
+}
+
+label{
+    font-weight:600;
+    display:block;
+    margin-top:15px;
+    font-size:14px;
+}
+
+select, input{
+    width:100%;
+    padding:14px;
+    margin-top:8px;
+    border-radius:12px;
+    border:1px solid #ddd;
+    background:#f9f9f9;
+    font-size:14px;
+}
+
+.btn{
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    color:white;
+    width:100%;
+    padding:15px;
+    margin-top:25px;
+    border-radius:30px;
+    border:none;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+}
+
+/* RULES */
+.rules{
+    margin-top:25px;
+    background:white;
+    padding:15px;
+    border-radius:15px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+.rules h4{
+    margin-bottom:10px;
+}
+
+.rules p{
+    font-size:13px;
+    margin:6px 0;
+    color:#555;
+}
+
+/* FEES */
+.fees{
+    display:flex;
+    justify-content:space-between;
+    margin-top:12px;
+    font-size:14px;
+}
+
+.fees span:last-child{
+    color:red;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    ← Retrait
+</div>
+
+<div class="container">
+
+    <!-- 💳 CARTE BANCAIRE -->
+    <div class="bank-card">
+
+        <div class="bank-name">Coris Bank</div>
+
+        <div class="chip"></div>
+
+        <div class="number">
+            **** **** **** {{ user.wallet_number[-4:] if user and user.wallet_number else "1234" }}
+        </div>
+
+        <div class="holder">
+            {{ user.nom if user and user.nom else "Nom du titulaire" }}
+        </div>
+
+        <div class="balance">
+            Solde disponible :
+            <strong>
+                XOF {{ "{:,.0f}".format(user.solde_revenu if user else 0) }}
+            </strong>
+        </div>
+
+    </div>
+
+    <!-- FORMULAIRE RETRAIT -->
+    <div class="form-card">
+        <form method="POST">
+
+            <label>Montant du retrait</label>
+            <input type="number" name="montant" id="montant" placeholder="XOF Minimum 1 500" required>
+
+            <div class="fees">
+                <span>Montant reçu :</span>
+                <span id="netAmount">0 XOF</span>
+            </div>
+
+            <div class="fees">
+                <span>Frais (18%) :</span>
+                <span id="feesAmount">0 XOF</span>
+            </div>
+
+            <button type="submit" class="btn" id="withdrawBtn">Retirer maintenant</button>
+        </form>
+    </div>
+
+    <!-- RÈGLES -->
+    <div class="rules">
+        <h4>Règles de retrait</h4>
+        <p>1. Le montant minimum de retrait est défini par la plateforme.</p>
+        <p>2. Une taxe de <strong>18%</strong> est automatiquement appliquée.</p>
+        <p>3. Assurez-vous que votre compte de retrait est correct.</p>
+        <p>4. Les retraits sont traités après vérification.</p>
+        <p>5. Un retrait incorrect peut entraîner un rejet.</p>
+    </div>
+
+</div>
+
+<script>
+document.getElementById("montant").addEventListener("input", function () {
+    let montant = parseFloat(this.value);
+    let btn = document.getElementById("withdrawBtn");
+
+    if (isNaN(montant) || montant <= 0) {
+        document.getElementById("netAmount").innerText = "0 XOF";
+        document.getElementById("feesAmount").innerText = "0 XOF";
+        btn.disabled = true;
+        return;
+    }
+
+    let fees = montant * 0.15;
+    let net = montant - fees;
+
+    document.getElementById("netAmount").innerText =
+        net.toLocaleString("fr-FR") + " XOF";
+
+    document.getElementById("feesAmount").innerText =
+        fees.toLocaleString("fr-FR") + " XOF";
+
+    btn.disabled = false;
+});
+</script>
+
+</body>
+</html>

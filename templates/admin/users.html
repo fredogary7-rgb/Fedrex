@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Liste des utilisateurs</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f5f5f5;
+    color: #333;
+}
+
+/* HEADER */
+header {
+    background: #4D148C;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #FFD700;
+}
+
+/* CONTAINER */
+.container {
+    padding: 20px;
+}
+
+/* TABLEAU */
+.table-container {
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #4D148C;
+    color: #fff;
+}
+
+thead th {
+    padding: 12px;
+    text-align: left;
+}
+
+tbody tr {
+    border-bottom: 1px solid #eee;
+}
+
+tbody tr:hover {
+    background: #f9f2ff;
+}
+
+td {
+    padding: 10px;
+    vertical-align: middle;
+}
+
+/* BOUTONS */
+button, a.btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    margin: 2px 0;
+    font-size: 13px;
+}
+
+.credit-btn { background: #28a745; color: #fff; }
+.debit-btn { background: #dc2626; color: #fff; }
+.ban-btn { background: #FF6600; color: #fff; }
+.invest-btn { background: #4D148C; color: #FFD700; }
+
+/* INPUTS */
+input[type="number"] {
+    width: 70px;
+    padding: 4px 6px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-right: 3px;
+}
+
+/* RESPONSIVE */
+@media(max-width: 900px){
+    input[type="number"] { width: 60px; }
+    table { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Liste des utilisateurs</h1>
+</header>
+
+<div class="container">
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Téléphone</th>
+                    <th>Solde</th>
+                    <th>Revenu</th>
+                    <th>Parrain</th>
+                    <th>Date Création</th>
+                    <th>Banni</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>{{ "{:,.0f}".format(user.solde_total) }} XOF</td>
+                    <td>{{ "{:,.0f}".format(user.solde_revenu) }} XOF</td>
+                    <td>{{ user.parrain or '-' }}</td>
+                    <td>{{ user.date_creation.strftime("%d/%m/%Y") }}</td>
+                    <td>{{ "Oui" if user.is_banned else "Non" }}</td>
+                    <td>
+                        <!-- Crédit -->
+                        <form method="POST" action="{{ url_for('admin_balance', user_id=user.id) }}" style="display:inline-block;">
+                            <input type="number" name="montant" placeholder="Montant" required>
+                            <input type="hidden" name="action" value="credit">
+                            <button type="submit" class="credit-btn">Créditer</button>
+                        </form>
+                        <!-- Débit -->
+                        <form method="POST" action="{{ url_for('admin_balance', user_id=user.id) }}" style="display:inline-block;">
+                            <input type="number" name="montant" placeholder="Montant" required>
+                            <input type="hidden" name="action" value="debit">
+                            <button type="submit" class="debit-btn">Débiter</button>
+                        </form>
+                        <br>
+                        <!-- Bannir / Réactiver -->
+                        <a href="{{ url_for('toggle_ban', user_id=user.id) }}" class="ban-btn">
+                            {{ "Réactiver" if user.is_banned else "Bannir" }}
+                        </a>
+                        <br>
+                        <!-- Quick Invest -->
+                        <form method="POST" action="{{ url_for('quick_invest', user_id=user.id) }}" style="margin-top:4px;">
+                            <input type="number" name="montant" placeholder="Montant" required>
+                            <input type="number" name="duree" placeholder="Durée" required>
+                            <input type="number" name="revenu_journalier" placeholder="Revenu" required>
+                            <button type="submit" class="invest-btn">Invest Rapid</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8" style="text-align:center;">Aucun utilisateur trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

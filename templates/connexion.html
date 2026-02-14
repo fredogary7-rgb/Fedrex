@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion - Crois Max</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+body {
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+    color:#333;
+}
+.container {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255,255,255,0.95);
+    padding: 30px 25px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    animation: fadeIn 1s ease;
+}
+h2 { text-align:center; margin-bottom: 20px; color: #0c3d2e; }
+label { display:block; margin-bottom:5px; font-weight:500; color:#555; }
+input, select {
+    width:100%;
+    padding:12px 15px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    outline:none;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+input:focus, select:focus { border-color:#1abc9c; box-shadow: 0 0 8px rgba(26,188,156,0.3); }
+.otp-container { display:flex; }
+.otp-container input { flex:2; margin-right:10px; }
+.otp-container button {
+    flex:1;
+    background:#1abc9c;
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    transition: background 0.3s ease;
+}
+.otp-container button:hover { background:#16a085; }
+button.submit-btn {
+    width:100%; padding:12px; background:#1abc9c; color:#fff; border:none;
+    border-radius:10px; font-size:16px; cursor:pointer; transition: background 0.3s ease;
+}
+button.submit-btn:hover { background:#16a085; }
+p.register-link { text-align:center; margin-top:15px; font-size:14px; }
+p.register-link a { color:#1abc9c; font-weight:600; text-decoration:none; }
+p.register-link a:hover { color:#16a085; }
+@keyframes fadeIn { from {opacity:0; transform: translateY(-20px);} to {opacity:1; transform: translateY(0);} }
+.flash-message { background:#f8d7da; color:#721c24; padding:10px 15px; border-radius:10px; margin-bottom:15px; text-align:center; }
+.flash-success { background:#d4edda; color:#155724; }
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>Connexion</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="flash-message {% if category == 'success' %}flash-success{% endif %}">
+            {% if msg.title %}<strong>{{ msg.title }}</strong><br>{% endif %}
+            {{ msg.message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label>Pays</label>
+        <select name="pays" required>
+            <option value="">Veuillez sélectionner votre pays</option>
+            <option value="Burkina Faso">Burkina Faso</option>
+            <option value="Bénin">Bénin</option>
+            <option value="Togo">Togo</option>
+            <option value="Cameroun">Cameroun</option>
+            <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+        </select>
+
+        <label>Numéro de téléphone</label>
+        <input type="text" name="phone" placeholder="Entrez votre numéro" required>
+
+        <label>Mot de passe</label>
+        <input type="password" name="password" placeholder="Mot de passe" required>
+
+        <label>Code de vérification (OTP)</label>
+        <div class="otp-container">
+            <input type="text" id="otp" name="otp" placeholder="Code de vérification">
+            <button type="button" onclick="sendOTP()">Envoyer</button>
+        </div>
+
+        <button type="submit" class="submit-btn">Se connecter</button>
+    </form>
+
+    <p class="register-link">
+        Pas encore inscrit ? <a href="{{ url_for('inscription_page') }}">Créer un compte</a>
+    </p>
+</div>
+
+<script>
+function sendOTP() {
+    fetch('/generate-otp')
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('otp').value = data.otp; // pour test seulement
+        alert("Votre code OTP : " + data.otp);
+    })
+    .catch(err => console.error(err));
+}
+</script>
+</body>
+</html>

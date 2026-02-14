@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirmation achat</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f6fb;
+    padding:20px;
+}
+
+/* CARD */
+.confirm-card{
+    background:#fff;
+    border-radius:20px;
+    padding:20px;
+    box-shadow:0 5px 25px rgba(0,0,0,0.06);
+    max-width:500px;
+    margin:auto;
+}
+
+.confirm-card img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+    border-radius:15px;
+    margin-bottom:15px;
+}
+
+h2{
+    font-size:20px;
+    margin-bottom:10px;
+}
+
+.info{
+    margin-bottom:8px;
+    font-size:14px;
+    color:#555;
+}
+
+.highlight{
+    font-weight:600;
+    color:#3a5cb8;
+}
+
+.total-box{
+    background:#f2f4ff;
+    padding:12px;
+    border-radius:12px;
+    margin:15px 0;
+    font-size:15px;
+    font-weight:600;
+}
+
+/* BUTTONS */
+.btn-group{
+    display:flex;
+    gap:10px;
+}
+
+.btn{
+    flex:1;
+    padding:12px;
+    border-radius:25px;
+    text-align:center;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    border:none;
+    cursor:pointer;
+}
+
+.btn-cancel{
+    background:#eee;
+    color:#333;
+}
+
+.btn-confirm{
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    color:#fff;
+}
+
+/* NAVIGATION BAS */
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    display:flex;
+    justify-content:space-around;
+    background: linear-gradient(to right, #3a5cb8, #5a7cd3);
+    padding:10px 0;
+    border-top-left-radius:20px;
+    border-top-right-radius:20px;
+}
+
+.bottom-nav a{
+    color:rgba(255,255,255,0.7);
+    font-size:12px;
+    text-decoration:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.bottom-nav a.active{
+    color:#fff;
+    font-weight:600;
+}
+
+.bottom-nav i{
+    margin-bottom:3px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="confirm-card">
+
+    <img
+        src="{{ url_for('static', filename='images/' + (p.image if p.image else 'co.jpg')) }}"
+        alt="{{ p.nom }}"
+        class="product-image"
+    >
+
+    <h2>{{ p.nom }}</h2>
+
+    <div class="info">
+        Prix :
+        <span class="highlight">
+            XOF {{ "{:,.0f}".format(p.prix) }}
+        </span>
+    </div>
+
+    <div class="info">
+        Revenu quotidien :
+        <span class="highlight">
+            XOF {{ "{:,.0f}".format(p.revenu_journalier) }}
+        </span>
+    </div>
+
+    <div class="info">
+        Durée :
+        <span class="highlight">150 jours</span>
+    </div>
+
+    <div class="total-box">
+        Gain total estimé :
+        <strong>
+            XOF {{ "{:,.0f}".format(p.revenu_journalier * 150) }}
+        </strong>
+    </div>
+
+    <form method="POST" action="{{ url_for('valider_produit_rapide', vip_id=p.id) }}">
+        <div class="btn-group">
+
+            <a href="{{ url_for('dashboard_page') }}" class="btn btn-cancel">
+                Annuler
+            </a>
+
+            <button type="submit" class="btn btn-confirm">
+                Confirmer l'achat
+            </button>
+
+        </div>
+    </form>
+
+</div>
+
+<!-- NAV BAS -->
+<div class="bottom-nav">
+    <a href="/dashboard" class="active"><i class="fa-solid fa-house"></i>Accueil</a>
+    <a href="/produits_rapide"><i class="fa-solid fa-chart-line"></i>Investir</a>
+    <a href="/team"><i class="fa-solid fa-users"></i>Team</a>
+    <a href="/profile"><i class="fa-solid fa-user"></i>Compte</a>
+</div>
+
+</body>
+</html>

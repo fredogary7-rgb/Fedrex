@@ -1,0 +1,55 @@
+<h2>Liste des dépôts</h2>
+
+<table border="1" width="100%" cellspacing="0" cellpadding="6">
+    <tr style="background:#f2f2f2;">
+        <th>ID</th>
+        <th>Pays</th>
+        <th>Moyen</th>
+        <th>Nom</th>
+        <th>Numéro paiement</th>
+        <th>Montant</th>
+        <th>Référence</th>
+        <th>Date</th>
+        <th>Statut</th>
+        <th>Action</th>
+    </tr>
+
+    {% for d in depots %}
+    <tr>
+        <td>{{ d.id }}</td>
+        <td>{{ d.country }}</td>
+        <td>{{ d.operator }}</td>
+        <td>{{ d.fullname }}</td>
+        <td>{{ d.phone_paiement }}</td>
+        <td>{{ d.montant }} FCFA</td>
+        <td>{{ d.reference or "-" }}</td>
+        <td>{{ d.date.strftime("%d/%m/%Y %H:%M") }}</td>
+
+        <td>
+            {% if d.statut == "valide" %}
+                <span style="color:green; font-weight:bold;">Validé</span>
+            {% elif d.statut == "rejete" %}
+                <span style="color:red; font-weight:bold;">Rejeté</span>
+            {% else %}
+                <span style="color:orange; font-weight:bold;">En attente</span>
+            {% endif %}
+        </td>
+
+        <td>
+            {% if d.statut != "valide" %}
+                <a href="/admin/deposits/valider/{{ d.id }}"
+                   style="color:green; font-weight:bold; margin-right:10px;">
+                    Valider
+                </a>
+            {% endif %}
+
+            {% if d.statut != "rejete" %}
+                <a href="/admin/deposits/rejeter/{{ d.id }}"
+                   style="color:red; font-weight:bold;">
+                    Rejeter
+                </a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>

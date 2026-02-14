@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paramètres</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f6fb;
+    padding:20px;
+}
+
+.container{
+    max-width:500px;
+    margin:auto;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.header h1{
+    font-size:22px;
+    color:#3a5cb8;
+}
+
+.card{
+    background:#fff;
+    border-radius:20px;
+    padding:22px;
+    box-shadow:0 8px 30px rgba(0,0,0,0.05);
+    margin-bottom:20px;
+}
+
+h2{
+    font-size:16px;
+    margin-bottom:15px;
+    color:#3a5cb8;
+}
+
+input, select{
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid #ddd;
+    margin-bottom:12px;
+    font-size:14px;
+    transition:0.3s;
+}
+
+input:focus, select:focus{
+    border-color:#3a5cb8;
+    outline:none;
+}
+
+button{
+    width:100%;
+    padding:13px;
+    border:none;
+    border-radius:25px;
+    background:linear-gradient(to right,#3a5cb8,#5a7cd3);
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+.flash{
+    padding:12px;
+    border-radius:12px;
+    margin-bottom:15px;
+    font-size:13px;
+    text-align:center;
+}
+
+.flash.success{
+    background:#e6f9f0;
+    color:#1a7f5a;
+}
+
+.flash.danger{
+    background:#fde8e8;
+    color:#c53030;
+}
+
+.info-text{
+    font-size:12px;
+    color:#777;
+    margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Paramètres du compte</h1>
+    </div>
+
+    <!-- FLASH MESSAGE -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- 🔐 CHANGER MOT DE PASSE -->
+    <div class="card">
+        <h2>🔐 Modifier le mot de passe</h2>
+
+        <form method="POST">
+            <input type="hidden" name="action" value="password">
+
+            <input type="password" name="current_password" placeholder="Mot de passe actuel" required>
+
+            <input type="password" name="new_password" placeholder="Nouveau mot de passe" required>
+
+            <input type="password" name="confirm_password" placeholder="Confirmer le nouveau mot de passe" required>
+
+            <button type="submit">Mettre à jour le mot de passe</button>
+        </form>
+    </div>
+
+    <!-- 💳 MODIFIER WALLET -->
+    <div class="card">
+        <h2>💳 Informations Wallet</h2>
+
+        <div class="info-text">
+            Modifiez vos informations de paiement.
+        </div>
+
+        <form method="POST">
+            <input type="hidden" name="action" value="wallet">
+
+            <input type="text" name="wallet_country" 
+                   value="{{ user.wallet_country or '' }}" 
+                   placeholder="Pays du wallet" required>
+
+            <input type="text" name="wallet_operator" 
+                   value="{{ user.wallet_operator or '' }}" 
+                   placeholder="Opérateur (MTN, Orange, Wave...)" required>
+
+            <input type="text" name="wallet_number" 
+                   value="{{ user.wallet_number or '' }}" 
+                   placeholder="Numéro wallet" required>
+
+            <button type="submit">Mettre à jour le wallet</button>
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boutique FedEx</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Arrière-plan avec image */
+body {
+    background: url('{{ url_for("static", filename="images/fed5.jpg") }}') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Boîte centrale */
+.container {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 40px 25px;
+    border-radius: 16px;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Icône animée */
+.container i {
+    font-size: 60px;
+    color: #f5c842;
+    margin-bottom: 20px;
+    animation: bounce 1s infinite alternate;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #000;
+}
+
+p {
+    font-size: 16px;
+    color: #333;
+}
+
+/* Animation de l'icône */
+@keyframes bounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-12px); }
+}
+
+/* Bouton retour (optionnel) */
+.btn-home {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 25px;
+    background: #000;
+    color: #fff;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn-home:hover {
+    background: #f5c842;
+    color: #000;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <i class="fa-solid fa-hard-hat"></i>
+    <h1>En cours de développement</h1>
+    <p>Veuillez patienter pour la nouvelle mise à jour de notre boutique FedEx.</p>
+    <a href="/dashboard" class="btn-home">Retour à l'accueil</a>
+</div>
+
+</body>
+</html>

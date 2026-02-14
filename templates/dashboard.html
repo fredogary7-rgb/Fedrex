@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - Coris Max</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f7ff;
+}
+
+/* ===== APP ===== */
+.app{
+    max-width:480px;
+    margin:auto;
+    min-height:100vh;
+    padding-bottom:90px;
+}
+
+/* ===== HEADER ===== */
+.header{
+    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
+    padding:30px 20px 60px;
+    color:white;
+    border-radius:0 0 40px 40px;
+    position:relative;
+}
+
+.header img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    border-radius:20px;
+}
+
+/* ===== BALANCE BOX ===== */
+.balance-box{
+    display:flex;
+    justify-content:space-around;
+    margin:-40px 15px 15px 15px;
+    padding:20px;
+    background:rgba(255,255,255,0.15);
+    border-radius:25px;
+    backdrop-filter:blur(6px);
+}
+
+.balance-item{
+    text-align:center;
+}
+
+.balance-item strong{
+    font-size:16px;
+    color:#fff;
+    display:block;
+}
+
+.balance-item small{
+    font-size:12px;
+    color:#fff;
+    opacity:0.8;
+}
+
+/* ===== MENU ===== */
+.menu{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin:20px 15px 25px;
+}
+
+.menu-item{
+    background:white;
+    border-radius:20px;
+    padding:18px 10px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,0.05);
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.menu-item:hover{
+    transform:translateY(-5px);
+}
+
+.menu-item i{
+    font-size:20px;
+    margin-bottom:8px;
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.menu-item span{
+    font-size:13px;
+    font-weight:500;
+}
+
+/* ===== BONUS CARD ===== */
+.bonus-card{
+    background:white;
+    border-radius:22px;
+    padding:20px;
+    margin:0 15px 20px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.05);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.bonus-card p{
+    margin:0;
+    font-size:14px;
+    color:#333;
+}
+
+.bonus-card a{
+    padding:8px 15px;
+    border-radius:30px;
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    color:white;
+    text-decoration:none;
+    font-weight:500;
+    font-size:13px;
+}
+
+/* ===== RÈGLES D’INVESTISSEMENT ===== */
+.rules-card{
+    background:white;
+    border-radius:22px;
+    padding:20px;
+    margin:0 15px 20px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.05);
+    color:#333;
+    line-height:1.5;
+}
+
+.rules-card strong{
+    display:block;
+    margin-bottom:5px;
+    font-size:15px;
+}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:white;
+    display:flex;
+    justify-content:space-around;
+    padding:10px 0;
+    box-shadow:0 -5px 20px rgba(0,0,0,0.05);
+}
+
+.bottom-nav a{
+    text-decoration:none;
+    color:#777;
+    font-size:12px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.bottom-nav a.active{
+    color:#3a5cb8;
+    font-weight:600;
+}
+
+.bottom-nav i{
+    margin-bottom:4px;
+}
+
+/* ===== TELEGRAM POPUP ===== */
+.tg-overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+    animation:fadeIn 0.3s ease;
+}
+
+.tg-box{
+    background:#fff;
+    width:90%;
+    max-width:420px;
+    border-radius:25px;
+    padding:30px 20px 25px;
+    text-align:center;
+    position:relative;
+    animation:slideUp 0.3s ease;
+}
+
+.tg-logo{
+    width:90px;
+    height:90px;
+    margin:-70px auto 15px;
+    background:linear-gradient(135deg,#2AABEE,#1c92d2);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+.tg-logo img{
+    width:45px;
+}
+
+.tg-close{
+    position:absolute;
+    top:15px; /* corrigé */
+    right:15px; /* corrigé */
+    width:35px;
+    height:35px;
+    background:#fff;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    cursor:pointer;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    z-index:10;
+}
+
+.tg-box h2{
+    font-size:20px;
+    margin-bottom:15px;
+    color:#333;
+}
+
+.tg-box p{
+    font-size:15px;
+    color:#666;
+    margin-bottom:25px;
+    line-height:1.5;
+}
+
+.tg-buttons{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.tg-main-btn{
+    padding:14px;
+    border-radius:30px;
+    text-decoration:none;
+    color:#fff;
+    font-weight:600;
+    background:linear-gradient(135deg,#2AABEE,#1c92d2);
+}
+
+.tg-second-btn{
+    padding:14px;
+    border-radius:30px;
+    border:none;
+    background:#f1f1f1;
+    font-weight:600;
+    cursor:pointer;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+@keyframes slideUp{
+    from{transform:translateY(30px); opacity:0;}
+    to{transform:translateY(0); opacity:1;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- TELEGRAM POPUP -->
+<div id="telegramPopup" class="tg-overlay">
+    <div class="tg-box">
+
+        <div class="tg-logo">
+            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png">
+        </div>
+
+        <span class="tg-close" onclick="closeTelegram()">&times;</span>
+
+        <h2>Diffusion d'Informations Officielle</h2>
+
+        <p>
+            Suivez notre canal officiel Telegram pour obtenir les dernières
+            nouvelles et informations sur les avantages.
+        </p>
+
+        <div class="tg-buttons">
+            <a href="https://t.me/coris_max" target="_blank" class="tg-main-btn">
+                Voir la chaîne
+            </a>
+            <button class="tg-second-btn" onclick="closeTelegram()">
+                Continuer
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="app">
+
+    <!-- HEADER -->
+    <div class="header">
+        <img src="{{ url_for('static', filename='images/co.jpg') }}" alt="Header Image">
+    </div>
+
+    <!-- SOLDE BOX -->
+    <div class="balance-box">
+        <div class="balance-item">
+            <strong>{{ user.solde_total or 0 }} XOF</strong>
+            <small>Solde de Recharge</small>
+        </div>
+        <div class="balance-item">
+            <strong>{{ user.solde_retrait or 0 }} XOF</strong>
+            <small>Solde de Retrait</small>
+        </div>
+        <div class="balance-item">
+            <strong>{{ user.revenu_produits or 0 }} XOF</strong>
+            <small>Revenu des Produits</small>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu">
+        <div class="menu-item" onclick="location.href='/deposit'">
+            <i class="fa-solid fa-wallet icon"></i>
+            <span>Recharger</span>
+        </div>
+        <div class="menu-item" onclick="location.href='/retrait'">
+            <i class="fa-solid fa-arrow-up icon"></i>
+            <span>Retirer</span>
+        </div>
+        <div class="menu-item" onclick="location.href='/gift'">
+            <i class="fa-solid fa-gift icon"></i>
+            <span>Cadeaux</span>
+        </div>
+        <div class="menu-item" onclick="location.href='/support'">
+            <i class="fa-solid fa-headset icon"></i>
+            <span>Support</span>
+        </div>
+    </div>
+
+    <!-- INVITER DES AMIS -->
+    <div class="bonus-card">
+        <p>
+            <strong>Inviter des Amis</strong><br>
+            Invitez des amis pour gagner des commissions
+        </p>
+        <a href="/team">Aller -></a>
+    </div>
+
+    <!-- RÈGLES D’INVESTISSEMENT -->
+    <div class="rules-card">
+        <strong>Règles d'Investissement</strong>
+        • Commencez avec un montant adapté à votre budget.<br>
+        • Les investissements réguliers augmentent vos revenus.<br>
+        • Réinvestir une partie des gains accélère la croissance du capital.<br>
+        • Retrait disponible à tout moment.
+    </div>
+</div>
+
+<!-- NAV BAS -->
+<div class="bottom-nav">
+    <a href="/dashboard" class="active"><i class="fa-solid fa-house"></i>Accueil</a>
+    <a href="/produits_rapide"><i class="fa-solid fa-chart-line"></i>Investir</a>
+    <a href="/team"><i class="fa-solid fa-users"></i>Team</a>
+    <a href="/profile"><i class="fa-solid fa-user"></i>Compte</a>
+</div>
+
+<script>
+function closeTelegram(){
+    document.getElementById("telegramPopup").style.display = "none";
+}
+</script>
+
+</body>
+</html>

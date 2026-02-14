@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recharge - Coris Max</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f7ff;
+}
+
+/* HEADER */
+.header{
+    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
+    padding:30px 20px 70px;
+    color:white;
+    border-radius:0 0 40px 40px;
+    text-align:center;
+}
+
+.header h2{
+    font-size:20px;
+    font-weight:600;
+}
+
+.container{
+    padding:20px;
+    max-width:480px;
+    margin:-40px auto 0;
+}
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.05);
+}
+
+.card h3{
+    text-align:center;
+    margin-bottom:20px;
+    font-size:16px;
+}
+
+/* Montants rapides */
+.quick-amounts{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.quick-amounts button{
+    border:1px solid #ddd;
+    border-radius:50px;
+    padding:10px;
+    background:white;
+    cursor:pointer;
+    font-weight:500;
+    color:#555;
+    transition:0.2s;
+    font-size:13px;
+}
+
+.quick-amounts button.selected,
+.quick-amounts button:hover{
+    border-color:#3a5cb8;
+    color:#3a5cb8;
+    background:#eef2ff;
+}
+
+/* Pays */
+.country-option{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border:1px solid #eee;
+    border-radius:12px;
+    padding:12px;
+    margin-top:8px;
+    cursor:pointer;
+    transition:0.2s;
+    font-size:14px;
+}
+
+.country-option:hover{
+    border-color:#3a5cb8;
+}
+
+.country-option input{
+    accent-color:#3a5cb8;
+}
+
+/* Champs */
+.user-info input,
+.user-info select{
+    width:100%;
+    padding:12px;
+    margin-top:12px;
+    border-radius:12px;
+    border:1px solid #ddd;
+    font-size:14px;
+    outline:none;
+}
+
+.user-info input:focus,
+.user-info select:focus{
+    border-color:#3a5cb8;
+}
+
+/* Bouton */
+#deposit-btn{
+    width:100%;
+    margin-top:20px;
+    padding:14px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    font-size:15px;
+    transition:0.3s;
+}
+
+#deposit-btn:hover{
+    opacity:0.9;
+}
+
+.loader{
+    display:none;
+    text-align:center;
+    margin-top:15px;
+    font-size:13px;
+    color:#3a5cb8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h2>💰 Déposer de l'argent</h2>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h3>Recharger votre compte</h3>
+
+        <!-- Montants rapides -->
+        <div class="quick-amounts">
+            <button type="button" onclick="setQuickAmount(event,2000)">2000</button>
+            <button type="button" onclick="setQuickAmount(event,5000)">5000</button>
+            <button type="button" onclick="setQuickAmount(event,10000)">10000</button>
+            <button type="button" onclick="setQuickAmount(event,20000)">20000</button>
+            <button type="button" onclick="setQuickAmount(event,50000)">50000</button>
+            <button type="button" onclick="setQuickAmount(event,100000)">100000</button>
+            <button type="button" onclick="setQuickAmount(event,200000)">200000</button>
+            <button type="button" onclick="setQuickAmount(event,500000)">500000</button>
+        </div>
+
+        <!-- Pays -->
+        <label style="font-size:14px;font-weight:500;">Choisissez votre pays</label>
+
+        <div class="country-option">
+            <span>🇹🇬 Togo</span>
+            <input type="radio" name="country" value="Togo">
+        </div>
+
+        <div class="country-option">
+            <span>🇧🇯 Bénin</span>
+            <input type="radio" name="country" value="Bénin">
+        </div>
+
+        <div class="country-option">
+            <span>🇨🇮 Côte d'Ivoire</span>
+            <input type="radio" name="country" value="Côte d'Ivoire">
+        </div>
+
+        <div class="country-option">
+            <span>🇨🇲 Cameroun</span>
+            <input type="radio" name="country" value="Cameroun">
+        </div>
+
+        <div class="country-option">
+            <span>🇧🇫 Burkina Faso</span>
+            <input type="radio" name="country" value="Burkina Faso">
+        </div>
+
+        <!-- Infos -->
+        <div class="user-info">
+            <input type="text" id="fullname" placeholder="Nom complet">
+            <input type="email" id="email" placeholder="Email">
+            <input type="text" id="phone" placeholder="Numéro téléphone">
+            <input type="number" id="montant" placeholder="Montant minimum 3000">
+        </div>
+
+        <button id="deposit-btn" onclick="initDeposit()">Déposer maintenant</button>
+
+        <div class="loader" id="loader">
+            Redirection vers la page de paiement...
+        </div>
+
+    </div>
+</div>
+
+<script>
+function setQuickAmount(event,value){
+    document.getElementById("montant").value = value;
+    document.querySelectorAll(".quick-amounts button").forEach(btn=>{
+        btn.classList.remove("selected");
+    });
+    event.target.classList.add("selected");
+}
+
+function initDeposit(){
+
+    const btn = document.getElementById("deposit-btn");
+    const loader = document.getElementById("loader");
+
+    const fullname = document.getElementById("fullname").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const montant = parseInt(document.getElementById("montant").value);
+
+    const countryRadio = document.querySelector('input[name="country"]:checked');
+    const country = countryRadio ? countryRadio.value : null;
+
+    if(!fullname || !email || !phone || !country){
+        alert("Veuillez remplir tous les champs");
+        return;
+    }
+
+    if(!montant || montant < 3000){
+        alert("Montant minimum 3000 FCFA");
+        return;
+    }
+
+    btn.disabled = true;
+    loader.style.display = "block";
+
+    fetch("/create-deposit",{
+        method:"POST",
+        headers:{ "Content-Type":"application/x-www-form-urlencoded" },
+        body:`fullname=${encodeURIComponent(fullname)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&country=${encodeURIComponent(country)}&montant=${montant}`
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        if(data.success){
+            window.location.href = data.payment_url;
+        }else{
+            alert(data.error || "Erreur lors du paiement");
+            btn.disabled = false;
+            loader.style.display = "none";
+        }
+    })
+    .catch(()=>{
+        alert("Erreur serveur");
+        btn.disabled = false;
+        loader.style.display = "none";
+    });
+}
+</script>
+
+</body>
+</html>

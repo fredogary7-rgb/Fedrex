@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Équipe - Crois Max</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    background:#4f74b8;
+}
+
+/* ===== HEADER ===== */
+.header{
+    background:#4f74b8;
+    color:#fff;
+    padding:20px 16px 30px;
+    text-align:center;
+    font-size:22px;
+    font-weight:600;
+    position:relative;
+}
+
+.header i{
+    position:absolute;
+    left:15px;
+    top:22px;
+    font-size:20px;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.container{
+    background:#f4f6fb;
+    border-top-left-radius:30px;
+    border-top-right-radius:30px;
+    padding:20px 16px 100px;
+    max-width:480px;
+    margin:auto;
+    margin-top:-15px;
+}
+
+/* ===== INVITATION BOX ===== */
+.invite-box{
+    background:#fff;
+    border-radius:18px;
+    padding:16px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 4px 10px rgba(0,0,0,0.05);
+    margin-bottom:20px;
+}
+
+.invite-left{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+}
+
+.invite-left span{
+    font-size:22px;
+}
+
+.invite-title{
+    font-weight:600;
+    font-size:15px;
+    margin-bottom:5px;
+}
+
+.invite-link{
+    font-size:13px;
+    color:#4f74b8;
+    word-break:break-all;
+}
+
+.copy-btn{
+    background:#5a7cd3;
+    border:none;
+    color:#fff;
+    padding:8px 14px;
+    border-radius:20px;
+    font-size:13px;
+    cursor:pointer;
+}
+
+/* ===== TEAM LEVEL SECTION ===== */
+.section-title{
+    font-size:16px;
+    font-weight:600;
+    margin-bottom:4px;
+}
+
+.section-sub{
+    font-size:13px;
+    color:#666;
+    margin-bottom:15px;
+}
+
+.level-card{
+    border-radius:20px;
+    padding:18px;
+    margin-bottom:16px;
+    color:#333;
+    position:relative;
+}
+
+/* Gold */
+.level1{
+    background:linear-gradient(135deg,#f6d365,#fda085);
+}
+
+/* Silver */
+.level2{
+    background:linear-gradient(135deg,#cfd9df,#e2ebf0);
+}
+
+/* Bronze */
+.level3{
+    background:linear-gradient(135deg,#fbc2eb,#a18cd1);
+}
+
+.level-badge{
+    position:absolute;
+    top:15px;
+    right:15px;
+    font-size:22px;
+}
+
+.level-title{
+    font-size:18px;
+    font-weight:600;
+    margin-bottom:15px;
+}
+
+.level-stats{
+    display:flex;
+    justify-content:space-between;
+    text-align:center;
+}
+
+.stat strong{
+    display:block;
+    font-size:20px;
+    font-weight:700;
+}
+
+.stat span{
+    font-size:12px;
+}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:linear-gradient(to right,#3a5cb8,#5a7cd3);
+    display:flex;
+    justify-content:space-around;
+    padding:10px 0;
+    border-top-left-radius:20px;
+    border-top-right-radius:20px;
+}
+
+.bottom-nav a{
+    text-decoration:none;
+    color:rgba(255,255,255,0.7);
+    font-size:12px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.bottom-nav a.active{
+    color:#fff;
+    font-weight:600;
+}
+
+.bottom-nav i{
+    margin-bottom:4px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <i class="fa-solid fa-chevron-left"></i>
+    équipe
+</div>
+
+<div class="container">
+
+    <!-- INVITATION -->
+    <div class="invite-box">
+        <div class="invite-left">
+            <span>🫂</span>
+            <div>
+                <div class="invite-title">Lien d'invitation</div>
+                <div class="invite-link" id="refLink">
+                    {{ referral_link }}
+                </div>
+            </div>
+        </div>
+        <button class="copy-btn" onclick="copyLink()">Copier</button>
+    </div>
+
+    <!-- TEAM LEVEL -->
+    <div class="section-title">Niveau d'équipe</div>
+    <div class="section-sub">1 Récompense d'activation: FCFA0</div>
+
+    <!-- LEVEL 1 -->
+    <div class="level-card level1">
+        <div class="level-badge">🥇</div>
+        <div class="level-title">Level 1</div>
+        <div class="level-stats">
+            <div class="stat">
+                <strong>28%</strong>
+                <span>Remise Niveau 1</span>
+            </div>
+            <div class="stat">
+                <strong>{{ stats.level1 }}</strong>
+                <span>Total des invités</span>
+            </div>
+            <div class="stat">
+                <strong>0</strong>
+                <span>Actif</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEVEL 2 -->
+    <div class="level-card level2">
+        <div class="level-badge">🥈</div>
+        <div class="level-title">Level 2</div>
+        <div class="level-stats">
+            <div class="stat">
+                <strong>2%</strong>
+                <span>Remise Niveau 2</span>
+            </div>
+            <div class="stat">
+                <strong>{{ stats.level2 }}</strong>
+                <span>Total des invités</span>
+            </div>
+            <div class="stat">
+                <strong>0</strong>
+                <span>Actif</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEVEL 3 -->
+    <div class="level-card level3">
+        <div class="level-badge">🥉</div>
+        <div class="level-title">Level 3</div>
+        <div class="level-stats">
+            <div class="stat">
+                <strong>1%</strong>
+                <span>Remise Niveau 3</span>
+            </div>
+            <div class="stat">
+                <strong>{{ stats.level3 }}</strong>
+                <span>Total des invités</span>
+            </div>
+            <div class="stat">
+                <strong>0</strong>
+                <span>Actif</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+    <a href="/dashboard"><i class="fa-solid fa-house"></i>Accueil</a>
+    <a href="/produits_rapide"><i class="fa-solid fa-chart-line"></i>Investir</a>
+    <a href="/Team"><i class="fa-solid fa-users"></i>Team</a>
+    <a href="/profile" class="active"><i class="fa-solid fa-user"></i>Compte</a>
+</div>
+
+<script>
+function copyLink(){
+    const text = document.getElementById("refLink").innerText;
+    navigator.clipboard.writeText(text);
+    alert("Lien copié !");
+}
+</script>
+
+</body>
+</html>

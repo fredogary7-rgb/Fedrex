@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Messages Support</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f7ff;
+    padding:20px;
+}
+
+.container{
+    max-width:600px;
+    margin:auto;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.header h2{
+    font-size:20px;
+    color:#333;
+}
+
+.back-btn{
+    text-decoration:none;
+    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
+    color:white;
+    padding:8px 15px;
+    border-radius:20px;
+    font-size:13px;
+}
+
+.card{
+    background:white;
+    border-radius:20px;
+    padding:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.05);
+}
+
+.user-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px;
+    border-radius:15px;
+    margin-bottom:10px;
+    background:#f9f9ff;
+    transition:0.3s;
+    text-decoration:none;
+    color:#333;
+}
+
+.user-item:hover{
+    background:#eef2ff;
+    transform:translateY(-2px);
+}
+
+.user-left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.user-left i{
+    width:35px;
+    height:35px;
+    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
+    color:white;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+}
+
+.user-name{
+    font-size:14px;
+    font-weight:500;
+}
+
+.arrow{
+    color:#999;
+    font-size:13px;
+}
+
+.empty{
+    text-align:center;
+    padding:20px;
+    color:#999;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h2><i class="fa-solid fa-headset"></i> Messages Support</h2>
+        <a href="/admin" class="back-btn">Retour</a>
+    </div>
+
+    <div class="card">
+
+        {% if users %}
+            {% for u in users %}
+            <a href="/admin/support/{{ u[0] }}" class="user-item">
+                <div class="user-left">
+                    <i class="fa-solid fa-user"></i>
+                    <div class="user-name">
+                        {{ u[0] }}
+                    </div>
+                </div>
+                <div class="arrow">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </a>
+            {% endfor %}
+        {% else %}
+            <div class="empty">
+                <i class="fa-solid fa-inbox"></i><br><br>
+                Aucun message disponible
+            </div>
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

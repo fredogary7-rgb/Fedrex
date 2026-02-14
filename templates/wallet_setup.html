@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portefeuille</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f6fb;
+}
+
+/* HEADER */
+.header{
+    padding:18px;
+    font-size:20px;
+    font-weight:600;
+    background:white;
+    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* CONTAINER */
+.container{
+    padding:20px;
+}
+
+/* 💳 CARTE BANCAIRE */
+.bank-card{
+    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
+    border-radius:22px;
+    padding:25px;
+    color:white;
+    position:relative;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    margin-bottom:25px;
+}
+
+.bank-card .chip{
+    width:50px;
+    height:35px;
+    background:rgba(255,255,255,0.6);
+    border-radius:8px;
+    margin-bottom:30px;
+}
+
+.bank-card .bank-name{
+    position:absolute;
+    top:20px;
+    right:20px;
+    font-weight:600;
+    font-size:14px;
+}
+
+.bank-card .holder{
+    font-size:18px;
+    margin-top:15px;
+    font-weight:500;
+}
+
+.bank-card .number{
+    font-size:16px;
+    letter-spacing:2px;
+    margin-top:10px;
+}
+
+.bank-card .balance{
+    margin-top:15px;
+    font-size:14px;
+    opacity:0.9;
+}
+
+/* FORM CARD */
+.form-card{
+    background:white;
+    padding:20px;
+    border-radius:18px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.05);
+}
+
+label{
+    font-weight:600;
+    display:block;
+    margin-top:15px;
+    font-size:14px;
+}
+
+select, input{
+    width:100%;
+    padding:14px;
+    margin-top:8px;
+    border-radius:12px;
+    border:1px solid #ddd;
+    background:#f9f9f9;
+    font-size:14px;
+}
+
+.btn{
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    color:white;
+    width:100%;
+    padding:15px;
+    margin-top:25px;
+    border-radius:30px;
+    border:none;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+}
+
+/* RULES */
+.rules{
+    margin-top:25px;
+    background:white;
+    padding:15px;
+    border-radius:15px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+.rules h4{
+    margin-bottom:10px;
+}
+
+.rules p{
+    font-size:13px;
+    margin:6px 0;
+    color:#555;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    ← Portefeuille
+</div>
+
+<div class="container">
+
+    <!-- 💳 CARTE CORIS BANK -->
+    <div class="bank-card">
+
+        <div class="bank-name">Coris Bank</div>
+
+        <div class="chip"></div>
+
+        <div class="number">
+            **** **** **** {{ user.phone[-4:] if user and user.phone else "1234" }}
+        </div>
+
+        <div class="holder">
+            {{ user.nom if user else "Nom du titulaire" }}
+        </div>
+
+        <div class="balance">
+            Solde disponible :
+            <strong>
+                XOF {{ "{:,.0f}".format(user.solde_total if user else 0) }}
+            </strong>
+        </div>
+
+    </div>
+
+<!-- FORMULAIRE -->
+<div class="form-card">
+    <form method="POST">
+
+        <label>Nom du titulaire</label>
+        <input type="text" name="holder_name" placeholder="Exemple : Jean Dupont" required>
+
+        <label>Pays</label>
+        <select name="country" required>
+            <option value="">Choisissez votre pays</option>
+            <option value="Togo">🇹🇬 Togo</option>
+            <option value="Bénin">🇧🇯 Bénin</option>
+            <option value="Côte d'Ivoire">🇨🇮 Côte d'Ivoire</option>
+            <option value="Cameroun">🇨🇲 Cameroun</option>
+            <option value="Burkina Faso">🇧🇫 Burkina Faso</option>
+        </select>
+
+        <label>Opérateur Mobile</label>
+        <select name="operator" required>
+            <option value="">Sélectionnez un opérateur</option>
+            <option value="Moov">Moov Money</option>
+            <option value="TMoney">TMoney</option>
+            <option value="Orange Money">Orange Money</option>
+            <option value="MTN Money">MTN Money</option>
+        </select>
+
+        <label>Numéro de retrait</label>
+        <input type="tel" name="number" placeholder="Exemple : 90 12 34 56" required>
+
+        <button type="submit" class="btn">
+            Enregistrer
+        </button>
+
+    </form>
+</div>
+
+    <!-- RÈGLES -->
+    <div class="rules">
+        <h4>Règles</h4>
+        <p>1. Ne mettez pas un numéro non fonctionnel.</p>
+        <p>2. Vérifiez l’opérateur sélectionné.</p>
+        <p>3. Assurez-vous que le pays est correct.</p>
+    </div>
+
+</div>
+
+</body>
+</html>

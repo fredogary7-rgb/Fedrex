@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produits rapides</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f6fb;
+    padding-bottom:100px;
+}
+
+/* ===== HEADER ===== */
+.header{
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    padding:25px 20px 60px;
+    color:#fff;
+    font-size:22px;
+    font-weight:600;
+}
+
+/* ===== CONTAINER ===== */
+.container{
+    margin-top:-40px;
+    padding:0 15px;
+}
+
+/* ===== PRODUCT CARD ===== */
+.card{
+    background:#fff;
+    border-radius:22px;
+    padding:16px;
+    margin-bottom:18px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.06);
+    position:relative;
+}
+
+/* Badge rentable */
+.badge{
+    position:absolute;
+    top:15px;
+    right:15px;
+    background:#2ea78d;
+    color:#fff;
+    font-size:11px;
+    padding:5px 10px;
+    border-radius:20px;
+}
+
+/* Top section */
+.card-top{
+    display:flex;
+    gap:15px;
+}
+
+.card img{
+    width:95px;
+    height:95px;
+    border-radius:16px;
+    object-fit:cover;
+}
+
+/* Product content */
+.card-content{
+    flex:1;
+}
+
+.card-content h3{
+    font-size:17px;
+    margin-bottom:6px;
+}
+
+.price{
+    font-size:16px;
+    font-weight:600;
+    color:#3a5cb8;
+    margin-bottom:6px;
+}
+
+.details{
+    font-size:13px;
+    color:#555;
+    margin-bottom:4px;
+}
+
+/* Divider */
+.divider{
+    height:1px;
+    background:#eee;
+    margin:12px 0;
+}
+
+/* Bottom row */
+.card-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.total{
+    font-size:14px;
+    font-weight:600;
+}
+
+.btn-buy{
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    color:#fff;
+    padding:10px 20px;
+    border-radius:25px;
+    text-decoration:none;
+    font-size:13px;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.btn-buy:hover{
+    opacity:0.85;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty{
+    text-align:center;
+    margin-top:60px;
+    color:#777;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    Produits rapides
+</div>
+
+<div class="container">
+
+{% if produits %}
+{% for p in produits %}
+<div class="card">
+
+    <div class="badge">
+        Rentable
+    </div>
+
+    <div class="card-top">
+        <img src="{{ url_for('static', filename='images/' + (p.image if p.image else 'cyber1.jpg')) }}">
+
+        <div class="card-content">
+            <h3>{{ p.nom }}</h3>
+            <div class="price">XOF {{ "{:,.0f}".format(p.prix) }}</div>
+
+            <div class="details">
+                <i class="fa-regular fa-calendar"></i>
+                Validité : 150 jours
+            </div>
+
+            <div class="details">
+                <i class="fa-solid fa-coins"></i>
+                Revenu quotidien : XOF {{ "{:,.0f}".format(p.revenu_journalier) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card-bottom">
+        <div class="total">
+            Total : XOF {{ "{:,.0f}".format(p.revenu_journalier * 150) }}
+        </div>
+
+        <a href="/produits_rapide/confirmer/{{ p.id }}" class="btn-buy">
+            Acheter
+        </a>
+    </div>
+
+</div>
+{% endfor %}
+{% else %}
+
+<div class="empty">
+    <i class="fa-regular fa-box-open" style="font-size:40px;margin-bottom:10px;"></i>
+    <p>Aucun produit disponible</p>
+</div>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

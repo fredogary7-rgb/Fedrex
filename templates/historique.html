@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historique</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f7ff;
+}
+
+/* ===== HEADER ===== */
+.header{
+    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
+    padding:25px 20px 40px;
+    color:white;
+    border-radius:0 0 30px 30px;
+}
+
+.header-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.back{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    color:white;
+    font-size:18px;
+}
+
+.header h2{
+    font-size:20px;
+    font-weight:600;
+}
+
+/* ===== TABS ===== */
+.tabs{
+    display:flex;
+    gap:8px;
+    padding:20px;
+    margin-top:-25px;
+}
+
+.tab{
+    flex:1;
+    text-align:center;
+    padding:10px;
+    border-radius:25px;
+    background:white;
+    color:#666;
+    font-size:14px;
+    font-weight:500;
+    cursor:pointer;
+    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+    transition:0.3s;
+}
+
+.tab.active{
+    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    color:white;
+}
+
+/* ===== CONTENT ===== */
+.container{
+    padding:0 20px 20px;
+}
+
+/* ===== CARD ===== */
+.card{
+    background:white;
+    border-radius:22px;
+    padding:18px;
+    margin-bottom:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.05);
+}
+
+.card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.card h3{
+    font-size:16px;
+}
+
+.status{
+    font-size:12px;
+    font-weight:600;
+}
+
+.green{color:#16a34a;}
+.red{color:#dc2626;}
+.orange{color:#f59e0b;}
+
+.amount{
+    font-size:16px;
+    font-weight:600;
+    margin-top:6px;
+}
+
+.desc{
+    margin-top:4px;
+    font-size:13px;
+    color:#777;
+}
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+.empty{
+    text-align:center;
+    margin-top:40px;
+    color:#777;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+    <div class="header-top">
+        <a href="javascript:history.back()" class="back">←</a>
+        <h2>Historique</h2>
+    </div>
+</div>
+
+<!-- ===== TABS ===== -->
+<div class="tabs">
+    <div class="tab active" onclick="showTab('tout', this)">Tout</div>
+    <div class="tab" onclick="showTab('depots', this)">Dépôts</div>
+    <div class="tab" onclick="showTab('retraits', this)">Retraits</div>
+    <div class="tab" onclick="showTab('revenus', this)">Revenus</div>
+</div>
+
+<div class="container">
+
+<!-- ===== TOUT ===== -->
+<div id="tout" class="section active">
+
+{% for d in depots %}
+<div class="card">
+    <div class="card-top">
+        <h3>Dépôt</h3>
+        <span class="status green">+{{ "{:,.0f}".format(d.montant).replace(",", " ") }} XOF</span>
+    </div>
+    <div class="desc">Statut : {{ d.statut }}</div>
+</div>
+{% endfor %}
+
+{% for r in retraits %}
+<div class="card">
+    <div class="card-top">
+        <h3>Retrait</h3>
+        <span class="status red">-{{ "{:,.0f}".format(r.montant).replace(",", " ") }} XOF</span>
+    </div>
+    <div class="desc">Statut : {{ r.statut }}</div>
+</div>
+{% endfor %}
+
+{% for c in commissions %}
+<div class="card">
+    <div class="card-top">
+        <h3>Commission Niveau {{ c.niveau }}</h3>
+        <span class="status orange">+{{ "{:,.0f}".format(c.montant).replace(",", " ") }} XOF</span>
+    </div>
+    <div class="desc">Filleul : {{ c.filleul_phone }}</div>
+</div>
+{% endfor %}
+
+{% if depots|length == 0 and retraits|length == 0 and commissions|length == 0 %}
+<div class="empty">Aucune transaction pour le moment.</div>
+{% endif %}
+
+</div>
+
+<!-- ===== DEPOTS ===== -->
+<div id="depots" class="section">
+{% for d in depots %}
+<div class="card">
+    <div class="card-top">
+        <h3>Dépôt</h3>
+        <span class="status green">+{{ "{:,.0f}".format(d.montant).replace(",", " ") }} XOF</span>
+    </div>
+    <div class="desc">Statut : {{ d.statut }}</div>
+</div>
+{% else %}
+<div class="empty">Aucun dépôt.</div>
+{% endfor %}
+</div>
+
+<!-- ===== RETRAITS ===== -->
+<div id="retraits" class="section">
+{% for r in retraits %}
+<div class="card">
+    <div class="card-top">
+        <h3>Retrait</h3>
+        <span class="status red">-{{ "{:,.0f}".format(r.montant).replace(",", " ") }} XOF</span>
+    </div>
+    <div class="desc">Statut : {{ r.statut }}</div>
+</div>
+{% else %}
+<div class="empty">Aucun retrait.</div>
+{% endfor %}
+</div>
+
+<!-- ===== REVENUS ===== -->
+<div id="revenus" class="section">
+
+{% for inv in investissements %}
+<div class="card">
+    <div class="card-top">
+        <h3>Revenu journalier</h3>
+        <span class="status green">
+            +{{ "{:,.0f}".format(inv.montant).replace(",", " ") }} XOF
+        </span>
+    </div>
+    <div class="desc">{{ inv.jours_restants }} jours restants</div>
+</div>
+{% endfor %}
+
+{% for c in commissions %}
+<div class="card">
+    <div class="card-top">
+        <h3>Commission Niveau {{ c.niveau }}</h3>
+        <span class="status orange">
+            +{{ "{:,.0f}".format(c.montant).replace(",", " ") }} XOF
+        </span>
+    </div>
+    <div class="desc">Filleul : {{ c.filleul_phone }}</div>
+</div>
+{% endfor %}
+
+{% if investissements|length == 0 and commissions|length == 0 %}
+<div class="empty">Aucun revenu.</div>
+{% endif %}
+
+</div>
+
+</div>
+
+<script>
+function showTab(id, el){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+
+    el.classList.add('active');
+    document.getElementById(id).classList.add('active');
+}
+</script>
+
+</body>
+</html>
