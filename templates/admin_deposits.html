@@ -1,12 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Administration - Dépôts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            padding: 30px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .empty {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body>
+
 <h2>Liste des dépôts en attente</h2>
 
-<table border="1" width="100%" cellspacing="0" cellpadding="6">
-    <tr style="background:#f2f2f2;">
+{% if depots %}
+
+<table>
+    <tr>
         <th>ID</th>
         <th>Pays</th>
-        <th>Moyen</th>
+        <th>Opérateur</th>
         <th>Nom</th>
-        <th>Numéro paiement</th>
+        <th>Téléphone Compte</th>
+        <th>Téléphone Paiement</th>
         <th>Montant</th>
         <th>Référence</th>
         <th>Date</th>
@@ -16,17 +86,33 @@
     {% for d in depots %}
     <tr>
         <td>{{ d.id }}</td>
-        <td>{{ d.country }}</td>
-        <td>{{ d.operator }}</td>
-        <td>{{ d.fullname }}</td>
-        <td>{{ d.phone_paiement }}</td>
-        <td>{{ d.montant }} FCFA</td>
+        <td>{{ d.country or "-" }}</td>
+        <td>{{ d.operator or "-" }}</td>
+        <td>{{ d.fullname or "-" }}</td>
+        <td>{{ d.phone }}</td>
+        <td>{{ d.phone_paiement or "-" }}</td>
+        <td><strong>{{ d.montant }} FCFA</strong></td>
         <td>{{ d.reference or "-" }}</td>
         <td>{{ d.date.strftime("%d/%m/%Y %H:%M") }}</td>
         <td>
-            <a href="/admin/deposits/valider/{{ d.id }}" style="color:green; font-weight:bold; margin-right:10px;">Valider</a>
-            <a href="/admin/deposits/rejeter/{{ d.id }}" style="color:red; font-weight:bold;">Rejeter</a>
+            <a href="/admin/deposits/valider/{{ d.id }}" class="btn btn-success">
+                Valider
+            </a>
+            <a href="/admin/deposits/rejeter/{{ d.id }}" class="btn btn-danger">
+                Rejeter
+            </a>
         </td>
     </tr>
     {% endfor %}
 </table>
+
+{% else %}
+
+<div class="empty">
+    ✅ Aucun dépôt en attente pour le moment.
+</div>
+
+{% endif %}
+
+</body>
+</html>

@@ -1044,44 +1044,48 @@ def generate_depot_id():
 def create_deposit():
     try:
         fullname = request.form.get("fullname", "").strip()
-        email = request.form.get("email", "").strip()
         phone = request.form.get("phone", "").strip()
-        montant = int(request.form.get("montant", 0))
+        phone_paiement = request.form.get("phone_paiement", "").strip()
+        operator = request.form.get("operator", "").strip()
+        country = request.form.get("country", "").strip()
+        montant = float(request.form.get("montant", 0))
 
-        # Validation
-        if not fullname or not email or not phone:
-            return jsonify({"success": False, "error": "Tous les champs sont requis."})
-        if montant < 3000:
-            return jsonify({"success": False, "error": "Montant minimum 3000 FCFA."})
+        # ✅ Validation
+        if not fullname or not phone:
+            return jsonify({"success": False, "error": "Nom et téléphone requis."})
 
-        # Génération de l'ID dépôt
-        depot_id = generate_depot_id()
+        if montant < 4000:
+            return jsonify({"success": False, "error": "Montant minimum 4000 FCFA."})
 
-        # Création du dépôt en base
-        depot = Depot(
-            id=depot_id,
-            fullname=fullname,
-            email=email,
+        # ✅ Création du dépôt en base
+        nouveau_depot = Depot(
             phone=phone,
+            phone_paiement=phone_paiement,
+            fullname=fullname,
+            operator=operator,
+            country=country,
             montant=montant,
             statut="pending",
-            country=request.form.get("country"),
-            date=datetime.utcnow()
+            reference=None  # sera rempli après paiement si besoin
         )
-        db.session.add(depot)
+
+        db.session.add(nouveau_depot)
         db.session.commit()
 
-        # 🔹 Lien SendavaPay (exemple statique)
+        # 🔹 Lien de paiement
         payment_url = "https://sendavapay.com/pay/SPYN7ENTPHP"
 
         return jsonify({
             "success": True,
-            "payment_url": payment_url,
-            "depot_id": depot_id
+            "payment_url": payment_url
         })
 
     except Exception as e:
-        return jsonify({"success": False, "error": f"Erreur serveur: {str(e)}"})
+        return jsonify({
+            "success": False,
+            "error": f"Erreur serveur: {str(e)}"
+        })
+
 
 @app.route("/nous")
 def nous_page():
