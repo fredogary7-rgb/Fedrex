@@ -1042,51 +1042,37 @@ def generate_depot_id():
 # =========================
 @app.route("/create-deposit", methods=["POST"])
 def create_deposit():
+    try:
+        fullname = request.form.get("fullname", "").strip()
+        email = request.form.get("email", "").strip()
+        phone = request.form.get("phone", "").strip()
+        montant = int(request.form.get("montant", 0))
 
-    fullname = request.form.get("fullname")
-    email = request.form.get("email")
-    phone = request.form.get("phone")
-    montant = int(request.form.get("montant"))
+        # Validation des champs
+        if not fullname or not email or not phone:
+            return jsonify({"success": False, "error": "Tous les champs sont requis."})
+        if montant < 4000:
+            return jsonify({"success": False, "error": "Montant minimum 4000 FCFA."})
 
-    if montant < 3000:
-        return jsonify({"success": False, "error": "Montant minimum 3000"})
+        # Génération de l'ID dépôt
+        depot_id = generate_depot_id()
 
-    # 👉 Enregistre ton dépôt en base ici (status = pending)
-    depot_id = generate_depot_id()  # crée ta fonction
+        # 🔹 Lien SendavaPay (exemple statique)
+        # Tu peux générer dynamiquement un lien si nécessaire via ton API côté serveur
+        payment_url = "https://sendavapay.com/pay/SPYN7ENTPHP"
 
-    payload = {
-        "amount": montant,
-        "currency": "XOF",
-        "description": "Recharge compte Coris Max",
-        "externalReference": f"DEPOT-{depot_id}",
-        "customerEmail": email,
-        "customerPhone": phone,
-        "customerName": fullname,
-        "redirectUrl": "https://tonsite.com/dashboard"
-    }
-
-    headers = {
-        "Authorization": f"Bearer {SENDAVAPAY_API_KEY}",
-        "Content-Type": "application/json"
-    }
-
-    response = requests.post(
-        f"{SENDAVAPAY_BASE_URL}/create-payment",
-        json=payload,
-        headers=headers
-    )
-
-    data = response.json()
-
-    if data.get("success"):
-        payment_url = data["data"]["paymentUrl"]
+        # Ici tu peux enregistrer le dépôt en base (status pending)
+        # save_deposit(fullname, email, phone, montant, depot_id, status="pending")
 
         return jsonify({
             "success": True,
-            "payment_url": payment_url
+            "payment_url": payment_url,
+            "depot_id": depot_id  # utile pour traçabilité côté serveur
         })
 
-    return jsonify({"success": False, "error": "Erreur API paiement"})
+    except Exception as e:
+        return jsonify({"success": False, "error": f"Erreur serveur: {str(e)}"})
+
 
 @app.route("/nous")
 def nous_page():
