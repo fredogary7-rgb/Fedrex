@@ -17,7 +17,11 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 app.secret_key = "ma_cle_ultra_secrete"
 
 load_dotenv()
+load_dotenv()
 
+SENDAVAPAY_API_KEY = os.getenv("SENDAVAPAY_API_KEY")
+WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
+SENDAVAPAY_BASE_URL = os.getenv("SENDAVAPAY_BASE_URL")
 UPLOAD_FOLDER = "static/vlogs"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
