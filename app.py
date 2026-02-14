@@ -400,11 +400,11 @@ def dashboard_page():
 def admin_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if not current_user.is_authenticated or not getattr(current_user, "is_admin", False):
-            abort(403)
+        if not session.get("admin"):
+            flash("Accès administrateur requis 🔐", "danger")
+            return redirect(url_for("admin_login"))
         return f(*args, **kwargs)
     return decorated
-
 # ===== Dashboard admin =====
 @app.route("/admin")
 @login_required
@@ -422,14 +422,14 @@ def admin_dashboard():
 
 # ===== Liste utilisateurs =====
 @app.route("/admin/users")
-@login_required
+@admin_required
 def admin_users():
     users = User.query.order_by(User.date_creation.desc()).all()
     return render_template("admin/users.html", users=users)
 
 # ===== Crédit / débit utilisateur =====
 @app.route("/admin/user/<int:user_id>/balance", methods=["POST"])
-@login_required
+@admin_required
 def admin_balance(user_id):
     user = User.query.get_or_404(user_id)
     action = request.form.get("action")   # credit | debit
@@ -457,7 +457,7 @@ def admin_balance(user_id):
 
 # ===== Activer / désactiver bannissement =====
 @app.route("/admin/user/<int:user_id>/toggle-ban")
-@login_required
+@admin_required
 def toggle_ban(user_id):
     user = User.query.get_or_404(user_id)
     user.is_banned = not getattr(user, "is_banned", False)
@@ -470,7 +470,7 @@ def toggle_ban(user_id):
 
 # ===== Quick invest =====
 @app.route("/admin/user/<int:user_id>/quick-invest", methods=["POST"])
-@login_required
+@admin_required
 def quick_invest(user_id):
     user = User.query.get_or_404(user_id)
     try:
@@ -501,6 +501,31 @@ def check_banned_user():
             flash("⛔ Votre compte est suspendu", "danger")
             session.pop("phone", None)
             return redirect(url_for("connexion_page"))
+
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "POST":
+        phone = request.form.get("phone")
+        password = request.form.get("password")
+
+        if phone == "98789878" and password == "ProjetCoris":
+            session["admin"] = True
+            flash("Connexion admin réussie ✅", "success")
+            return redirect("/admin/users")
+        else:
+            flash("Identifiants incorrects ❌", "danger")
+
+    return render_template("admin/login.html")
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("admin"):
+            flash("Veuillez vous connecter en tant qu'administrateur 🔐", "danger")
+            return redirect(url_for("admin_login"))
+        return f(*args, **kwargs)
+    return decorated_function
 
 # ===== Helpers =====
 def get_logged_in_user_phone():
