@@ -812,9 +812,13 @@ def confirmer_produit_rapide(vip_id):
 # ========================
 
 @app.route("/admin/support")
+@admin_required
 def admin_support_list():
+
     users = db.session.query(
         SupportMessage.user_phone
+    ).filter(
+        SupportMessage.is_read == False
     ).distinct().all()
 
     return render_template("admin/support_list.html", users=users)

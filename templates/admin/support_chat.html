@@ -122,13 +122,21 @@ body{
         <a href="/admin/support" class="back-btn">Retour</a>
     </div>
 
-    <div class="chat-messages" id="chatBox">
+<div class="chat-messages" id="chatBox">
+
+    {% if messages %}
         {% for m in messages %}
             <div class="message {{ 'user' if m.sender=='user' else 'admin' }}">
                 {{ m.message }}
             </div>
         {% endfor %}
-    </div>
+    {% else %}
+        <div style="text-align:center; font-size:13px; color:#777;">
+            Aucun message non lu 📭
+        </div>
+    {% endif %}
+
+</div>
 
     <form method="POST" class="chat-form">
         <input type="text" name="message" placeholder="Écrire une réponse..." required>
