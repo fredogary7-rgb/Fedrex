@@ -284,15 +284,15 @@ body{
 
     <div class="balance-row">
         <div class="balance-item">
-            <strong>FCFA {{ user.revenus_produits or 0 }}</strong>
+            <strong>FCFA {{ user.solde_revenu or 0 }}</strong>
             <span>Revenu des produits</span>
         </div>
         <div class="balance-item">
-            <strong>FCFA {{ user.solde_recharge or 0 }}</strong>
+            <strong>FCFA {{ user.solde_total or 0 }}</strong>
             <span>Solde de recharge</span>
         </div>
         <div class="balance-item">
-            <strong>FCFA {{ user.solde_retrait or 0 }}</strong>
+            <strong>FCFA {{ user.solde_revenu or 0 }}</strong>
             <span>Solde de retrait</span>
         </div>
     </div>
