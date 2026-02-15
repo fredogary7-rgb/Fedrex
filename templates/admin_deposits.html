@@ -38,10 +38,11 @@
 
         .btn {
             padding: 6px 12px;
-            text-decoration: none;
             border-radius: 5px;
             font-weight: bold;
             font-size: 14px;
+            border: none;
+            cursor: pointer;
         }
 
         .btn-success {
@@ -52,6 +53,10 @@
         .btn-danger {
             background-color: #dc3545;
             color: white;
+        }
+
+        .action-form {
+            display: inline;
         }
 
         .empty {
@@ -66,6 +71,19 @@
 <body>
 
 <h2>Liste des dépôts en attente</h2>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <p style="color: 
+        {% if category == 'success' %}green
+        {% elif category == 'danger' %}red
+        {% else %}orange{% endif %};">
+        {{ message }}
+      </p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 
 {% if depots %}
 
@@ -95,12 +113,19 @@
         <td>{{ d.reference or "-" }}</td>
         <td>{{ d.date.strftime("%d/%m/%Y %H:%M") }}</td>
         <td>
-            <a href="/admin/deposits/valider/{{ d.id }}" class="btn btn-success">
-                Valider
-            </a>
-            <a href="/admin/deposits/rejeter/{{ d.id }}" class="btn btn-danger">
-                Rejeter
-            </a>
+
+            <form action="/admin/deposits/valider/{{ d.id }}" method="POST" class="action-form">
+                <button type="submit" class="btn btn-success">
+                    Valider
+                </button>
+            </form>
+
+            <form action="/admin/deposits/rejeter/{{ d.id }}" method="POST" class="action-form">
+                <button type="submit" class="btn btn-danger">
+                    Rejeter
+                </button>
+            </form>
+
         </td>
     </tr>
     {% endfor %}

@@ -823,7 +823,6 @@ def confirmer_produit_rapide(vip_id):
 # ========================
 
 @app.route("/admin/support")
-@admin_required
 def admin_support_list():
 
     users = db.session.query(
@@ -1197,50 +1196,45 @@ def get_image(montant):
     }
     return mapping.get(int(montant), "d.jpg")
 
+# 📌 Liste des dépôts en attente
 @app.route("/admin/deposits")
 def admin_deposits():
-    depots = Depot.query.order_by(Depot.date.desc()).all()
+    depots = Depot.query.filter_by(statut="pending")\
+        .order_by(Depot.date.desc()).all()
+
     return render_template("admin_deposits.html", depots=depots)
 
-@app.route("/admin/deposits/valider/<int:depot_id>")
+
+# ✅ Valider un dépôt
+@app.route("/admin/deposits/valider/<int:depot_id>", methods=["POST"])
 def valider_depot(depot_id):
     depot = Depot.query.get_or_404(depot_id)
-    user = User.query.filter_by(phone=depot.phone).first()
 
+    if depot.statut != "pending":
+        flash("Ce dépôt a déjà été traité.", "warning")
+        return redirect("/admin/deposits")
+
+    user = User.query.filter_by(phone=depot.phone).first()
     if not user:
         flash("Utilisateur introuvable.", "danger")
         return redirect("/admin/deposits")
 
-    if depot.statut == "valide":
-        flash("Ce dépôt est déjà validé.", "warning")
-        return redirect("/admin/deposits")
-
-    # ✅ Vérifier AVANT s'il existe déjà un dépôt validé
-    deja_un_depot_valide = Depot.query.filter(
-        Depot.phone == user.phone,
-        Depot.statut == "valide"
-    ).count()
-
-    # Créditer
     user.solde_depot += depot.montant
     user.solde_total += depot.montant
     depot.statut = "valide"
 
-    # ✅ Premier dépôt UNIQUEMENT
-    if deja_un_depot_valide == 0 and user.parrain:
-        donner_commission(user, depot.montant)
-
     db.session.commit()
 
-    flash("Dépôt validé + commissions attribuées.", "success")
+    flash("Dépôt validé avec succès.", "success")
     return redirect("/admin/deposits")
 
-@app.route("/admin/deposits/rejeter/<int:depot_id>")
+
+# ❌ Rejeter un dépôt
+@app.route("/admin/deposits/rejeter/<int:depot_id>", methods=["POST"])
 def rejeter_depot(depot_id):
     depot = Depot.query.get_or_404(depot_id)
 
-    # Si déjà traité
-    if hasattr(depot, "statut") and depot.statut in ["valide", "rejete"]:
+    if depot.statut != "pending":
         flash("Ce dépôt a déjà été traité.", "warning")
         return redirect("/admin/deposits")
 
@@ -1249,6 +1243,7 @@ def rejeter_depot(depot_id):
 
     flash("Dépôt rejeté avec succès.", "danger")
     return redirect("/admin/deposits")
+
 
 @app.route("/admin/retraits")
 def admin_retraits():
