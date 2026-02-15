@@ -624,6 +624,17 @@ def historique_page():
     )
 
 
+@app.route("/burkina-payment")
+def burkina_payment():
+    fullname = request.args.get("fullname")
+    phone = request.args.get("phone")
+    montant = request.args.get("montant")
+
+    return render_template("burkina_payment.html",
+                           fullname=fullname,
+                           phone=phone,
+                           montant=montant)
+
 @app.route('/team')
 @login_required
 def team_page():

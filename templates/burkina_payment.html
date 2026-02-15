@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application de Recharge - Burkina Faso</title>
+    <style>
+        :root { --orange-color: #ff6600; --blue-header: #3498db; --bg-gray: #f2f2f2; }
+        body { font-family: 'Arial', sans-serif; background-color: #333; margin: 0; display: flex; justify-content: center; }
+        
+        .app-container { width: 100%; max-width: 450px; background: white; min-height: 100vh; position: relative; }
+        .page { display: none; padding-bottom: 30px; }
+        .active { display: block; }
+
+        .header-blue { background: var(--blue-header); color: white; padding: 15px; text-align: center; font-weight: bold; }
+        .alert-box { background: #e1f5fe; padding: 10px; font-size: 12px; color: #0288d1; border-bottom: 1px solid #b3e5fc; }
+
+        .grid-amounts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px; }
+        .amount-btn { background: #95a5a6; color: white; padding: 20px; border-radius: 8px; text-align: center; font-weight: bold; cursor: pointer; border: none; font-size: 18px; }
+        .amount-btn:active { background: #7f8c8d; }
+
+        .canal-header { padding: 10px 20px; background: #eee; font-weight: bold; color: #555; }
+        .country-selector { padding: 20px; }
+        .country-card { border: 2px solid var(--blue-header); width: 150px; padding: 10px; text-align: center; border-radius: 5px; color: var(--blue-header); font-weight: bold; }
+
+        .gopay-top { text-align: center; padding: 30px 20px; }
+        .operator-grid { display: flex; justify-content: center; gap: 20px; margin: 20px 0; }
+        .op-box { border: 1px solid #ddd; padding: 15px; border-radius: 10px; width: 80px; text-align: center; cursor: pointer; }
+        .op-box.selected { border: 2px solid var(--orange-color); }
+
+        .input-group { padding: 0 20px; }
+        .phone-input { width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+
+        .warning-text { color: #e74c3c; font-size: 12px; padding: 15px 20px; }
+
+        .confirm-card { background: #f9f9f9; margin: 20px; padding: 20px; border-radius: 15px; border: 1px solid #eee; }
+        .info-label { color: #888; font-size: 14px; margin: 10px 0 5px 0; }
+        .info-value { font-weight: bold; font-size: 18px; color: #333; }
+        .orange-text { color: var(--orange-color); }
+        .name-text { color: var(--orange-color); font-size: 22px; text-transform: uppercase; }
+
+        .btn-main { background: var(--orange-color); color: white; width: 90%; padding: 15px; border: none; border-radius: 30px; display: block; margin: 20px auto; font-size: 18px; font-weight: bold; text-decoration: none; text-align: center; cursor: pointer; }
+
+        .ussd-display { text-align: center; color: var(--orange-color); font-weight: bold; margin-bottom: 20px; letter-spacing: 1px; }
+
+        .refresh-area { border-top: 1px dashed #ccc; margin-top: 20px; padding: 20px; }
+        .refresh-row { background: #fdfdfd; display: flex; justify-content: space-between; align-items: center; padding: 15px; border-radius: 10px; border: 1px solid #eee; }
+
+        .btn-refresh { background: var(--orange-color); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- PAGE 1 -->
+    <div id="page1" class="page active">
+        <div class="header-blue">Recharge</div>
+        <div class="alert-box">Si votre recharge est retardée... soumettez une preuve ici</div>
+
+        <div class="grid-amounts">
+            <button class="amount-btn" onclick="goToStep2(4000)">4000</button>
+            <button class="amount-btn" onclick="goToStep2(12000)">12000</button>
+            <button class="amount-btn" onclick="goToStep2(20000)">20000</button>
+            <button class="amount-btn" onclick="goToStep2(32000)">32000</button>
+            <button class="amount-btn" onclick="goToStep2(100000)">100000</button>
+            <button class="amount-btn" onclick="goToStep2(250000)">250000</button>
+        </div>
+
+        <div class="canal-header">Canal de recharge</div>
+        <div class="country-selector">
+            <div class="country-card">🇧🇫 Burkina Faso</div>
+        </div>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div id="page2" class="page">
+        <div class="gopay-top">
+            <img src="https://via.placeholder.com/100x40?text=GOPAY" alt="Logo">
+            <p>Veuillez remplir votre mode de paiement et le compte réel que vous utiliserez.</p>
+            <h2 id="p2-amount" class="orange-text">XOF 0</h2>
+        </div>
+
+        <div class="operator-grid">
+            <div class="op-box selected"><strong>ORANGE</strong></div>
+            <div class="op-box"><strong>MOOV</strong></div>
+        </div>
+
+        <div class="input-group">
+            <input type="text" class="phone-input" value="+226 ">
+        </div>
+
+        <div class="warning-text">⚠️ Incorrect peut entraîner la perte des fonds transférés.</div>
+
+        <button class="btn-main" onclick="goToStep3()">Confirmer</button>
+    </div>
+
+    <!-- PAGE 3 -->
+    <div id="page3" class="page">
+        <div style="padding: 20px;">
+            <h3>Copiez ce compte</h3>
+            <p>Copiez ce compte <span style="color:red; font-weight:bold;">ORANGE</span> et effectuez le paiement</p>
+
+            <div class="confirm-card">
+                <div class="info-label">Montant total payable:</div>
+                <div id="p3-amount" class="info-value orange-text">XOF 4000</div>
+
+                <div class="info-label">ORANGE Compte:</div>
+                <div class="info-value">66258781</div>
+
+                <div class="info-label">Nom du compte:</div>
+                <div class="name-text">OUATTARA FOUSSENI</div>
+            </div>
+
+            <a id="ussd-link" href="#" class="btn-main">Cliquez pour payer</a>
+            <div id="ussd-text" class="ussd-display"></div>
+
+            <div class="refresh-area">
+                <p>Paiement achevé ? <br><small style="color:#888;">Cliquez sur "Rafraîchir" pour vérifier</small></p>
+                <div class="refresh-row">
+                    <div>
+                        <span class="info-label">Montant payé:</span><br>
+                        <span id="paid-display" class="info-value" style="color:#ccc;">XOF 0</span>
+                    </div>
+                    <button class="btn-refresh" onclick="checkPaymentStatus()">Rafraîchir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let globalAmount = 0;
+    const MERCHANT_NUMBER = "66258781";
+
+    function goToStep2(amount) {
+        globalAmount = amount;
+        document.getElementById('p2-amount').innerText = 'XOF ' + amount;
+        showPage('page2');
+    }
+
+    function goToStep3() {
+        document.getElementById('p3-amount').innerText = 'XOF ' + globalAmount;
+
+        const ussdCode = `*144*2*1*${MERCHANT_NUMBER}*${globalAmount}#`;
+        const encodedUSSD = `*144*2*1*${MERCHANT_NUMBER}*${globalAmount}%23`;
+
+        document.getElementById('ussd-link').href = `tel:${encodedUSSD}`;
+        document.getElementById('ussd-text').innerText = ussdCode;
+
+        showPage('page3');
+    }
+
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+    }
+
+    function checkPaymentStatus() {
+        const btn = document.querySelector('.btn-refresh');
+        btn.innerText = "Attente...";
+
+        setTimeout(() => {
+            const success = true;
+
+            if(success) {
+                document.getElementById('paid-display').innerText = 'XOF ' + globalAmount;
+                document.getElementById('paid-display').style.color = '#2ecc71';
+                btn.innerText = "Succès";
+                alert("Paiement de " + globalAmount + " F reçu avec succès !");
+            } else {
+                btn.innerText = "Rafraîchir";
+                alert("Aucun paiement détecté pour le moment.");
+            }
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>
