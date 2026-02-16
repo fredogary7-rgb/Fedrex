@@ -14,12 +14,9 @@
     box-sizing:border-box;
     font-family:'Poppins',sans-serif;
 }
-
 body{
     background:#f4f7ff;
 }
-
-/* HEADER */
 .header{
     background:linear-gradient(135deg,#3a5cb8,#2ea78d);
     padding:30px 20px 70px;
@@ -27,39 +24,32 @@ body{
     border-radius:0 0 40px 40px;
     text-align:center;
 }
-
 .header h2{
     font-size:20px;
     font-weight:600;
 }
-
 .container{
     padding:20px;
     max-width:480px;
     margin:-40px auto 0;
 }
-
 .card{
     background:white;
     padding:25px;
     border-radius:20px;
     box-shadow:0 15px 35px rgba(0,0,0,0.05);
 }
-
 .card h3{
     text-align:center;
     margin-bottom:20px;
     font-size:16px;
 }
-
-/* Montants rapides */
 .quick-amounts{
     display:grid;
     grid-template-columns:repeat(4,1fr);
     gap:10px;
     margin-bottom:20px;
 }
-
 .quick-amounts button{
     border:1px solid #ddd;
     border-radius:50px;
@@ -71,39 +61,13 @@ body{
     transition:0.2s;
     font-size:13px;
 }
-
 .quick-amounts button.selected,
 .quick-amounts button:hover{
     border-color:#3a5cb8;
     color:#3a5cb8;
     background:#eef2ff;
 }
-
-/* Pays */
-.country-option{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    border:1px solid #eee;
-    border-radius:12px;
-    padding:12px;
-    margin-top:8px;
-    cursor:pointer;
-    transition:0.2s;
-    font-size:14px;
-}
-
-.country-option:hover{
-    border-color:#3a5cb8;
-}
-
-.country-option input{
-    accent-color:#3a5cb8;
-}
-
-/* Champs */
-.user-info input,
-.user-info select{
+.user-info input{
     width:100%;
     padding:12px;
     margin-top:12px;
@@ -112,13 +76,9 @@ body{
     font-size:14px;
     outline:none;
 }
-
-.user-info input:focus,
-.user-info select:focus{
+.user-info input:focus{
     border-color:#3a5cb8;
 }
-
-/* Bouton */
 #deposit-btn{
     width:100%;
     margin-top:20px;
@@ -132,11 +92,9 @@ body{
     font-size:15px;
     transition:0.3s;
 }
-
 #deposit-btn:hover{
     opacity:0.9;
 }
-
 .loader{
     display:none;
     text-align:center;
@@ -157,7 +115,6 @@ body{
     <div class="card">
         <h3>Recharger votre compte</h3>
 
-        <!-- Montants rapides -->
         <div class="quick-amounts">
             <button type="button" onclick="setQuickAmount(event,4000)">4000</button>
             <button type="button" onclick="setQuickAmount(event,8000)">8000</button>
@@ -169,35 +126,6 @@ body{
             <button type="button" onclick="setQuickAmount(event,500000)">500000</button>
         </div>
 
-        <!-- Pays -->
-        <label style="font-size:14px;font-weight:500;">Choisissez votre pays</label>
-
-        <div class="country-option">
-            <span>🇹🇬 Togo</span>
-            <input type="radio" name="country" value="Togo">
-        </div>
-
-        <div class="country-option">
-            <span>🇧🇯 Bénin</span>
-            <input type="radio" name="country" value="Bénin">
-        </div>
-
-        <div class="country-option">
-            <span>🇨🇮 Côte d'Ivoire</span>
-            <input type="radio" name="country" value="Côte d'Ivoire">
-        </div>
-
-        <div class="country-option">
-            <span>🇨🇲 Cameroun</span>
-            <input type="radio" name="country" value="Cameroun">
-        </div>
-
-        <div class="country-option">
-            <span>🇧🇫 Burkina Faso</span>
-            <input type="radio" name="country" value="Burkina Faso">
-        </div>
-
-        <!-- Infos -->
         <div class="user-info">
             <input type="text" id="fullname" placeholder="Nom complet">
             <input type="email" id="email" placeholder="Email">
@@ -208,73 +136,96 @@ body{
         <button id="deposit-btn" onclick="initDeposit()">Déposer maintenant</button>
 
         <div class="loader" id="loader">
-            Redirection vers la page de paiement...
+            Ouverture du paiement sécurisé...
         </div>
 
     </div>
 </div>
 
+<script src="https://bkapay.com/bkapay-inline.js"></script>
+
 <script>
-function setQuickAmount(event,value){
-    document.getElementById("montant").value = value;
-    document.querySelectorAll(".quick-amounts button").forEach(btn=>{
-        btn.classList.remove("selected");
-    });
-    event.target.classList.add("selected");
+function setQuickAmount(e, amount){
+    document.querySelectorAll(".quick-amounts button")
+        .forEach(btn=>btn.classList.remove("selected"));
+    e.target.classList.add("selected");
+    document.getElementById("montant").value = amount;
 }
 
 function initDeposit(){
 
-    const btn = document.getElementById("deposit-btn");
-    const loader = document.getElementById("loader");
+    let fullname = document.getElementById("fullname").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+    let montant = parseInt(document.getElementById("montant").value);
 
-    const fullname = document.getElementById("fullname").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const montant = parseInt(document.getElementById("montant").value);
-
-    const countryRadio = document.querySelector('input[name="country"]:checked');
-    const country = countryRadio ? countryRadio.value : null;
-
-    if(!fullname || !email || !phone || !country){
-        alert("Veuillez remplir tous les champs");
+    if(!fullname || !phone || !email || !montant || montant < 3000){
+        alert("Veuillez remplir correctement les informations.");
         return;
     }
 
-    if(!montant || montant < 4000){
-        alert("Montant minimum 4000 FCFA");
-        return;
-    }
+    document.getElementById("loader").style.display = "block";
 
-    btn.disabled = true;
-    loader.style.display = "block";
-
-    // ✅ SI BURKINA → redirection vers page spéciale
-    if(country === "Burkina Faso"){
-        window.location.href = `/burkina-payment?fullname=${encodeURIComponent(fullname)}&phone=${encodeURIComponent(phone)}&montant=${montant}`;
-        return;
-    }
-
-    // ✅ SINON → Sendavapay (Togo, Bénin, Côte d'Ivoire, Cameroun)
     fetch("/create-deposit",{
         method:"POST",
-        headers:{ "Content-Type":"application/x-www-form-urlencoded" },
-        body:`fullname=${encodeURIComponent(fullname)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&country=${encodeURIComponent(country)}&montant=${montant}`
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            montant: montant,
+            email: email,
+            fullname: fullname,
+            phone: phone
+        })
     })
     .then(res=>res.json())
     .then(data=>{
         if(data.success){
-            window.location.href = data.payment_url;
+
+            BKApay.checkout({
+                key:"pk_live_8948bec4-53e9-4c1a-8c4c-936928edfca4",
+                amount: montant,
+                orderId: data.depot_id,
+                description:"Depot compte",
+
+                customer:{
+                    name: fullname,
+                    phone: phone,
+                    email: email
+                },
+
+                onSuccess:function(response){
+
+                    fetch("/verify-bkapay",{
+                        method:"POST",
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        body:JSON.stringify({
+                            transactionId: response.transactionId,
+                            depot_id: data.depot_id
+                        })
+                    })
+                    .then(res=>res.json())
+                    .then(result=>{
+                        if(result.success){
+                            alert("Paiement validé ✅");
+                            window.location.href="/dashboard";
+                        }else{
+                            alert("Erreur vérification.");
+                        }
+                    });
+                },
+
+                onError:function(){
+                    alert("Paiement échoué ❌");
+                }
+            });
+
         }else{
-            alert(data.error || "Erreur lors du paiement");
-            btn.disabled = false;
-            loader.style.display = "none";
+            alert("Erreur création dépôt");
+            document.getElementById("loader").style.display = "none";
         }
-    })
-    .catch(()=>{
-        alert("Erreur serveur");
-        btn.disabled = false;
-        loader.style.display = "none";
     });
 }
 </script>

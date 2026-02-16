@@ -897,96 +897,103 @@ def wallet_setup_page():
 
     return render_template("wallet_setup.html")
 
-SENDAVAPAY_BASE_URL= "https://sendavapay.com/api/v1"
+import hmac
+import hashlib
 
+@app.route("/webhook/bkapay", methods=["POST"])
+def webhook_bkapay():
 
-@app.route("/webhook/sendavapay", methods=["POST"])
-def sendavapay_webhook():
+    payload = request.data
+    signature = request.headers.get("X-BKApay-Signature")
+    secret = "cs_37ef7c6a670a4f8db6321d66f9d326c0"
 
-    signature = request.headers.get("X-SendavaPay-Signature")
-    event = request.headers.get("X-SendavaPay-Event")
-
-    payload = request.get_json()
-
-    # 🔐 Vérification HMAC plus fiable
     expected_signature = hmac.new(
-        WEBHOOK_SECRET.encode(),
-        request.data,
+        secret.encode(),
+        payload,
         hashlib.sha256
     ).hexdigest()
 
     if signature != expected_signature:
-        return jsonify({"error": "Invalid signature"}), 401
+        return jsonify({"error": "Signature invalide"}), 401
 
-    if event == "payment.completed":
+    data = request.get_json()
 
-        reference = payload["data"]["reference"]
-        amount = float(payload["data"]["amount"])
-        phone = payload["data"]["customer"]["phone"]
+    if data["event"] == "payment.completed":
 
-        # 🔎 Anti double traitement
-        transaction = Transaction.query.filter_by(reference=reference).first()
+        transaction_id = data["transactionId"]
+        amount = data["amount"]
+        phone = data["customerPhone"]
 
-        if transaction and transaction.status == "completed":
-            return jsonify({"message": "Déjà traité"}), 200
+        depot = Depot.query.filter_by(
+            phone=phone,
+            statut="pending"
+        ).order_by(Depot.date.desc()).first()
 
-        user = User.query.filter_by(phone=phone).first()
+        if depot:
+            user = User.query.filter_by(phone=phone).first()
 
-        if not user:
-            return jsonify({"error": "User not found"}), 404
+            user.solde_total += amount
+            user.solde_depot += amount
+            depot.statut = "valide"
 
-        # 💰 Crédit utilisateur
-        user.solde_depot += amount
-        user.solde_total += amount
-
-        # 🎁 Donner commission parrain
-        donner_commission(user, amount)
-
-        # 📝 Sauvegarde transaction
-        if not transaction:
-            transaction = Transaction(
-                reference=reference,
-                user_id=user.id,
-                amount=amount,
-                status="completed"
-            )
-            db.session.add(transaction)
-        else:
-            transaction.status = "completed"
-
-        db.session.commit()
-
-        print("Paiement + commission confirmés :", reference)
+            db.session.commit()
 
     return jsonify({"received": True})
 
-@app.route("/confirm-deposit", methods=["POST"])
-@login_required
-def confirm_deposit():
+import requests
 
-    depot_id = request.json.get("depot_id")
-    transaction_id = request.json.get("transaction_id")
+@app.route("/verify-bkapay", methods=["POST"])
+def verify_bkapay():
+
+    data = request.get_json()
+    transaction_id = data.get("transactionId")
+    depot_id = data.get("depot_id")
 
     depot = Depot.query.get(depot_id)
 
     if not depot or depot.statut != "pending":
-        return jsonify({"error": "Depot invalide"}), 400
+        return jsonify({"success": False})
 
-    user = User.query.filter_by(phone=depot.phone).first()
+    # 🔥 Vérification auprès de BKApay
+    try:
+        r = requests.get(
+            f"https://bkapay.com/api/inline-pay/status/{transaction_id}"
+        )
+        response = r.json()
 
-    if not user:
-        return jsonify({"error": "Utilisateur introuvable"}), 400
+        if response.get("status") == "completed":
 
-    # créditer solde
-    user.solde_total += depot.montant
+            user = User.query.filter_by(phone=depot.phone).first()
 
-    # mettre à jour dépôt
-    depot.statut = "completed"
-    depot.reference = transaction_id
+            if not user:
+                return jsonify({"success": False})
 
-    db.session.commit()
+            # 💰 Crédit
+            user.solde_total += depot.montant
+            user.solde_depot += depot.montant
+            depot.statut = "valide"
 
-    return jsonify({"success": True})
+            # 🎁 Commission parrain (si premier dépôt)
+            deja_valide = Depot.query.filter(
+                Depot.phone == user.phone,
+                Depot.statut == "valide"
+            ).count()
+
+            if deja_valide == 0 and user.parrain:
+                donner_commission(user, depot.montant)
+
+            db.session.commit()
+
+            return jsonify({"success": True})
+
+        else:
+            return jsonify({"success": False})
+
+    except Exception as e:
+        print("Erreur verification:", e)
+        return jsonify({"success": False})
+
+
 
 @app.route("/boutique")
 def boutique_page():
@@ -1080,51 +1087,36 @@ def generate_depot_id():
 # 1️⃣ Créer un dépôt
 # =========================
 @app.route("/create-deposit", methods=["POST"])
+@login_required
 def create_deposit():
+
+    data = request.get_json()
+
+    if not data or "montant" not in data:
+        return jsonify({"success": False, "message": "Montant manquant"}), 400
+
     try:
-        fullname = request.form.get("fullname", "").strip()
-        phone = request.form.get("phone", "").strip()
-        phone_paiement = request.form.get("phone_paiement", "").strip()
-        operator = request.form.get("operator", "").strip()
-        country = request.form.get("country", "").strip()
-        montant = float(request.form.get("montant", 0))
+        montant = float(data.get("montant"))
+    except (TypeError, ValueError):
+        return jsonify({"success": False, "message": "Montant invalide"}), 400
 
-        # ✅ Validation
-        if not fullname or not phone:
-            return jsonify({"success": False, "error": "Nom et téléphone requis."})
+    if montant < 3000:
+        return jsonify({"success": False, "message": "Montant minimum 3000"}), 400
 
-        if montant < 4000:
-            return jsonify({"success": False, "error": "Montant minimum 4000 FCFA."})
+    # Création dépôt
+    depot = Depot(
+        phone=session.get("phone"),  # adapte selon ton système
+        montant=montant,
+        statut="en_attente"
+    )
 
-        # ✅ Création du dépôt en base
-        nouveau_depot = Depot(
-            phone=phone,
-            phone_paiement=phone_paiement,
-            fullname=fullname,
-            operator=operator,
-            country=country,
-            montant=montant,
-            statut="pending",
-            reference=None  # sera rempli après paiement si besoin
-        )
+    db.session.add(depot)
+    db.session.commit()
 
-        db.session.add(nouveau_depot)
-        db.session.commit()
-
-        # 🔹 Lien de paiement
-        payment_url = "https://sendavapay.com/pay/SPYN7ENTPHP"
-
-        return jsonify({
-            "success": True,
-            "payment_url": payment_url
-        })
-
-    except Exception as e:
-        return jsonify({
-            "success": False,
-            "error": f"Erreur serveur: {str(e)}"
-        })
-
+    return jsonify({
+        "success": True,
+        "depot_id": depot.id
+    })
 
 @app.route("/nous")
 def nous_page():
