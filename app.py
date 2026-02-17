@@ -1191,7 +1191,7 @@ def get_image(montant):
 # 📌 Liste des dépôts en attente
 @app.route("/admin/deposits")
 def admin_deposits():
-    depots = Depot.query.filter_by(statut="pending")\
+    depots = Depot.query.filter_by(statut="en_attente")\
         .order_by(Depot.date.desc()).all()
 
     return render_template("admin_deposits.html", depots=depots)
@@ -1202,7 +1202,7 @@ def admin_deposits():
 def valider_depot(depot_id):
     depot = Depot.query.get_or_404(depot_id)
 
-    if depot.statut != "pending":
+    if depot.statut != "en_attente":
         flash("Ce dépôt a déjà été traité.", "warning")
         return redirect("/admin/deposits")
 
@@ -1226,7 +1226,7 @@ def valider_depot(depot_id):
 def rejeter_depot(depot_id):
     depot = Depot.query.get_or_404(depot_id)
 
-    if depot.statut != "pending":
+    if depot.statut != "en_attente":
         flash("Ce dépôt a déjà été traité.", "warning")
         return redirect("/admin/deposits")
 
