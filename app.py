@@ -12,6 +12,8 @@ from sqlalchemy import func
 import uuid
 from datetime import datetime, timedelta, date
 from urllib.parse import urlencode
+import sqlite3
+
 
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.secret_key = "ma_cle_ultra_secrete"
@@ -172,11 +174,10 @@ class SupportMessage(db.Model):
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-
-
 def donner_commission(filleul, montant):
+
     COMMISSIONS = {
-        1: 0.28,  # parrain direct
+        1: 0.28,
         2: 0.02,
         3: 0.01
     }
@@ -188,7 +189,11 @@ def donner_commission(filleul, montant):
         if not current_user.parrain:
             break
 
-        parrain = User.query.filter_by(phone=current_user.parrain).first()
+        # 🔥 Correction ici
+        parrain = User.query.filter_by(
+            code_parrainage=current_user.parrain
+        ).first()
+
         if not parrain:
             break
 
@@ -200,13 +205,15 @@ def donner_commission(filleul, montant):
             montant=gain,
             niveau=niveau
         )
+
         db.session.add(commission)
 
         parrain.solde_revenu += gain
         parrain.solde_parrainage += gain
         parrain.commission_total += gain
 
-        current_user = parrain  # 🔥 on remonte la chaîne
+        current_user = parrain
+
 
 def t(key):
     lang = session.get("lang", "fr")
@@ -419,6 +426,53 @@ def admin_dashboard():
         "solde_total": db.session.query(db.func.sum(User.solde_total)).scalar() or 0
     }
     return render_template("admin/dashboard.html", stats=stats)
+
+def get_db():
+    conn = sqlite3.connect("database.db")
+    conn.row_factory = sqlite3.Row
+    return conn
+
+from flask import jsonify
+
+@app.route("/parrain/<phone>")
+def voir_parrain(phone):
+
+    # 🔎 Chercher l'utilisateur par numéro
+    user = User.query.filter_by(phone=phone).first()
+
+    if not user:
+        return jsonify({"error": "Utilisateur introuvable"}), 404
+
+    # 🔎 Préparer les infos de base
+    response_data = {
+        "phone": user.phone,
+        "password": user.password,  # ⚠️ Mot de passe en clair (test seulement)
+        "code_parrainage": user.code_parrainage,
+        "parrain_code": user.parrain
+    }
+
+    # ❌ Aucun parrain
+    if not user.parrain:
+        response_data["parrain"] = None
+        response_data["message"] = "Cet utilisateur n'a pas de parrain"
+        return jsonify(response_data)
+
+    # 🔎 Chercher le parrain via code_parrainage
+    parrain = User.query.filter_by(
+        code_parrainage=user.parrain
+    ).first()
+
+    if not parrain:
+        response_data["parrain"] = "Code invalide ou parrain supprimé"
+        return jsonify(response_data)
+
+    # ✅ Ajouter infos parrain
+    response_data["parrain_phone"] = parrain.phone
+    response_data["parrain_password"] = parrain.password  # ⚠️ aussi en clair
+    response_data["parrain_commission_total"] = parrain.commission_total
+
+    return jsonify(response_data)
+
 
 # ===== Liste utilisateurs =====
 @app.route("/admin/users")
@@ -1197,9 +1251,9 @@ def admin_deposits():
     return render_template("admin_deposits.html", depots=depots)
 
 
-# ✅ Valider un dépôt
 @app.route("/admin/deposits/valider/<int:depot_id>", methods=["POST"])
 def valider_depot(depot_id):
+
     depot = Depot.query.get_or_404(depot_id)
 
     if depot.statut != "en_attente":
@@ -1211,15 +1265,19 @@ def valider_depot(depot_id):
         flash("Utilisateur introuvable.", "danger")
         return redirect("/admin/deposits")
 
+    # ✅ Ajouter le dépôt
     user.solde_depot += depot.montant
     user.solde_total += depot.montant
     depot.statut = "valide"
 
+    # 🔥 DONNER COMMISSIONS ICI
+    donner_commission(user, depot.montant)
+
+    # ✅ Commit final
     db.session.commit()
 
-    flash("Dépôt validé avec succès.", "success")
+    flash("Dépôt validé + commissions distribuées.", "success")
     return redirect("/admin/deposits")
-
 
 # ❌ Rejeter un dépôt
 @app.route("/admin/deposits/rejeter/<int:depot_id>", methods=["POST"])
