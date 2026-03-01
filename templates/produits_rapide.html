@@ -187,7 +187,7 @@ body{
     </div>
 
     <div class="card-top">
-        <img src="{{ url_for('static', filename='images/' + (p.image if p.image else 'cyber1.jpg')) }}">
+        <img src="{{ url_for('static', filename='images/' + (p.image if p.image else 'p.jpg')) }}">
 
         <div class="card-content">
             <h3>{{ p.nom }}</h3>
@@ -195,7 +195,7 @@ body{
 
             <div class="details">
                 <i class="fa-regular fa-clock"></i>
-                Cycle : 150 jours
+                Cycle : 60 jours
             </div>
 
             <div class="details">
@@ -210,7 +210,7 @@ body{
     <div class="card-bottom">
         <div class="total">
             Revenu Total
-            <span>{{ "{:,.0f}".format(p.revenu_journalier * 150) }} XOF</span>
+            <span>{{ "{:,.0f}".format(p.revenu_journalier * 60) }} XOF</span>
         </div>
 
         <a href="/produits_rapide/confirmer/{{ p.id }}" class="btn-buy">
