@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Paramètres</title>
+<title>Paramètres - PepsiBet</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 *{
@@ -16,8 +17,9 @@
 }
 
 body{
-    background:#f4f6fb;
-    padding:20px;
+    background:#000b1d; /* Fond PepsiBet */
+    color: #fff;
+    padding: 20px;
 }
 
 .container{
@@ -26,82 +28,119 @@ body{
 }
 
 .header{
-    text-align:center;
-    margin-bottom:20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.back-btn {
+    color: #fff;
+    font-size: 20px;
+    text-decoration: none;
+    background: rgba(255,255,255,0.1);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
 }
 
 .header h1{
-    font-size:22px;
-    color:#3a5cb8;
+    font-size:20px;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 .card{
-    background:#fff;
-    border-radius:20px;
-    padding:22px;
-    box-shadow:0 8px 30px rgba(0,0,0,0.05);
-    margin-bottom:20px;
+    background:#001a3d;
+    border-radius:25px;
+    padding:25px;
+    border: 1px solid rgba(0, 86, 179, 0.2);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    margin-bottom:25px;
 }
 
 h2{
-    font-size:16px;
-    margin-bottom:15px;
-    color:#3a5cb8;
+    font-size:15px;
+    margin-bottom:20px;
+    color:#00d4ff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 input, select{
     width:100%;
-    padding:12px;
+    padding:14px;
     border-radius:12px;
-    border:1px solid #ddd;
-    margin-bottom:12px;
+    border: 1px solid rgba(0, 86, 179, 0.3);
+    background: #000b1d;
+    color: #fff;
+    margin-bottom:15px;
     font-size:14px;
     transition:0.3s;
 }
 
-input:focus, select:focus{
-    border-color:#3a5cb8;
+input:focus{
+    border-color:#00d4ff;
     outline:none;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.1);
 }
 
 button{
     width:100%;
-    padding:13px;
+    padding:15px;
     border:none;
-    border-radius:25px;
-    background:linear-gradient(to right,#3a5cb8,#5a7cd3);
+    border-radius:15px;
+    background: #e32219; /* Rouge Pepsi */
     color:#fff;
-    font-weight:600;
+    font-weight:700;
     cursor:pointer;
     transition:0.3s;
+    text-transform: uppercase;
+    font-size: 13px;
+    box-shadow: 0 5px 15px rgba(227, 34, 25, 0.2);
 }
 
-button:hover{
-    opacity:0.9;
+button:active{
+    transform: scale(0.98);
 }
 
+/* FLASH MESSAGES */
 .flash{
-    padding:12px;
-    border-radius:12px;
-    margin-bottom:15px;
+    padding:15px;
+    border-radius:15px;
+    margin-bottom:20px;
     font-size:13px;
     text-align:center;
+    font-weight: 500;
 }
 
 .flash.success{
-    background:#e6f9f0;
-    color:#1a7f5a;
+    background: rgba(0, 212, 255, 0.1);
+    color: #00d4ff;
+    border: 1px solid rgba(0, 212, 255, 0.2);
 }
 
 .flash.danger{
-    background:#fde8e8;
-    color:#c53030;
+    background: rgba(227, 34, 25, 0.1);
+    color: #ff5e57;
+    border: 1px solid rgba(227, 34, 25, 0.2);
 }
 
 .info-text{
     font-size:12px;
-    color:#777;
-    margin-bottom:10px;
+    color:#94a3b8;
+    margin-bottom:15px;
+    line-height: 1.6;
+}
+
+::placeholder {
+    color: #475569;
 }
 </style>
 </head>
@@ -111,10 +150,10 @@ button:hover{
 <div class="container">
 
     <div class="header">
-        <h1>Paramètres du compte</h1>
+        <a href="/profile" class="back-btn"><i class="fa-solid fa-chevron-left"></i></a>
+        <h1>Paramètres</h1>
     </div>
 
-    <!-- FLASH MESSAGE -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -123,47 +162,46 @@ button:hover{
         {% endif %}
     {% endwith %}
 
-    <!-- 🔐 CHANGER MOT DE PASSE -->
     <div class="card">
-        <h2>🔐 Modifier le mot de passe</h2>
+        <h2><i class="fa-solid fa-lock"></i> Sécurité</h2>
+        <div class="info-text">Protégez votre compte en mettant à jour votre mot de passe régulièrement.</div>
 
         <form method="POST">
             <input type="hidden" name="action" value="password">
 
             <input type="password" name="current_password" placeholder="Mot de passe actuel" required>
-
             <input type="password" name="new_password" placeholder="Nouveau mot de passe" required>
-
             <input type="password" name="confirm_password" placeholder="Confirmer le nouveau mot de passe" required>
 
-            <button type="submit">Mettre à jour le mot de passe</button>
+            <button type="submit">Mettre à jour l'accès</button>
         </form>
     </div>
 
-    <!-- 💳 MODIFIER WALLET -->
     <div class="card">
-        <h2>💳 Informations Wallet</h2>
+        <h2><i class="fa-solid fa-wallet"></i> Méthode de retrait</h2>
 
         <div class="info-text">
-            Modifiez vos informations de paiement.
+            Ces informations seront utilisées pour l'envoi de vos gains. Assurez-vous qu'elles sont correctes.
         </div>
 
         <form method="POST">
             <input type="hidden" name="action" value="wallet">
 
-            <input type="text" name="wallet_country" 
-                   value="{{ user.wallet_country or '' }}" 
-                   placeholder="Pays du wallet" required>
+            <input type="text" name="wallet_country"
+                   value="{{ user.wallet_country or '' }}"
+                   placeholder="Votre Pays (ex: Côte d'Ivoire)" required>
 
-            <input type="text" name="wallet_operator" 
-                   value="{{ user.wallet_operator or '' }}" 
-                   placeholder="Opérateur (MTN, Orange, Wave...)" required>
+            <input type="text" name="wallet_operator"
+                   value="{{ user.wallet_operator or '' }}"
+                   placeholder="Opérateur (Wave, MTN, Orange...)" required>
 
-            <input type="text" name="wallet_number" 
-                   value="{{ user.wallet_number or '' }}" 
-                   placeholder="Numéro wallet" required>
+            <input type="text" name="wallet_number"
+                   value="{{ user.wallet_number or '' }}"
+                   placeholder="Numéro de téléphone mobile money" required>
 
-            <button type="submit">Mettre à jour le wallet</button>
+            <button type="submit" style="background: transparent; border: 1px solid #00d4ff; color: #00d4ff; box-shadow: none;">
+                Enregistrer le Wallet
+            </button>
         </form>
     </div>
 
@@ -171,3 +209,4 @@ button:hover{
 
 </body>
 </html>
+

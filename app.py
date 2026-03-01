@@ -27,7 +27,7 @@ SENDAVAPAY_BASE_URL = os.getenv("SENDAVAPAY_BASE_URL")
 UPLOAD_FOLDER = "static/vlogs"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-DATABASE_URL = "postgresql://neondb_owner:npg_bDg56LINYFhl@ep-long-sound-ahzwwd4s-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+DATABASE_URL = "postgresql://neondb_owner:npg_NYzc6Ap8gHah@ep-tiny-moon-abgyer8p-pooler.eu-west-2.aws.neon.tech/neondb?>"
 
 # ⚡ Utilisation correcte dans Flask
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
@@ -177,9 +177,9 @@ class SupportMessage(db.Model):
 def donner_commission(filleul, montant):
 
     COMMISSIONS = {
-        1: 0.28,
-        2: 0.02,
-        3: 0.01
+        1: 0.20,
+        2: 0.03,
+        3: 0.02
     }
 
     current_user = filleul
@@ -300,8 +300,8 @@ def inscription_page():
         new_user = User(
             phone=phone,
             password=password,
-            solde_total=1500,
-            solde_depot=1500,
+            solde_total=1000,
+            solde_depot=1000,
             solde_revenu=0,
             solde_parrainage=0,
             parrain=parrain_user.code_parrainage if parrain_user else None
@@ -780,7 +780,7 @@ def valider_produit_rapide(vip_id):
         phone=phone,
         montant=montant,
         revenu_journalier=produit["revenu_journalier"],
-        duree=150,
+        duree=60,
         actif=True
     )
     db.session.add(inv)
@@ -791,14 +791,16 @@ def valider_produit_rapide(vip_id):
     return render_template("achat_rapide_loader.html", produit=produit)
 
 PRODUITS_VIP = [
-    {"id": 1, "nom": "Coris 1", "prix": 4000, "revenu_journalier": 700, "image": "co.jpg"},
-    {"id": 2, "nom": "Coris 2", "prix": 12000, "revenu_journalier": 2100, "image": "co.jpg"},
-    {"id": 3, "nom": "Coris 3", "prix": 20000, "revenu_journalier": 3500, "image": "co.jpg"},
-    {"id": 4, "nom": "Coris 4", "prix": 32000, "revenu_journalier": 5600, "image": "co.jpg"},
-    {"id": 5, "nom": "Coris 5", "prix": 100000, "revenu_journalier": 17500, "image": "co.jpg"},
-    {"id": 6, "nom": "Coris 6", "prix": 250000, "revenu_journalier": 43750, "image": "co.jpg"},
-    {"id": 7, "nom": "Coris 7", "prix": 500000, "revenu_journalier": 87500, "image": "co.jpg"},
-    {"id": 8, "nom": "Coris 8", "prix": 1000000, "revenu_journalier": 175000, "image": "co.jpg"}
+    {"id": 1, "nom": "Pepsi 1", "prix": 2500, "revenu_journalier": 510, "image": "p.jpg"},
+    {"id": 2, "nom": "Pepsi 2", "prix": 5000, "revenu_journalier": 1020, "image": "p.jpg"},
+    {"id": 3, "nom": "Pepsi 3", "prix": 7500, "revenu_journalier": 1530, "image": "p.jpg"},
+    {"id": 4, "nom": "Pepsi 4", "prix": 10000, "revenu_journalier": 2040, "image": "p.jpg"},
+    {"id": 5, "nom": "Pepsi 5", "prix": 15000, "revenu_journalier": 3060, "image": "p.jpg"},
+    {"id": 6, "nom": "Pepsi 6", "prix": 20000, "revenu_journalier": 4080, "image": "p.jpg"},
+    {"id": 7, "nom": "Pepsi 7", "prix": 30000, "revenu_journalier": 6120, "image": "p.jpg"},
+    {"id": 8, "nom": "Pepsi 8", "prix": 50000, "revenu_journalier": 10200, "image": "p.jpg"},
+    {"id": 7, "nom": "Pepsi 7", "prix": 100000, "revenu_journalier": 20400, "image": "p.jpg"},
+    {"id": 8, "nom": "Pepsi 8", "prix": 200000, "revenu_journalier": 40800, "image": "p.jpg"}
 ]
 
 
@@ -834,7 +836,7 @@ def confirmer_produit_rapide(vip_id):
 
     montant = produit["prix"]
     revenu_journalier = produit["revenu_journalier"]
-    revenu_total = revenu_journalier * 150
+    revenu_total = revenu_journalier * 60
 
     # GET → affichage normal
     if request.method == "GET":
@@ -859,7 +861,7 @@ def confirmer_produit_rapide(vip_id):
         phone=phone,
         montant=montant,
         revenu_journalier=revenu_journalier,
-        duree=150,
+        duree=60,
         actif=True
     )
     db.session.add(inv)
@@ -1231,16 +1233,16 @@ def profile_page():
 
 def get_image(montant):
     mapping = {
-        4000: "co.jpg",
-        8000: "co.jpg",
-        15000: "co.jpg",
-        20000: "co.jpg",
-        30000: "co.jpg",
-        50000: "co.jpg",
-        100000: "co.jpg",
-        200000: "co.jpg",
+        2500: "p.jpg",
+        5000: "p.jpg",
+        7500: "p.jpg",
+        10000: "p.jpg",
+        15000: "p.jpg",
+        20000: "p.jpg",
+        30000: "p.jpg",
+        50000: "p.jpg",
     }
-    return mapping.get(int(montant), "d.jpg")
+    return mapping.get(int(montant), "p.jpg")
 
 # 📌 Liste des dépôts en attente
 @app.route("/admin/deposits")

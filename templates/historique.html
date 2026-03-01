@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Historique</title>
+<title>Historique - PepsiBet</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 *{
@@ -16,112 +17,115 @@
 }
 
 body{
-    background:#f4f7ff;
+    background:#000b1d;
+    color: #fff;
 }
 
 /* ===== HEADER ===== */
 .header{
-    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
-    padding:25px 20px 40px;
-    color:white;
-    border-radius:0 0 30px 30px;
+    background: linear-gradient(180deg, #0056b3 0%, #000b1d 100%);
+    padding:25px 20px 50px;
+    border-radius:0 0 40px 40px;
 }
 
 .header-top{
     display:flex;
     align-items:center;
-    gap:12px;
+    gap:15px;
 }
 
 .back{
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    background:rgba(255,255,255,0.2);
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.1);
     display:flex;
     align-items:center;
     justify-content:center;
     text-decoration:none;
     color:white;
     font-size:18px;
+    backdrop-filter: blur(10px);
 }
 
 .header h2{
-    font-size:20px;
-    font-weight:600;
+    font-size:18px;
+    font-weight:700;
+    text-transform: uppercase;
 }
 
 /* ===== TABS ===== */
 .tabs{
     display:flex;
-    gap:8px;
-    padding:20px;
+    gap:10px;
+    padding:0 15px;
     margin-top:-25px;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
 }
+.tabs::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
 .tab{
-    flex:1;
-    text-align:center;
-    padding:10px;
-    border-radius:25px;
-    background:white;
-    color:#666;
-    font-size:14px;
-    font-weight:500;
+    flex: 0 0 auto;
+    padding:10px 20px;
+    border-radius:20px;
+    background:#001a3d;
+    color:#94a3b8;
+    font-size:13px;
+    font-weight:600;
     cursor:pointer;
-    box-shadow:0 5px 15px rgba(0,0,0,0.05);
+    box-shadow:0 10px 20px rgba(0,0,0,0.2);
+    border: 1px solid rgba(0, 86, 179, 0.2);
     transition:0.3s;
 }
 
 .tab.active{
-    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    background: #e32219; /* Rouge Pepsi */
     color:white;
+    border-color: #e32219;
 }
 
 /* ===== CONTENT ===== */
 .container{
-    padding:0 20px 20px;
+    padding:25px 20px;
 }
 
 /* ===== CARD ===== */
 .card{
-    background:white;
-    border-radius:22px;
+    background:#001a3d;
+    border-radius:20px;
     padding:18px;
-    margin-bottom:18px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.05);
+    margin-bottom:15px;
+    border: 1px solid rgba(0, 86, 179, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.card-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.card-info h3{
+    font-size:14px;
+    font-weight: 600;
+    margin-bottom: 4px;
 }
 
-.card h3{
-    font-size:16px;
-}
-
-.status{
+.card-info p{
     font-size:12px;
-    font-weight:600;
+    color:#94a3b8;
 }
 
-.green{color:#16a34a;}
-.red{color:#dc2626;}
-.orange{color:#f59e0b;}
-
-.amount{
-    font-size:16px;
-    font-weight:600;
-    margin-top:6px;
+.amount-box{
+    text-align: right;
 }
 
-.desc{
-    margin-top:4px;
-    font-size:13px;
-    color:#777;
+.status-amt{
+    font-size:15px;
+    font-weight:700;
+    display: block;
 }
+
+.green{color:#00d4ff;} /* Cyan électrique */
+.red{color:#ff5e57;}   /* Rouge soft */
+.orange{color:#ffbd2e;} /* Ambre */
 
 .section{
     display:none;
@@ -129,29 +133,41 @@ body{
 
 .section.active{
     display:block;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .empty{
     text-align:center;
-    margin-top:40px;
-    color:#777;
+    margin-top:60px;
+    color:#94a3b8;
+    font-size: 14px;
+}
+
+.empty i {
+    display: block;
+    font-size: 40px;
+    margin-bottom: 10px;
+    opacity: 0.3;
 }
 </style>
 </head>
 
 <body>
 
-<!-- ===== HEADER ===== -->
 <div class="header">
     <div class="header-top">
-        <a href="javascript:history.back()" class="back">←</a>
-        <h2>Historique</h2>
+        <a href="javascript:history.back()" class="back"><i class="fa-solid fa-chevron-left"></i></a>
+        <h2>Transactions</h2>
     </div>
 </div>
 
-<!-- ===== TABS ===== -->
 <div class="tabs">
-    <div class="tab active" onclick="showTab('tout', this)">Tout</div>
+    <div class="tab active" onclick="showTab('tout', this)">Toutes</div>
     <div class="tab" onclick="showTab('depots', this)">Dépôts</div>
     <div class="tab" onclick="showTab('retraits', this)">Retraits</div>
     <div class="tab" onclick="showTab('revenus', this)">Revenus</div>
@@ -159,106 +175,114 @@ body{
 
 <div class="container">
 
-<!-- ===== TOUT ===== -->
 <div id="tout" class="section active">
 
-{% for d in depots %}
-<div class="card">
-    <div class="card-top">
-        <h3>Dépôt</h3>
-        <span class="status green">+{{ "{:,.0f}".format(d.montant).replace(",", " ") }} XOF</span>
+    {% for d in depots %}
+    <div class="card">
+        <div class="card-info">
+            <h3>Dépôt Mobile</h3>
+            <p>{{ d.date or "Aujourd'hui" }} • {{ d.statut }}</p>
+        </div>
+        <div class="amount-box">
+            <span class="status-amt green">+{{ "{:,.0f}".format(d.montant) }} F</span>
+        </div>
     </div>
-    <div class="desc">Statut : {{ d.statut }}</div>
-</div>
-{% endfor %}
+    {% endfor %}
 
-{% for r in retraits %}
-<div class="card">
-    <div class="card-top">
-        <h3>Retrait</h3>
-        <span class="status red">-{{ "{:,.0f}".format(r.montant).replace(",", " ") }} XOF</span>
+    {% for r in retraits %}
+    <div class="card">
+        <div class="card-info">
+            <h3>Retrait Portefeuille</h3>
+            <p>{{ r.date or "Aujourd'hui" }} • {{ r.statut }}</p>
+        </div>
+        <div class="amount-box">
+            <span class="status-amt red">-{{ "{:,.0f}".format(r.montant) }} F</span>
+        </div>
     </div>
-    <div class="desc">Statut : {{ r.statut }}</div>
-</div>
-{% endfor %}
+    {% endfor %}
 
-{% for c in commissions %}
-<div class="card">
-    <div class="card-top">
-        <h3>Commission Niveau {{ c.niveau }}</h3>
-        <span class="status orange">+{{ "{:,.0f}".format(c.montant).replace(",", " ") }} XOF</span>
+    {% for c in commissions %}
+    <div class="card">
+        <div class="card-info">
+            <h3>Bonus Affiliation</h3>
+            <p>Niveau {{ c.niveau }} • {{ c.filleul_phone }}</p>
+        </div>
+        <div class="amount-box">
+            <span class="status-amt orange">+{{ "{:,.0f}".format(c.montant) }} F</span>
+        </div>
     </div>
-    <div class="desc">Filleul : {{ c.filleul_phone }}</div>
+    {% endfor %}
+
+    {% if not depots and not retraits and not commissions %}
+    <div class="empty">
+        <i class="fa-solid fa-receipt"></i>
+        Aucune activité enregistrée.
+    </div>
+    {% endif %}
+
 </div>
-{% endfor %}
 
-{% if depots|length == 0 and retraits|length == 0 and commissions|length == 0 %}
-<div class="empty">Aucune transaction pour le moment.</div>
-{% endif %}
-
-</div>
-
-<!-- ===== DEPOTS ===== -->
 <div id="depots" class="section">
-{% for d in depots %}
-<div class="card">
-    <div class="card-top">
-        <h3>Dépôt</h3>
-        <span class="status green">+{{ "{:,.0f}".format(d.montant).replace(",", " ") }} XOF</span>
+    {% for d in depots %}
+    <div class="card">
+        <div class="card-info">
+            <h3>Dépôt Approuvé</h3>
+            <p>ID: #{{ d.id }} • {{ d.statut }}</p>
+        </div>
+        <div class="amount-box">
+            <span class="status-amt green">+{{ "{:,.0f}".format(d.montant) }} F</span>
+        </div>
     </div>
-    <div class="desc">Statut : {{ d.statut }}</div>
-</div>
-{% else %}
-<div class="empty">Aucun dépôt.</div>
-{% endfor %}
+    {% else %}
+    <div class="empty"><i class="fa-solid fa-wallet"></i>Aucun dépôt.</div>
+    {% endfor %}
 </div>
 
-<!-- ===== RETRAITS ===== -->
 <div id="retraits" class="section">
-{% for r in retraits %}
-<div class="card">
-    <div class="card-top">
-        <h3>Retrait</h3>
-        <span class="status red">-{{ "{:,.0f}".format(r.montant).replace(",", " ") }} XOF</span>
+    {% for r in retraits %}
+    <div class="card">
+        <div class="card-info">
+            <h3>Retrait Cash</h3>
+            <p>ID: #{{ r.id }} • {{ r.statut }}</p>
+        </div>
+        <div class="amount-box">
+            <span class="status-amt red">-{{ "{:,.0f}".format(r.montant) }} F</span>
+        </div>
     </div>
-    <div class="desc">Statut : {{ r.statut }}</div>
-</div>
-{% else %}
-<div class="empty">Aucun retrait.</div>
-{% endfor %}
+    {% else %}
+    <div class="empty"><i class="fa-solid fa-money-bill-transfer"></i>Aucun retrait effectué.</div>
+    {% endfor %}
 </div>
 
-<!-- ===== REVENUS ===== -->
 <div id="revenus" class="section">
 
-{% for inv in investissements %}
-<div class="card">
-    <div class="card-top">
-        <h3>Revenu journalier</h3>
-        <span class="status green">
-            +{{ "{:,.0f}".format(inv.montant).replace(",", " ") }} XOF
-        </span>
+    {% for inv in investissements %}
+    <div class="card">
+        <div class="card-info">
+            <h3>Récolte Journalière</h3>
+            <p>Pack Machine • {{ inv.jours_restants }}j restants</p>
+        </div>
+        <div class="amount-box">
+            <span class="status-amt green">+{{ "{:,.0f}".format(inv.montant) }} F</span>
+        </div>
     </div>
-    <div class="desc">{{ inv.jours_restants }} jours restants</div>
-</div>
-{% endfor %}
+    {% endfor %}
 
-{% for c in commissions %}
-<div class="card">
-    <div class="card-top">
-        <h3>Commission Niveau {{ c.niveau }}</h3>
-        <span class="status orange">
-            +{{ "{:,.0f}".format(c.montant).replace(",", " ") }} XOF
-        </span>
+    {% for c in commissions %}
+    <div class="card">
+        <div class="card-info">
+            <h3>Prime Parrainage</h3>
+            <p>Filleul: {{ c.filleul_phone }}</p>
+        </div>
+        <div class="amount-box">
+            <span class="status-amt orange">+{{ "{:,.0f}".format(c.montant) }} F</span>
+        </div>
     </div>
-    <div class="desc">Filleul : {{ c.filleul_phone }}</div>
-</div>
-{% endfor %}
+    {% endfor %}
 
-{% if investissements|length == 0 and commissions|length == 0 %}
-<div class="empty">Aucun revenu.</div>
-{% endif %}
-
+    {% if not investissements and not commissions %}
+    <div class="empty"><i class="fa-solid fa-chart-line"></i>Aucun revenu généré.</div>
+    {% endif %}
 </div>
 
 </div>
@@ -275,3 +299,4 @@ function showTab(id, el){
 
 </body>
 </html>
+

@@ -3,63 +3,119 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inscription - Coris Max</title>
+<title>Inscription - PepsiCo</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+
 body {
     min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
-    background: linear-gradient(135deg, #3498db, #2980b9);
+    /* Dégradé aux couleurs PepsiCo */
+    background: radial-gradient(circle at top left, #005cb4, #002d72);
     color:#333;
 }
+
 .container {
     width: 100%;
     max-width: 450px;
-    background: rgba(255,255,255,0.95);
-    padding: 35px 30px;
-    border-radius: 20px;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.2);
-    animation: fadeIn 1s ease;
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 30px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    animation: slideUp 0.8s ease-out;
+    border-top: 8px solid #e32219; /* Ligne rouge distinctive Pepsi */
 }
-h2 { text-align:center; margin-bottom: 20px; color: #0c2e4a; }
-label { display:block; margin-bottom:5px; font-weight:500; color:#555; }
+
+h2 { 
+    text-align:center; 
+    margin-bottom: 25px; 
+    color: #002d72; 
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+label { display:block; margin-bottom:6px; font-weight:600; color:#002d72; font-size: 13px; }
+
 input, select {
     width:100%;
-    padding:12px 15px;
-    margin-bottom:15px;
-    border:1px solid #ccc;
-    border-radius:10px;
+    padding:14px 15px;
+    margin-bottom:18px;
+    border: 2px solid #eee;
+    border-radius:12px;
     outline:none;
     transition: all 0.3s ease;
-    font-size: 14px;
+    background: #f8f9fa;
 }
-input:focus, select:focus { border-color:#3498db; box-shadow: 0 0 8px rgba(52,152,219,0.3); }
-.otp-container { display:flex; }
-.otp-container input { flex:2; margin-right:10px; }
+
+input:focus, select:focus { 
+    border-color:#005cb4; 
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(0,92,180,0.1); 
+}
+
+.otp-container { display:flex; gap: 10px; margin-bottom: 18px; }
+.otp-container input { flex:2; margin-bottom: 0; }
 .otp-container button {
     flex:1;
-    background:#3498db;
+    background:#005cb4;
     color:#fff;
     border:none;
-    border-radius:10px;
+    border-radius:12px;
+    font-weight: 600;
     cursor:pointer;
-    transition: background 0.3s ease;
+    transition: 0.3s;
 }
-.otp-container button:hover { background:#2980b9; }
+.otp-container button:hover { background:#002d72; transform: translateY(-2px); }
+
 button.submit-btn {
-    width:100%; padding:12px; background:#3498db; color:#fff; border:none;
-    border-radius:10px; font-size:16px; cursor:pointer; transition: background 0.3s ease;
+    width:100%; 
+    padding:15px; 
+    background:#e32219; /* Rouge Pepsi */
+    color:#fff; 
+    border:none;
+    border-radius:12px; 
+    font-size:16px; 
+    font-weight: 700;
+    cursor:pointer; 
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(227, 34, 25, 0.3);
 }
-button.submit-btn:hover { background:#2980b9; }
-p.login-link { text-align:center; margin-top:15px; font-size:14px; }
-p.login-link a { color:#3498db; font-weight:600; text-decoration:none; }
-p.login-link a:hover { color:#2980b9; }
-@keyframes fadeIn { from {opacity:0; transform: translateY(-20px);} to {opacity:1; transform: translateY(0);} }
-.flash-message { background:#f8d7da; color:#721c24; padding:10px 15px; border-radius:10px; margin-bottom:15px; text-align:center; }
-.flash-success { background:#d4edda; color:#155724; }
+
+button.submit-btn:hover { 
+    background:#c4120b; 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(227, 34, 25, 0.4);
+}
+
+p.login-link { text-align:center; margin-top:20px; font-size:14px; color: #666; }
+p.login-link a { color:#005cb4; font-weight:700; text-decoration:none; }
+p.login-link a:hover { text-decoration: underline; }
+
+/* Animations */
+@keyframes slideUp { 
+    from {opacity:0; transform: translateY(30px);} 
+    to {opacity:1; transform: translateY(0);} 
+}
+
+.flash-message { 
+    background:#fff5f5; 
+    color:#c4120b; 
+    padding:12px; 
+    border-radius:12px; 
+    margin-bottom:20px; 
+    text-align:center; 
+    border-left: 5px solid #e32219;
+    font-size: 14px;
+}
+.flash-success { 
+    background:#f0fff4; 
+    color:#2f855a; 
+    border-left: 5px solid #48bb78; 
+}
 </style>
 </head>
 <body>
@@ -89,28 +145,28 @@ p.login-link a:hover { color:#2980b9; }
         </select>
 
         <label>Numéro de téléphone</label>
-        <input type="text" name="phone" placeholder="Entrez votre numéro" required>
+        <input type="text" name="phone" placeholder="Ex: 01020304" required>
 
         <label>Mot de passe</label>
-        <input type="password" name="password" placeholder="Mot de passe" required>
+        <input type="password" name="password" placeholder="••••••••" required>
 
         <label>Confirmer le mot de passe</label>
-        <input type="password" name="confirm_password" placeholder="Confirmez le mot de passe" required>
+        <input type="password" name="confirm_password" placeholder="••••••••" required>
 
         <label>Code de parrainage (facultatif)</label>
-        <input type="text" name="code_invitation" placeholder="Entrez le code si vous avez un parrain" value="{{ code_ref }}">
+        <input type="text" name="code_invitation" placeholder="Code parrain" value="{{ code_ref }}">
 
         <label>Code de vérification (OTP)</label>
         <div class="otp-container">
-            <input type="text" id="otp" name="otp" placeholder="Code de vérification" required>
+            <input type="text" id="otp" name="otp" placeholder="Code" required>
             <button type="button" onclick="sendOTP()">Envoyer</button>
         </div>
 
-        <button type="submit" class="submit-btn">S’inscrire</button>
+        <button type="submit" class="submit-btn">CRÉER MON COMPTE</button>
     </form>
 
     <p class="login-link">
-        Déjà inscrit ? <a href="{{ url_for('connexion_page') }}">Se connecter</a>
+        Déjà membre PepsiCo ? <a href="{{ url_for('connexion_page') }}">Se connecter</a>
     </p>
 
 </div>
@@ -120,11 +176,12 @@ function sendOTP() {
     fetch('/generate-otp')
     .then(response => response.json())
     .then(data => {
-        document.getElementById('otp').value = data.otp; // pour test seulement
-        alert("Votre code OTP : " + data.otp);
+        document.getElementById('otp').value = data.otp; 
+        alert("Votre code de validation PepsiCo : " + data.otp);
     })
     .catch(err => console.error(err));
 }
 </script>
 </body>
 </html>
+

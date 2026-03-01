@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portefeuille</title>
+<title>Portefeuille - PepsiBet</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 *{
@@ -16,81 +17,86 @@
 }
 
 body{
-    background:#f4f6fb;
+    background:#000b1d;
+    color: #fff;
 }
 
 /* HEADER */
 .header{
     padding:18px;
-    font-size:20px;
-    font-weight:600;
-    background:white;
-    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+    font-size:18px;
+    font-weight:700;
+    background:#001a3d;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(0, 86, 179, 0.3);
 }
+.header a { color: #fff; text-decoration: none; }
 
 /* CONTAINER */
 .container{
     padding:20px;
 }
 
-/* 💳 CARTE BANCAIRE */
+/* 💳 CARTE VIP PEPSIBET */
 .bank-card{
-    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
+    background: linear-gradient(135deg, #0056b3 0%, #002d72 100%);
     border-radius:22px;
     padding:25px;
     color:white;
     position:relative;
-    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 25px rgba(0, 86, 179, 0.3);
     margin-bottom:25px;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .bank-card .chip{
-    width:50px;
-    height:35px;
-    background:rgba(255,255,255,0.6);
-    border-radius:8px;
-    margin-bottom:30px;
+    width:45px;
+    height:32px;
+    background: linear-gradient(135deg, #ffd700, #b8860b);
+    border-radius:6px;
+    margin-bottom:20px;
 }
 
 .bank-card .bank-name{
     position:absolute;
-    top:20px;
-    right:20px;
-    font-weight:600;
+    top:25px;
+    right:25px;
+    font-weight:800;
     font-size:14px;
+    font-style: italic;
 }
 
 .bank-card .holder{
-    font-size:18px;
-    margin-top:15px;
-    font-weight:500;
+    font-size:16px;
+    margin-top:10px;
+    font-weight:600;
+    text-transform: uppercase;
 }
 
 .bank-card .number{
-    font-size:16px;
+    font-size:17px;
     letter-spacing:2px;
-    margin-top:10px;
-}
-
-.bank-card .balance{
-    margin-top:15px;
-    font-size:14px;
-    opacity:0.9;
+    margin-top:5px;
+    color: rgba(255,255,255,0.8);
 }
 
 /* FORM CARD */
 .form-card{
-    background:white;
-    padding:20px;
-    border-radius:18px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.05);
+    background:#001a3d;
+    padding:25px;
+    border-radius:22px;
+    border: 1px solid rgba(0, 86, 179, 0.2);
 }
 
 label{
     font-weight:600;
     display:block;
     margin-top:15px;
-    font-size:14px;
+    color: #94a3b8;
+    font-size:12px;
+    text-transform: uppercase;
 }
 
 select, input{
@@ -98,122 +104,140 @@ select, input{
     padding:14px;
     margin-top:8px;
     border-radius:12px;
-    border:1px solid #ddd;
-    background:#f9f9f9;
+    border: 1px solid #0056b3;
+    background:#000b1d;
+    color: white;
     font-size:14px;
+    outline: none;
 }
 
+option { background: #001a3d; }
+
 .btn{
-    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    background: #e32219;
     color:white;
     width:100%;
     padding:15px;
     margin-top:25px;
-    border-radius:30px;
+    border-radius:15px;
     border:none;
-    font-weight:600;
+    font-weight:700;
     font-size:15px;
     cursor:pointer;
+    text-transform: uppercase;
+    box-shadow: 0 5px 15px rgba(227, 34, 25, 0.3);
 }
 
 /* RULES */
 .rules{
     margin-top:25px;
-    background:white;
-    padding:15px;
-    border-radius:15px;
-    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+    background: rgba(0, 26, 61, 0.5);
+    padding:20px;
+    border-radius:18px;
+    border: 1px dashed rgba(148, 163, 184, 0.3);
 }
 
-.rules h4{
-    margin-bottom:10px;
-}
-
-.rules p{
-    font-size:13px;
-    margin:6px 0;
-    color:#555;
-}
+.rules h4{ color: #e32219; margin-bottom: 10px; font-size: 14px; }
+.rules p{ font-size:12px; margin:6px 0; color:#94a3b8; }
 </style>
 </head>
 
 <body>
 
 <div class="header">
-    ← Portefeuille
+    <a href="/profile"><i class="fa-solid fa-arrow-left"></i></a>
+    Configuration Portefeuille
 </div>
 
 <div class="container">
 
-    <!-- 💳 CARTE CORIS BANK -->
     <div class="bank-card">
-
-        <div class="bank-name">Coris Bank</div>
-
+        <div class="bank-name">PEPSIBET CARD</div>
         <div class="chip"></div>
-
         <div class="number">
-            **** **** **** {{ user.phone[-4:] if user and user.phone else "1234" }}
+            **** **** **** {{ user.wallet_number[-4:] if user and user.wallet_number else "7777" }}
         </div>
-
         <div class="holder">
-            {{ user.nom if user else "Nom du titulaire" }}
+            {{ user.nom if user else "NOM DU TITULAIRE" }}
         </div>
-
-        <div class="balance">
-            Solde disponible :
-            <strong>
-                XOF {{ "{:,.0f}".format(user.solde_total if user else 0) }}
-            </strong>
-        </div>
-
     </div>
 
-<!-- FORMULAIRE -->
-<div class="form-card">
-    <form method="POST">
+    <div class="form-card">
+        <form method="POST">
 
-        <label>Nom du titulaire</label>
-        <input type="text" name="holder_name" placeholder="Exemple : Jean Dupont" required>
+            <label>Nom Complet (Identité Mobile)</label>
+            <input type="text" name="holder_name" placeholder="Ex: Jean Konan" required>
 
-        <label>Pays</label>
-        <select name="country" required>
-            <option value="">Choisissez votre pays</option>
-            <option value="Togo">🇹🇬 Togo</option>
-            <option value="Bénin">🇧🇯 Bénin</option>
-            <option value="Côte d'Ivoire">🇨🇮 Côte d'Ivoire</option>
-            <option value="Cameroun">🇨🇲 Cameroun</option>
-            <option value="Burkina Faso">🇧🇫 Burkina Faso</option>
-        </select>
+            <label>Pays de résidence</label>
+            <select name="country" id="countrySelect" onchange="updateOperators()" required>
+                <option value="">Sélectionnez votre pays</option>
+                <option value="Bénin">🇧🇯 Bénin</option>
+                <option value="Burkina Faso">🇧🇫 Burkina Faso</option>
+                <option value="Côte d'Ivoire">🇨🇮 Côte d’Ivoire</option>
+                <option value="Cameroun">🇨🇲 Cameroun</option>
+                <option value="Gabon">🇬🇦 Gabon</option>
+                <option value="Guinée">🇬🇳 Guinée</option>
+                <option value="Guinée-Bissau">🇬🇼 Guinée-Bissau</option>
+                <option value="Mali">🇲🇱 Mali</option>
+                <option value="Niger">🇳🇪 Niger</option>
+                <option value="Sénégal">🇸🇳 Sénégal</option>
+                <option value="Togo">🇹🇬 Togo</option>
+            </select>
 
-        <label>Opérateur Mobile</label>
-        <select name="operator" required>
-            <option value="">Sélectionnez un opérateur</option>
-            <option value="Moov">Moov Money</option>
-            <option value="TMoney">TMoney</option>
-            <option value="Orange Money">Orange Money</option>
-            <option value="MTN Money">MTN Money</option>
-        </select>
+            <label>Opérateur Mobile</label>
+            <select name="operator" id="operatorSelect" required>
+                <option value="">Choisissez d'abord le pays</option>
+            </select>
 
-        <label>Numéro de retrait</label>
-        <input type="tel" name="number" placeholder="Exemple : 90 12 34 56" required>
+            <label>Numéro de compte (Mobile Money)</label>
+            <input type="tel" name="number" placeholder="Ex: 0102030405" required>
 
-        <button type="submit" class="btn">
-            Enregistrer
-        </button>
+            <button type="submit" class="btn">Enregistrer les données</button>
 
-    </form>
-</div>
+        </form>
+    </div>
 
-    <!-- RÈGLES -->
     <div class="rules">
-        <h4>Règles</h4>
-        <p>1. Ne mettez pas un numéro non fonctionnel.</p>
-        <p>2. Vérifiez l’opérateur sélectionné.</p>
-        <p>3. Assurez-vous que le pays est correct.</p>
+        <h4><i class="fa-solid fa-shield-halved"></i> Sécurité</h4>
+        <p>1. Le nom doit correspondre à votre compte Mobile Money.</p>
+        <p>2. Vous ne pouvez lier qu'un seul compte par profil.</p>
+        <p>3. PepsiBet n'est pas responsable des erreurs de saisie.</p>
     </div>
 
 </div>
+
+<script>
+const data = {
+    "Bénin": ["MTN Money", "Moov Money"],
+    "Burkina Faso": ["Orange Money", "Moov Money"],
+    "Côte d'Ivoire": ["Orange Money", "MTN Money", "Moov Money", "Wave"],
+    "Cameroun": ["MTN Money", "Orange Money"],
+    "Gabon": ["Airtel Money", "Moov Money"],
+    "Guinée": ["Orange Money", "MTN Money"],
+    "Guinée-Bissau": ["MTN Money", "Orange Money"],
+    "Mali": ["Orange Money", "Moov Money"],
+    "Niger": ["Airtel Money", "Moov Money"],
+    "Sénégal": ["Orange Money", "Free Money", "Wave", "E-Money"],
+    "Togo": ["TMoney", "Moov Money"]
+};
+
+function updateOperators() {
+    const country = document.getElementById("countrySelect").value;
+    const operatorSelect = document.getElementById("operatorSelect");
+    
+    operatorSelect.innerHTML = '<option value="">Sélectionnez un opérateur</option>';
+    
+    if (data[country]) {
+        data[country].forEach(op => {
+            let option = document.createElement("option");
+            option.value = op;
+            option.text = op;
+            operatorSelect.appendChild(option);
+        });
+    }
+}
+</script>
 
 </body>
 </html>
+

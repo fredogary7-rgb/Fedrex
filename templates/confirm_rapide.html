@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Confirmation achat</title>
+<title>Confirmation - PepsiBet</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 *{
@@ -16,176 +17,209 @@
 }
 
 body{
-    background:#f4f6fb;
-    padding:20px;
+    background:#000b1d;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
 }
 
-/* CARD */
+/* CARD CONFIRMATION */
 .confirm-card{
-    background:#fff;
-    border-radius:20px;
-    padding:20px;
-    box-shadow:0 5px 25px rgba(0,0,0,0.06);
-    max-width:500px;
-    margin:auto;
+    background:#001a3d;
+    border-radius:30px;
+    padding:25px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.4);
+    max-width:450px;
+    width: 100%;
+    border: 1px solid rgba(0, 86, 179, 0.3);
+    position: relative;
 }
 
 .confirm-card img{
     width:100%;
-    height:180px;
+    height:200px;
     object-fit:cover;
-    border-radius:15px;
-    margin-bottom:15px;
+    border-radius:20px;
+    margin-bottom:20px;
+    border: 2px solid rgba(0, 212, 255, 0.2);
+}
+
+.badge-vip {
+    position: absolute;
+    top: 35px;
+    right: 35px;
+    background: #e32219;
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 12px;
+    box-shadow: 0 4px 10px rgba(227, 34, 25, 0.4);
 }
 
 h2{
-    font-size:20px;
-    margin-bottom:10px;
+    font-size:22px;
+    margin-bottom:15px;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
-.info{
-    margin-bottom:8px;
+.info-row{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom:12px;
     font-size:14px;
-    color:#555;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-.highlight{
-    font-weight:600;
-    color:#3a5cb8;
-}
+.label { color: #94a3b8; }
+.value { font-weight: 600; color: #fff; }
+.highlight { color: #00d4ff; font-weight: 700; }
 
 .total-box{
-    background:#f2f4ff;
-    padding:12px;
-    border-radius:12px;
-    margin:15px 0;
-    font-size:15px;
-    font-weight:600;
+    background: rgba(0, 212, 255, 0.1);
+    padding:15px;
+    border-radius:18px;
+    margin:20px 0;
+    text-align: center;
+    border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.total-label {
+    display: block;
+    font-size: 11px;
+    color: #00d4ff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.total-amount {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
 }
 
 /* BUTTONS */
 .btn-group{
     display:flex;
-    gap:10px;
+    gap:12px;
+    margin-top: 25px;
 }
 
 .btn{
     flex:1;
-    padding:12px;
-    border-radius:25px;
+    padding:15px;
+    border-radius:15px;
     text-align:center;
     text-decoration:none;
     font-size:14px;
-    font-weight:600;
+    font-weight:700;
     border:none;
     cursor:pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
 }
 
 .btn-cancel{
-    background:#eee;
-    color:#333;
+    background: rgba(255,255,255,0.05);
+    color: #94a3b8;
 }
 
 .btn-confirm{
-    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    background: #e32219; /* Rouge Pepsi */
     color:#fff;
+    box-shadow: 0 5px 20px rgba(227, 34, 25, 0.3);
 }
 
-/* NAVIGATION BAS */
+.btn:active { transform: scale(0.96); }
+
+/* NAVIGATION BAS SYNCHRO */
 .bottom-nav{
     position:fixed;
     bottom:0;
-    left:0;
+    left:50%;
+    transform: translateX(-50%);
     width:100%;
+    max-width:480px;
+    background:#001a3d;
     display:flex;
     justify-content:space-around;
-    background: linear-gradient(to right, #3a5cb8, #5a7cd3);
-    padding:10px 0;
-    border-top-left-radius:20px;
-    border-top-right-radius:20px;
+    padding:12px 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
 
 .bottom-nav a{
-    color:rgba(255,255,255,0.7);
-    font-size:12px;
     text-decoration:none;
+    color:#94a3b8;
+    font-size:11px;
     display:flex;
     flex-direction:column;
     align-items:center;
 }
 
-.bottom-nav a.active{
-    color:#fff;
-    font-weight:600;
-}
-
-.bottom-nav i{
-    margin-bottom:3px;
-}
+.bottom-nav a.active{ color:#00d4ff; font-weight:700; }
+.bottom-nav i{ margin-bottom:4px; font-size: 18px; }
 </style>
 </head>
 
 <body>
 
 <div class="confirm-card">
-
+    <div class="badge-vip">PEPSI POWER</div>
+    
     <img
-        src="{{ url_for('static', filename='images/' + (p.image if p.image else 'co.jpg')) }}"
+        src="{{ url_for('static', filename='images/' + (p.image if p.image else 'p.jpg')) }}"
         alt="{{ p.nom }}"
-        class="product-image"
     >
 
     <h2>{{ p.nom }}</h2>
 
-    <div class="info">
-        Prix :
-        <span class="highlight">
-            XOF {{ "{:,.0f}".format(p.prix) }}
-        </span>
+    <div class="info-row">
+        <span class="label">Prix d'acquisition</span>
+        <span class="value">{{ "{:,.0f}".format(p.prix) }} XOF</span>
     </div>
 
-    <div class="info">
-        Revenu quotidien :
-        <span class="highlight">
-            XOF {{ "{:,.0f}".format(p.revenu_journalier) }}
-        </span>
+    <div class="info-row">
+        <span class="label">Gain Quotidien</span>
+        <span class="highlight">+ {{ "{:,.0f}".format(p.revenu_journalier) }} XOF</span>
     </div>
 
-    <div class="info">
-        Durée :
-        <span class="highlight">150 jours</span>
+    <div class="info-row">
+        <span class="label">Cycle de production</span>
+        <span class="value">60 jours</span>
     </div>
 
     <div class="total-box">
-        Gain total estimé :
-        <strong>
-            XOF {{ "{:,.0f}".format(p.revenu_journalier * 150) }}
-        </strong>
+        <span class="total-label">Rentabilité Totale estimée</span>
+        <span class="total-amount">
+            {{ "{:,.0f}".format(p.revenu_journalier * 60) }} XOF
+        </span>
     </div>
 
     <form method="POST" action="{{ url_for('valider_produit_rapide', vip_id=p.id) }}">
         <div class="btn-group">
-
             <a href="{{ url_for('dashboard_page') }}" class="btn btn-cancel">
-                Annuler
+                Retour
             </a>
-
             <button type="submit" class="btn btn-confirm">
-                Confirmer l'achat
+                Activer la machine
             </button>
-
         </div>
     </form>
-
 </div>
 
-<!-- NAV BAS -->
 <div class="bottom-nav">
-    <a href="/dashboard" class="active"><i class="fa-solid fa-house"></i>Accueil</a>
-    <a href="/produits_rapide"><i class="fa-solid fa-chart-line"></i>Investir</a>
-    <a href="/team"><i class="fa-solid fa-users"></i>Team</a>
-    <a href="/profile"><i class="fa-solid fa-user"></i>Compte</a>
+    <a href="/dashboard" class="active"><i class="fa-solid fa-gamepad"></i>Accueil</a>
+    <a href="/produits_rapide"><i class="fa-solid fa-bolt"></i>Paris</a>
+    <a href="/team"><i class="fa-solid fa-user-group"></i>Équipe</a>
+    <a href="/profile"><i class="fa-solid fa-circle-user"></i>Moi</a>
 </div>
 
 </body>
 </html>
+

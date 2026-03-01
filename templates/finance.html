@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mes Investissements</title>
+<title>Mes Paris - PepsiBet</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 *{
@@ -16,50 +17,56 @@
 }
 
 body{
-    background:#f4f7ff;
+    background:#000b1d; /* Dark Mode Pepsi */
+    color: #fff;
 }
 
 /* ===== HEADER ===== */
 .header{
-    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
-    padding:25px 20px 40px;
-    color:white;
-    border-radius:0 0 30px 30px;
+    background: linear-gradient(180deg, #0056b3 0%, #000b1d 100%);
+    padding:25px 20px 50px;
+    border-radius:0 0 40px 40px;
+    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
 }
 
 .header-top{
     display:flex;
     align-items:center;
-    gap:12px;
+    gap:15px;
 }
 
 .back{
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    background:rgba(255,255,255,0.2);
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:rgba(255,255,255,0.1);
     display:flex;
     align-items:center;
     justify-content:center;
     text-decoration:none;
     color:white;
     font-size:18px;
+    backdrop-filter: blur(10px);
 }
 
 .header h2{
-    font-size:20px;
-    font-weight:600;
+    font-size:18px;
+    font-weight:700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 /* ===== STATS BOX ===== */
 .stats-box{
     margin-top:25px;
-    background:rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.05);
     padding:20px;
-    border-radius:20px;
-    backdrop-filter:blur(6px);
+    border-radius:25px;
+    backdrop-filter:blur(10px);
     display:flex;
     justify-content:space-between;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .stat{
@@ -67,56 +74,86 @@ body{
     flex:1;
 }
 
+.stat:first-child { border-right: 1px solid rgba(255, 255, 255, 0.1); }
+
 .stat small{
-    font-size:12px;
-    opacity:0.8;
+    font-size:11px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .stat strong{
     display:block;
     margin-top:6px;
-    font-size:22px;
-    font-weight:600;
+    font-size:20px;
+    font-weight:700;
+    color: #00d4ff; /* Bleu électrique */
 }
 
 /* ===== CONTENT ===== */
 .container{
     padding:20px;
-    margin-top:-20px;
+    margin-top:-30px;
 }
 
 /* ===== CARD ===== */
 .card{
-    background:white;
-    border-radius:22px;
-    padding:18px;
-    margin-bottom:18px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.05);
+    background:#001a3d;
+    border-radius:25px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.2);
+    border: 1px solid rgba(0, 86, 179, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Décoration subtile */
+.card::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 100px;
+    height: 100px;
+    background: rgba(0, 212, 255, 0.05);
+    border-radius: 50%;
 }
 
 .card-top{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    margin-bottom: 12px;
 }
 
 .card h3{
-    font-size:18px;
+    font-size:16px;
+    font-weight: 700;
+    color: #fff;
 }
 
 .status{
-    background:#e6f9f0;
-    color:#16a34a;
-    padding:6px 12px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:600;
+    background:rgba(0, 212, 255, 0.1);
+    color:#00d4ff;
+    padding:5px 12px;
+    border-radius:12px;
+    font-size:11px;
+    font-weight:700;
+    text-transform: uppercase;
+    border: 1px solid rgba(0, 212, 255, 0.3);
 }
 
 .price{
-    margin-top:8px;
-    color:#666;
-    font-size:14px;
+    color:#94a3b8;
+    font-size:13px;
+    margin-bottom: 15px;
+}
+
+.price span {
+    color: #fff;
+    font-weight: 600;
 }
 
 /* ===== DETAILS GRID ===== */
@@ -128,69 +165,86 @@ body{
 }
 
 .detail-box{
-    background:#f4f7ff;
-    padding:10px;
-    border-radius:12px;
+    background:rgba(0, 0, 0, 0.2);
+    padding:12px 8px;
+    border-radius:18px;
     text-align:center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .detail-box span{
-    font-size:11px;
-    color:#777;
+    font-size:10px;
+    color:#94a3b8;
+    display: block;
+    margin-bottom: 4px;
 }
 
 .detail-box strong{
     display:block;
-    margin-top:4px;
-    font-size:14px;
+    font-size:13px;
+    color: #fff;
 }
 
 /* ===== BUTTON ===== */
 .btn{
-    margin-top:18px;
-    display:block;
-    text-align:center;
-    padding:12px;
-    border-radius:30px;
-    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    margin-top:20px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding:14px;
+    border-radius:18px;
+    background: #e32219; /* Rouge Pepsi */
     color:white;
     text-decoration:none;
-    font-weight:600;
-    font-size:14px;
+    font-weight:700;
+    font-size:13px;
+    text-transform: uppercase;
+    box-shadow: 0 5px 15px rgba(227, 34, 25, 0.3);
+    transition: 0.3s;
 }
+
+.btn:active { transform: scale(0.97); }
 
 /* EMPTY */
 .empty{
     text-align:center;
-    margin-top:40px;
-    color:#777;
+    margin-top:60px;
+    padding: 20px;
 }
+
+.empty i {
+    font-size: 50px;
+    color: #1e293b;
+    margin-bottom: 15px;
+}
+
+.empty h4{ color: #fff; margin-bottom: 10px; }
+.empty p{ color: #94a3b8; font-size: 13px; }
 </style>
 </head>
 
 <body>
 
-<!-- ===== HEADER ===== -->
 <div class="header">
     <div class="header-top">
-        <a href="javascript:history.back()" class="back">←</a>
+        <a href="javascript:history.back()" class="back"><i class="fa-solid fa-chevron-left"></i></a>
         <h2>Mes Investissements</h2>
     </div>
 
     <div class="stats-box">
         <div class="stat">
-            <small>Revenu quotidien</small>
-            <strong>{{ "{:,.0f}".format(revenus_totaux).replace(",", " ") }} XOF</strong>
+            <small>Gain Quotidien</small>
+            <strong>{{ "{:,.0f}".format(revenus_totaux).replace(",", " ") }} F</strong>
         </div>
 
         <div class="stat">
-            <small>Produits actifs</small>
+            <small>Pari(s) Actif(s)</small>
             <strong>{{ actifs|length }}</strong>
         </div>
     </div>
 </div>
 
-<!-- ===== CONTENT ===== -->
 <div class="container">
 
 {% if actifs %}
@@ -198,35 +252,33 @@ body{
     <div class="card">
 
         <div class="card-top">
-            <h3>Pack Investissement</h3>
-            <span class="status">Actif</span>
+            <h3>Machine PepsiBet #{{ loop.index }}</h3>
+            <span class="status"><i class="fa-solid fa-circle-dot" style="font-size: 8px; margin-right: 5px;"></i> Actif</span>
         </div>
 
         <div class="price">
-            Investi : {{ "{:,.0f}".format(a.montant).replace(",", " ") }} XOF
+            Capital engagé : <span>{{ "{:,.0f}".format(a.montant).replace(",", " ") }} XOF</span>
         </div>
 
         <div class="details">
             <div class="detail-box">
-                <span>Durée</span>
+                <span>Cycle</span>
                 <strong>{{ a.duree }} j</strong>
             </div>
 
             <div class="detail-box">
-                <span>Gain / jour</span>
-                <strong>{{ "{:,.0f}".format(a.revenu_journalier).replace(",", " ") }}</strong>
+                <span>Gain/J</span>
+                <strong style="color: #00d4ff;">+{{ "{:,.0f}".format(a.revenu_journalier).replace(",", " ") }}</strong>
             </div>
 
             <div class="detail-box">
-                <span>Gain total</span>
-                <strong>
-                    {{ "{:,.0f}".format(a.revenu_journalier * a.duree).replace(",", " ") }}
-                </strong>
+                <span>Total</span>
+                <strong>{{ "{:,.0f}".format(a.revenu_journalier * a.duree).replace(",", " ") }}</strong>
             </div>
         </div>
 
         <a href="{{ url_for('produits_rapide_page') }}" class="btn">
-            Investir davantage
+            <i class="fa-solid fa-plus-circle"></i> Reprendre un pack
         </a>
 
     </div>
@@ -234,8 +286,10 @@ body{
 {% else %}
 
     <div class="empty">
-        <h4>Aucun investissement actif</h4>
-        <p>Commencez à investir pour générer des revenus quotidiens.</p>
+        <i class="fa-solid fa-folder-open"></i>
+        <h4>Aucun pari en cours</h4>
+        <p>Activez votre première machine pour commencer à collecter des revenus.</p>
+        <a href="{{ url_for('produits_rapide_page') }}" class="btn" style="margin-top: 30px;">Voir les offres</a>
     </div>
 
 {% endif %}
@@ -244,3 +298,4 @@ body{
 
 </body>
 </html>
+

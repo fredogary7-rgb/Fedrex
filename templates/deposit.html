@@ -3,232 +3,254 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Recharge - Coris Max</title>
+<title>Recharge - PepsiBet</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
+    font-family:'Poppins', sans-serif;
 }
+
 body{
-    background:#f4f7ff;
+    background:#000b1d;
+    color: #fff;
+    padding-bottom: 50px;
 }
+
+/* ===== HEADER ===== */
 .header{
-    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
-    padding:30px 20px 70px;
-    color:white;
-    border-radius:0 0 40px 40px;
-    text-align:center;
+    padding:20px;
+    font-size:18px;
+    font-weight:700;
+    background:#001a3d;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(0, 86, 179, 0.3);
 }
-.header h2{
-    font-size:20px;
-    font-weight:600;
-}
+.header a { color: #fff; text-decoration: none; }
+
+/* ===== CONTAINER ===== */
 .container{
     padding:20px;
-    max-width:480px;
-    margin:-40px auto 0;
 }
-.card{
-    background:white;
+
+/* ===== BALANCE CARD ===== */
+.balance-card {
+    background: linear-gradient(135deg, #0056b3 0%, #002d72 100%);
+    border-radius: 22px;
+    padding: 25px;
+    margin-bottom: 25px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.balance-card span {
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.balance-card h2 {
+    font-size: 28px;
+    margin-top: 5px;
+    color: #00d4ff;
+}
+
+/* ===== FORM CARD ===== */
+.form-card{
+    background:#001a3d;
     padding:25px;
-    border-radius:20px;
-    box-shadow:0 15px 35px rgba(0,0,0,0.05);
+    border-radius:22px;
+    border: 1px solid rgba(0, 86, 179, 0.2);
 }
-.card h3{
-    text-align:center;
-    margin-bottom:20px;
-    font-size:16px;
-}
-.quick-amounts{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:10px;
-    margin-bottom:20px;
-}
-.quick-amounts button{
-    border:1px solid #ddd;
-    border-radius:50px;
-    padding:10px;
-    background:white;
-    cursor:pointer;
-    font-weight:500;
-    color:#555;
-    transition:0.2s;
-    font-size:13px;
-}
-.quick-amounts button.selected,
-.quick-amounts button:hover{
-    border-color:#3a5cb8;
-    color:#3a5cb8;
-    background:#eef2ff;
-}
-.user-info input{
-    width:100%;
-    padding:12px;
-    margin-top:12px;
-    border-radius:12px;
-    border:1px solid #ddd;
-    font-size:14px;
-    outline:none;
-}
-.user-info input:focus{
-    border-color:#3a5cb8;
-}
-#deposit-btn{
-    width:100%;
-    margin-top:20px;
-    padding:14px;
-    border:none;
-    border-radius:30px;
-    background:linear-gradient(to right,#3a5cb8,#2ea78d);
-    color:white;
+
+label{
     font-weight:600;
-    cursor:pointer;
-    font-size:15px;
-    transition:0.3s;
-}
-#deposit-btn:hover{
-    opacity:0.9;
-}
-.loader{
-    display:none;
-    text-align:center;
+    display:block;
     margin-top:15px;
-    font-size:13px;
-    color:#3a5cb8;
+    color: #94a3b8;
+    font-size:12px;
+    text-transform: uppercase;
 }
+
+select, input{
+    width:100%;
+    padding:14px;
+    margin-top:8px;
+    border-radius:12px;
+    border: 1px solid #0056b3;
+    background:#000b1d;
+    color: white;
+    font-size:14px;
+    outline: none;
+}
+
+.amount-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.amount-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(0, 86, 179, 0.3);
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.amount-btn:hover, .amount-btn.active {
+    background: #0056b3;
+    border-color: #00d4ff;
+}
+
+.btn-submit{
+    background: #e32219;
+    color:white;
+    width:100%;
+    padding:16px;
+    margin-top:30px;
+    border-radius:15px;
+    border:none;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    text-transform: uppercase;
+    box-shadow: 0 5px 15px rgba(227, 34, 25, 0.3);
+}
+
+/* ===== NOTICE ===== */
+.notice {
+    margin-top: 25px;
+    background: rgba(227, 34, 25, 0.05);
+    border: 1px solid rgba(227, 34, 25, 0.2);
+    padding: 15px;
+    border-radius: 15px;
+}
+
+.notice p {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.5;
+}
+
+.notice strong { color: #e32219; }
 </style>
 </head>
 
 <body>
 
 <div class="header">
-    <h2>💰 Déposer de l'argent</h2>
+    <a href="/profile"><i class="fa-solid fa-arrow-left"></i></a>
+    Recharger mon compte
 </div>
 
 <div class="container">
-    <div class="card">
-        <h3>Recharger votre compte</h3>
 
-        <div class="quick-amounts">
-            <button type="button" onclick="setQuickAmount(event,4000)">4000</button>
-            <button type="button" onclick="setQuickAmount(event,8000)">8000</button>
-            <button type="button" onclick="setQuickAmount(event,10000)">10000</button>
-            <button type="button" onclick="setQuickAmount(event,20000)">20000</button>
-            <button type="button" onclick="setQuickAmount(event,50000)">50000</button>
-            <button type="button" onclick="setQuickAmount(event,100000)">100000</button>
-            <button type="button" onclick="setQuickAmount(event,200000)">200000</button>
-            <button type="button" onclick="setQuickAmount(event,500000)">500000</button>
-        </div>
-
-        <div class="user-info">
-            <input type="text" id="fullname" placeholder="Nom complet">
-            <input type="email" id="email" placeholder="Email">
-            <input type="text" id="phone" placeholder="Numéro téléphone">
-            <input type="number" id="montant" placeholder="Montant minimum 3000">
-        </div>
-
-        <button id="deposit-btn" onclick="initDeposit()">Déposer maintenant</button>
-
-        <div class="loader" id="loader">
-            Ouverture du paiement sécurisé...
-        </div>
-
+    <div class="balance-card">
+        <span>Solde Actuel</span>
+        <h2>{{ "{:,.0f}".format(user.solde_total if user else 0) }} XOF</h2>
     </div>
+
+    <div class="form-card">
+        <form action="https://my.moneyfusion.net/69932dd4efbbdc4f34565a60" method="GET">
+            
+            <label>1. Choisir le montant (XOF)</label>
+            <input type="number" name="amount" id="amountInput" placeholder="Minimum 1 000" required>
+            
+            <div class="amount-grid">
+                <div class="amount-btn" onclick="setAmount(2000)">2 000</div>
+                <div class="amount-btn" onclick="setAmount(5000)">5 000</div>
+                <div class="amount-btn" onclick="setAmount(10000)">10 000</div>
+                <div class="amount-btn" onclick="setAmount(25000)">25 000</div>
+                <div class="amount-btn" onclick="setAmount(50000)">50 000</div>
+                <div class="amount-btn" onclick="setAmount(100000)">100 000</div>
+            </div>
+
+            <label>2. Pays de paiement</label>
+            <select id="countrySelect" onchange="updateOperators()" required>
+                <option value="">Sélectionnez votre pays</option>
+                <option value="Bénin">🇧🇯 Bénin</option>
+                <option value="Burkina Faso">🇧🇫 Burkina Faso</option>
+                <option value="Côte d'Ivoire">🇨🇮 Côte d’Ivoire</option>
+                <option value="Cameroun">🇨🇲 Cameroun</option>
+                <option value="Gabon">🇬🇦 Gabon</option>
+                <option value="Guinée">🇬🇳 Guinée</option>
+                <option value="Guinée-Bissau">🇬🇼 Guinée-Bissau</option>
+                <option value="Mali">🇲🇱 Mali</option>
+                <option value="Niger">🇳🇪 Niger</option>
+                <option value="Sénégal">🇸🇳 Sénégal</option>
+                <option value="Togo">🇹🇬 Togo</option>
+            </select>
+
+            <label>3. Mode de paiement</label>
+            <select id="operatorSelect" required>
+                <option value="">Choisissez le pays d'abord</option>
+            </select>
+
+            <button type="submit" class="btn-submit">Procéder au paiement</button>
+        </form>
+    </div>
+
+    <div class="notice">
+        <p><strong>Note :</strong> Après avoir cliqué sur le bouton, vous serez redirigé vers notre passerelle sécurisée <strong>MoneyFusion</strong> pour finaliser la transaction. Votre solde sera mis à jour automatiquement dès confirmation.</p>
+    </div>
+
 </div>
 
-<script src="https://bkapay.com/bkapay-inline.js"></script>
-
 <script>
-function setQuickAmount(e, amount){
-    document.querySelectorAll(".quick-amounts button")
-        .forEach(btn=>btn.classList.remove("selected"));
-    e.target.classList.add("selected");
-    document.getElementById("montant").value = amount;
+// Configuration des opérateurs par pays
+const operatorsData = {
+    "Bénin": ["MTN Mobile Money", "Moov Money"],
+    "Burkina Faso": ["Orange Money", "Moov Money"],
+    "Côte d'Ivoire": ["Orange Money", "MTN Money", "Moov Money", "Wave"],
+    "Cameroun": ["MTN Money", "Orange Money"],
+    "Gabon": ["Airtel Money", "Moov Money"],
+    "Guinée": ["Orange Money", "MTN Money"],
+    "Guinée-Bissau": ["MTN Money", "Orange Money"],
+    "Mali": ["Orange Money", "Moov Money"],
+    "Niger": ["Airtel Money", "Moov Money"],
+    "Sénégal": ["Orange Money", "Free Money", "Wave", "E-Money"],
+    "Togo": ["TMoney", "Moov Money"]
+};
+
+function updateOperators() {
+    const country = document.getElementById("countrySelect").value;
+    const operatorSelect = document.getElementById("operatorSelect");
+    
+    operatorSelect.innerHTML = '<option value="">Sélectionnez un opérateur</option>';
+    
+    if (operatorsData[country]) {
+        operatorsData[country].forEach(op => {
+            let option = document.createElement("option");
+            option.value = op;
+            option.text = op;
+            operatorSelect.appendChild(option);
+        });
+    }
 }
 
-function initDeposit(){
-
-    let fullname = document.getElementById("fullname").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let phone = document.getElementById("phone").value.trim();
-    let montant = parseInt(document.getElementById("montant").value);
-
-    if(!fullname || !phone || !email || !montant || montant < 3000){
-        alert("Veuillez remplir correctement les informations.");
-        return;
-    }
-
-    document.getElementById("loader").style.display = "block";
-
-    fetch("/create-deposit",{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-            montant: montant,
-            email: email,
-            fullname: fullname,
-            phone: phone
-        })
-    })
-    .then(res=>res.json())
-    .then(data=>{
-        if(data.success){
-
-            BKApay.checkout({
-                key:"pk_live_8948bec4-53e9-4c1a-8c4c-936928edfca4",
-                amount: montant,
-                orderId: data.depot_id,
-                description:"Depot compte",
-
-                customer:{
-                    name: fullname,
-                    phone: phone,
-                    email: email
-                },
-
-                onSuccess:function(response){
-
-                    fetch("/verify-bkapay",{
-                        method:"POST",
-                        headers:{
-                            "Content-Type":"application/json"
-                        },
-                        body:JSON.stringify({
-                            transactionId: response.transactionId,
-                            depot_id: data.depot_id
-                        })
-                    })
-                    .then(res=>res.json())
-                    .then(result=>{
-                        if(result.success){
-                            alert("Paiement validé ✅");
-                            window.location.href="/dashboard";
-                        }else{
-                            alert("Erreur vérification.");
-                        }
-                    });
-                },
-
-                onError:function(){
-                    alert("Paiement échoué ❌");
-                }
-            });
-
-        }else{
-            alert("Erreur création dépôt");
-            document.getElementById("loader").style.display = "none";
-        }
-    });
+function setAmount(val) {
+    document.getElementById("amountInput").value = val;
+    // Optionnel : ajouter une classe active sur le bouton cliqué
+    const btns = document.querySelectorAll('.amount-btn');
+    btns.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
 }
 </script>
 
 </body>
 </html>
+

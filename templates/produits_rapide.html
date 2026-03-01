@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Produits rapides</title>
+<title>Produits PepsiBet</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -17,45 +17,58 @@
 }
 
 body{
-    background:#f4f6fb;
+    background:#000b1d; /* Fond sombre PepsiBet */
+    color: #fff;
     padding-bottom:100px;
 }
 
 /* ===== HEADER ===== */
 .header{
-    background:linear-gradient(to right,#3a5cb8,#2ea78d);
-    padding:25px 20px 60px;
+    background: linear-gradient(180deg, #0056b3 0%, #000b1d 100%);
+    padding:30px 20px 60px;
     color:#fff;
     font-size:22px;
-    font-weight:600;
+    font-weight:700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
 }
 
 /* ===== CONTAINER ===== */
 .container{
-    margin-top:-40px;
+    margin-top:-35px;
     padding:0 15px;
 }
 
 /* ===== PRODUCT CARD ===== */
 .card{
-    background:#fff;
+    background:#001a3d;
     border-radius:22px;
-    padding:16px;
-    margin-bottom:18px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.06);
+    padding:18px;
+    margin-bottom:20px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.3);
     position:relative;
+    border: 1px solid rgba(0, 86, 179, 0.3);
+    transition: 0.3s;
 }
 
-/* Badge rentable */
+.card:active {
+    transform: scale(0.98);
+}
+
+/* Badge Pepsi Red */
 .badge{
     position:absolute;
     top:15px;
     right:15px;
-    background:#2ea78d;
+    background:#e32219;
     color:#fff;
-    font-size:11px;
-    padding:5px 10px;
+    font-size:10px;
+    font-weight: 700;
+    padding:5px 12px;
     border-radius:20px;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px rgba(227, 34, 25, 0.4);
 }
 
 /* Top section */
@@ -65,10 +78,11 @@ body{
 }
 
 .card img{
-    width:95px;
-    height:95px;
-    border-radius:16px;
+    width:100px;
+    height:100px;
+    border-radius:18px;
     object-fit:cover;
+    border: 2px solid #0056b3;
 }
 
 /* Product content */
@@ -77,28 +91,37 @@ body{
 }
 
 .card-content h3{
-    font-size:17px;
+    font-size:16px;
     margin-bottom:6px;
+    color: #fff;
 }
 
 .price{
-    font-size:16px;
-    font-weight:600;
-    color:#3a5cb8;
-    margin-bottom:6px;
+    font-size:18px;
+    font-weight:700;
+    color:#00d4ff; /* Bleu électrique PepsiBet */
+    margin-bottom:8px;
 }
 
 .details{
-    font-size:13px;
-    color:#555;
-    margin-bottom:4px;
+    font-size:12px;
+    color:#94a3b8;
+    margin-bottom:5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.details i {
+    color: #0056b3;
+    width: 14px;
 }
 
 /* Divider */
 .divider{
     height:1px;
-    background:#eee;
-    margin:12px 0;
+    background:rgba(255,255,255,0.05);
+    margin:15px 0;
 }
 
 /* Bottom row */
@@ -109,39 +132,48 @@ body{
 }
 
 .total{
-    font-size:14px;
-    font-weight:600;
+    font-size:13px;
+    font-weight:500;
+    color: #94a3b8;
+}
+
+.total span {
+    display: block;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
 }
 
 .btn-buy{
-    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    background:#e32219;
     color:#fff;
-    padding:10px 20px;
-    border-radius:25px;
+    padding:12px 25px;
+    border-radius:15px;
     text-decoration:none;
     font-size:13px;
-    font-weight:600;
+    font-weight:700;
+    text-transform: uppercase;
     transition:0.3s;
+    box-shadow: 0 4px 12px rgba(227, 34, 25, 0.3);
 }
 
 .btn-buy:hover{
-    opacity:0.85;
+    background: #c4120b;
 }
 
 /* ===== EMPTY STATE ===== */
 .empty{
     text-align:center;
-    margin-top:60px;
-    color:#777;
+    margin-top:80px;
+    color:#64748b;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <div class="header">
-    Produits rapides
+    Paris Rapides
 </div>
 
 <div class="container">
@@ -151,7 +183,7 @@ body{
 <div class="card">
 
     <div class="badge">
-        Rentable
+        VIP Rentable
     </div>
 
     <div class="card-top">
@@ -159,16 +191,16 @@ body{
 
         <div class="card-content">
             <h3>{{ p.nom }}</h3>
-            <div class="price">XOF {{ "{:,.0f}".format(p.prix) }}</div>
+            <div class="price">{{ "{:,.0f}".format(p.prix) }} XOF</div>
 
             <div class="details">
-                <i class="fa-regular fa-calendar"></i>
-                Validité : 150 jours
+                <i class="fa-regular fa-clock"></i>
+                Cycle : 150 jours
             </div>
 
             <div class="details">
-                <i class="fa-solid fa-coins"></i>
-                Revenu quotidien : XOF {{ "{:,.0f}".format(p.revenu_journalier) }}
+                <i class="fa-solid fa-chart-line"></i>
+                Gain/jour : {{ "{:,.0f}".format(p.revenu_journalier) }} XOF
             </div>
         </div>
     </div>
@@ -177,11 +209,12 @@ body{
 
     <div class="card-bottom">
         <div class="total">
-            Total : XOF {{ "{:,.0f}".format(p.revenu_journalier * 150) }}
+            Revenu Total
+            <span>{{ "{:,.0f}".format(p.revenu_journalier * 150) }} XOF</span>
         </div>
 
         <a href="/produits_rapide/confirmer/{{ p.id }}" class="btn-buy">
-            Acheter
+            Parier
         </a>
     </div>
 
@@ -190,8 +223,8 @@ body{
 {% else %}
 
 <div class="empty">
-    <i class="fa-regular fa-box-open" style="font-size:40px;margin-bottom:10px;"></i>
-    <p>Aucun produit disponible</p>
+    <i class="fa-solid fa-ghost" style="font-size:45px;margin-bottom:15px; opacity:0.5;"></i>
+    <p>Aucun produit PepsiBet disponible</p>
 </div>
 
 {% endif %}
@@ -200,3 +233,4 @@ body{
 
 </body>
 </html>
+

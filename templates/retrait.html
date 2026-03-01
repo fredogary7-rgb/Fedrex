@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Retrait</title>
+<title>Retrait - PepsiBet</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -16,135 +16,197 @@
 }
 
 body{
-    background:#f4f6fb;
+    background:#000b1d; /* Fond sombre PepsiBet */
+    color: #fff;
 }
 
 /* HEADER */
 .header{
     padding:18px;
-    font-size:20px;
-    font-weight:600;
-    background:white;
-    box-shadow:0 2px 8px rgba(0,0,0,0.05);
+    font-size:18px;
+    font-weight:700;
+    background:#001a3d;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid rgba(0, 86, 179, 0.3);
 }
+
+.header a { color: #fff; text-decoration: none; }
 
 /* CONTAINER */
 .container{
     padding:20px;
 }
 
-/* 💳 CARTE BANCAIRE */
+/* 💳 CARTE VIP PEPSIBET */
 .bank-card{
-    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
+    background: linear-gradient(135deg, #0056b3 0%, #002d72 100%);
     border-radius:22px;
     padding:25px;
     color:white;
     position:relative;
-    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 25px rgba(0, 86, 179, 0.3);
     margin-bottom:25px;
+    border: 1px solid rgba(255,255,255,0.1);
+    overflow: hidden;
+}
+
+/* Effet de brillance sur la carte */
+.bank-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    transform: rotate(30deg);
 }
 
 .bank-card .chip{
-    width:50px;
-    height:35px;
-    background:rgba(255,255,255,0.6);
-    border-radius:8px;
-    margin-bottom:30px;
+    width:45px;
+    height:32px;
+    background: linear-gradient(135deg, #ffd700, #b8860b);
+    border-radius:6px;
+    margin-bottom:25px;
+    position: relative;
+    z-index: 2;
 }
 
 .bank-card .bank-name{
     position:absolute;
-    top:20px;
-    right:20px;
-    font-weight:600;
-    font-size:14px;
+    top:25px;
+    right:25px;
+    font-weight:800;
+    font-size:16px;
+    font-style: italic;
+    letter-spacing: 1px;
 }
 
 .bank-card .holder{
-    font-size:18px;
-    margin-top:15px;
+    font-size:16px;
+    margin-top:10px;
     font-weight:500;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
 }
 
 .bank-card .number{
-    font-size:16px;
-    letter-spacing:2px;
-    margin-top:10px;
+    font-size:18px;
+    letter-spacing:3px;
+    margin-top:5px;
+    font-family: 'Courier New', monospace;
+    position: relative;
+    z-index: 2;
 }
 
 .bank-card .balance{
-    margin-top:15px;
-    font-size:14px;
-    opacity:0.9;
+    margin-top:20px;
+    font-size:13px;
+    background: rgba(0,0,0,0.2);
+    padding: 10px;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.bank-card .balance strong{
+    font-size:16px;
+    color: #00d4ff;
 }
 
 /* FORM CARD */
 .form-card{
-    background:white;
-    padding:20px;
-    border-radius:18px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.05);
+    background:#001a3d;
+    padding:25px;
+    border-radius:22px;
+    border: 1px solid rgba(0, 86, 179, 0.2);
 }
 
 label{
     font-weight:600;
     display:block;
-    margin-top:15px;
-    font-size:14px;
+    color: #94a3b8;
+    font-size:13px;
+    text-transform: uppercase;
 }
 
-select, input{
+input{
     width:100%;
-    padding:14px;
-    margin-top:8px;
-    border-radius:12px;
-    border:1px solid #ddd;
-    background:#f9f9f9;
-    font-size:14px;
+    padding:16px;
+    margin-top:10px;
+    border-radius:15px;
+    border: 1px solid #0056b3;
+    background:#000b1d;
+    color: white;
+    font-size:16px;
+    outline: none;
+}
+
+input:focus {
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
 }
 
 .btn{
-    background:linear-gradient(to right,#3a5cb8,#2ea78d);
+    background: #e32219;
     color:white;
     width:100%;
-    padding:15px;
+    padding:16px;
     margin-top:25px;
-    border-radius:30px;
+    border-radius:15px;
     border:none;
-    font-weight:600;
+    font-weight:700;
     font-size:15px;
     cursor:pointer;
+    text-transform: uppercase;
+    box-shadow: 0 5px 15px rgba(227, 34, 25, 0.3);
+}
+
+.btn:disabled {
+    background: #555;
+    box-shadow: none;
+    cursor: not-allowed;
 }
 
 /* RULES */
 .rules{
     margin-top:25px;
-    background:white;
-    padding:15px;
-    border-radius:15px;
-    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+    background: rgba(0, 26, 61, 0.5);
+    padding:20px;
+    border-radius:18px;
+    border: 1px dashed rgba(148, 163, 184, 0.3);
 }
 
 .rules h4{
-    margin-bottom:10px;
+    margin-bottom:12px;
+    font-size: 15px;
+    color: #e32219;
 }
 
 .rules p{
-    font-size:13px;
-    margin:6px 0;
-    color:#555;
+    font-size:12px;
+    margin:8px 0;
+    color:#94a3b8;
+    line-height: 1.4;
 }
 
 /* FEES */
 .fees{
     display:flex;
     justify-content:space-between;
-    margin-top:12px;
-    font-size:14px;
+    margin-top:15px;
+    font-size:13px;
+    color: #94a3b8;
 }
 
 .fees span:last-child{
-    color:red;
+    color:#fff;
+    font-weight: 600;
+}
+
+.fees.highlight span:last-child{
+    color: #e32219;
 }
 </style>
 </head>
@@ -152,64 +214,51 @@ select, input{
 <body>
 
 <div class="header">
-    ← Retrait
+    <a href="/dashboard"> <i class="fa-solid fa-arrow-left"></i> </a>
+    Retrait PepsiBet
 </div>
 
 <div class="container">
 
-    <!-- 💳 CARTE BANCAIRE -->
     <div class="bank-card">
-
-        <div class="bank-name">Coris Bank</div>
-
+        <div class="bank-name">PEPSIBET VIP</div>
         <div class="chip"></div>
-
         <div class="number">
-            **** **** **** {{ user.wallet_number[-4:] if user and user.wallet_number else "1234" }}
+            **** **** **** {{ user.wallet_number[-4:] if user and user.wallet_number else "8888" }}
         </div>
-
         <div class="holder">
-            {{ user.nom if user and user.nom else "Nom du titulaire" }}
+            {{ user.phone if user else "JOUEUR PEPSI" }}
         </div>
-
         <div class="balance">
-            Solde disponible :
-            <strong>
-                XOF {{ "{:,.0f}".format(user.solde_revenu if user else 0) }}
-            </strong>
+            DISPONIBLE : <strong>{{ "{:,.0f}".format(user.solde_revenu if user else 0) }} F</strong>
         </div>
-
     </div>
 
-    <!-- FORMULAIRE RETRAIT -->
     <div class="form-card">
         <form method="POST">
-
-            <label>Montant du retrait</label>
-            <input type="number" name="montant" id="montant" placeholder="XOF Minimum 1 500" required>
-
-            <div class="fees">
-                <span>Montant reçu :</span>
-                <span id="netAmount">0 XOF</span>
-            </div>
+            <label>Montant à retirer (XOF)</label>
+            <input type="number" name="montant" id="montant" placeholder="Minimum 1 500" required>
 
             <div class="fees">
-                <span>Frais (18%) :</span>
-                <span id="feesAmount">0 XOF</span>
+                <span>Frais de retrait (18%) :</span>
+                <span id="feesAmount" style="color: #e32219;">0 F</span>
             </div>
 
-            <button type="submit" class="btn" id="withdrawBtn">Retirer maintenant</button>
+            <div class="fees" style="margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
+                <span>Vous recevrez :</span>
+                <span id="netAmount" style="font-size: 18px; color: #00d4ff;">0 F</span>
+            </div>
+
+            <button type="submit" class="btn" id="withdrawBtn" disabled>VALIDER LE RETRAIT</button>
         </form>
     </div>
 
-    <!-- RÈGLES -->
     <div class="rules">
-        <h4>Règles de retrait</h4>
-        <p>1. Le montant minimum de retrait est défini par la plateforme.</p>
-        <p>2. Une taxe de <strong>18%</strong> est automatiquement appliquée.</p>
-        <p>3. Assurez-vous que votre compte de retrait est correct.</p>
-        <p>4. Les retraits sont traités après vérification.</p>
-        <p>5. Un retrait incorrect peut entraîner un rejet.</p>
+        <h4><i class="fa-solid fa-circle-info"></i> Infos Retrait</h4>
+        <p>• Minimum de retrait : <strong>1 500 XOF</strong>.</p>
+        <p>• Taxe de maintenance PepsiBet : <strong>18%</strong>.</p>
+        <p>• Délai de traitement : entre 1h et 24h selon l'opérateur.</p>
+        <p>• Vérifiez bien votre numéro de compte avant de valider.</p>
     </div>
 
 </div>
@@ -218,22 +267,23 @@ select, input{
 document.getElementById("montant").addEventListener("input", function () {
     let montant = parseFloat(this.value);
     let btn = document.getElementById("withdrawBtn");
+    let minAmount = 1500;
 
-    if (isNaN(montant) || montant <= 0) {
-        document.getElementById("netAmount").innerText = "0 XOF";
-        document.getElementById("feesAmount").innerText = "0 XOF";
+    if (isNaN(montant) || montant < minAmount) {
+        document.getElementById("netAmount").innerText = "0 F";
+        document.getElementById("feesAmount").innerText = "0 F";
         btn.disabled = true;
         return;
     }
 
-    let fees = montant * 0.15;
+    let fees = montant * 0.18; // Calcul à 18% comme affiché
     let net = montant - fees;
 
     document.getElementById("netAmount").innerText =
-        net.toLocaleString("fr-FR") + " XOF";
+        net.toLocaleString("fr-FR") + " F";
 
     document.getElementById("feesAmount").innerText =
-        fees.toLocaleString("fr-FR") + " XOF";
+        fees.toLocaleString("fr-FR") + " F";
 
     btn.disabled = false;
 });
@@ -241,3 +291,4 @@ document.getElementById("montant").addEventListener("input", function () {
 
 </body>
 </html>
+

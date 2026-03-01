@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>À propos - Coris Max</title>
+<title>À propos - PepsiBet</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 *{
@@ -16,59 +17,71 @@
 }
 
 body{
-    background:#f4f7ff;
+    background:#000b1d; /* Fond PepsiBet */
+    color: #fff;
 }
 
 /* ===== HEADER ===== */
 .header{
-    background:linear-gradient(135deg,#3a5cb8,#2ea78d);
-    padding:30px 20px 50px;
+    background: linear-gradient(180deg, #0056b3 0%, #000b1d 100%);
+    padding:40px 20px 60px;
     color:white;
-    border-radius:0 0 40px 40px;
+    border-radius:0 0 45px 45px;
     text-align:center;
+    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
 }
 
 .header h1{
-    font-size:24px;
-    font-weight:700;
+    font-size:26px;
+    font-weight:800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .header p{
     margin-top:10px;
-    font-size:14px;
-    opacity:0.9;
+    font-size:13px;
+    color: #00d4ff;
+    font-weight: 500;
 }
 
 /* ===== CONTENT ===== */
 .container{
     padding:20px;
-    margin-top:-30px;
+    margin-top:-40px;
 }
 
 /* ===== CARD ===== */
 .card{
-    background:white;
+    background:#001a3d;
     border-radius:25px;
-    padding:20px;
+    padding:22px;
     margin-bottom:25px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.05);
+    box-shadow:0 15px 35px rgba(0,0,0,0.3);
+    border: 1px solid rgba(0, 86, 179, 0.2);
 }
 
 .card img{
     width:100%;
-    border-radius:18px;
-    margin-bottom:15px;
+    border-radius:20px;
+    margin-bottom:20px;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .card h2{
     font-size:18px;
-    margin-bottom:10px;
-    color:#3a5cb8;
+    margin-bottom:12px;
+    color:#fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
+.card h2 i { color: #e32219; }
+
 .card p{
-    font-size:14px;
-    color:#555;
+    font-size:13px;
+    color:#94a3b8;
     line-height:22px;
 }
 
@@ -77,125 +90,122 @@ body{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:12px;
-    margin-top:15px;
+    margin-top:20px;
 }
 
 .feature-box{
-    background:#f4f7ff;
+    background:rgba(0,0,0,0.2);
     padding:15px;
-    border-radius:15px;
+    border-radius:18px;
     text-align:center;
+    border: 1px solid rgba(0, 212, 255, 0.1);
 }
 
 .feature-box h4{
-    font-size:14px;
+    font-size:13px;
     margin-bottom:5px;
-    color:#2ea78d;
+    color:#00d4ff;
 }
 
 .feature-box p{
-    font-size:12px;
-    color:#666;
+    font-size:11px;
+    color:#64748b;
 }
 
 /* ===== FOOTER ===== */
 .footer{
     text-align:center;
-    padding:20px;
-    font-size:12px;
-    color:#888;
+    padding:30px 20px 100px;
+    font-size:11px;
+    color:#475569;
+}
+
+.btn-back {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <div class="header">
-    <h1>À propos de Coris Max</h1>
-    <p>Une solution bancaire moderne, sécurisée et innovante</p>
+    <a href="javascript:history.back()" class="btn-back"><i class="fa-solid fa-arrow-left"></i></a>
+    <h1>L'Univers PepsiBet</h1>
+    <p>Énergie, Technologie et Opportunités Financières</p>
 </div>
 
 <div class="container">
 
-    <!-- PRESENTATION -->
     <div class="card">
-        <img src="{{ url_for('static', filename='images/co2.jpg') }}" alt="Banque digitale">
+        <img src="{{ url_for('static', filename='images/p2.jpg') }}" alt="PepsiBet Concept">
 
-        <h2>Qui sommes-nous ?</h2>
+        <h2><i class="fa-solid fa-rocket"></i> Qui sommes-nous ?</h2>
         <p>
-            Coris Max est une plateforme financière moderne inspirée des standards
-            bancaires internationaux comme Coris Bank. Notre mission est d’offrir
-            des services financiers simples, rapides et sécurisés à tous.
-            Nous combinons technologie digitale et expertise bancaire pour vous
-            permettre de gérer votre argent en toute confiance.
+            PepsiBet n'est pas seulement une plateforme d'investissement, c'est un écosystème conçu pour dynamiser votre capital. Inspirés par la rapidité et l'énergie des plus grandes marques mondiales, nous offrons une interface ultra-rapide pour transformer vos jetons en revenus réels.
         </p>
     </div>
 
-    <!-- EPARGNE -->
     <div class="card">
-        <img src="{{ url_for('static', filename='images/co3.jpg') }}" alt="Epargne">
+        <img src="{{ url_for('static', filename='images/p3.jpg') }}" alt="Gains PepsiBet">
 
-        <h2>Épargne intelligente</h2>
+        <h2><i class="fa-solid fa-bolt-lightning"></i> Croissance Électrique</h2>
         <p>
-            Avec Coris Max, vous pouvez épargner de manière automatique et
-            générer des revenus quotidiens sur vos investissements.
-            Notre système vous permet de planifier votre avenir financier
-            tout en gardant un contrôle total sur vos fonds.
+            Nos packs d'investissement fonctionnent comme des moteurs à haute performance. Une fois activés, ils génèrent des revenus toutes les 24 heures, vous permettant de voir votre solde grimper sans effort.
         </p>
 
         <div class="features">
             <div class="feature-box">
-                <h4>Épargne flexible</h4>
-                <p>Dépôts et retraits rapides</p>
+                <h4>11 Pays</h4>
+                <p>Couverture totale en Afrique</p>
             </div>
 
             <div class="feature-box">
-                <h4>Rendement sécurisé</h4>
-                <p>Gains journaliers fiables</p>
+                <h4>Gain Non-Stop</h4>
+                <p>Récolte 7j/7, 24h/24</p>
             </div>
         </div>
     </div>
 
-    <!-- CARTE BANCAIRE -->
     <div class="card">
-        <img src="{{ url_for('static', filename='images/co1.jpg') }}" alt="Carte bancaire">
+        <img src="{{ url_for('static', filename='images/p1.jpg') }}" alt="Paiements">
 
-        <h2>Carte bancaire internationale</h2>
+        <h2><i class="fa-solid fa-shield-halved"></i> Transactions Express</h2>
         <p>
-            Profitez d’une carte bancaire Coris Max acceptée partout.
-            Payez en ligne, retirez de l’argent aux distributeurs
-            et effectuez vos transactions en toute sécurité.
+            Nous utilisons les passerelles les plus fiables comme <strong>MoneyFusion</strong> pour garantir que chaque dépôt et chaque retrait arrive à destination en un temps record, que vous soyez au Bénin, au Sénégal ou au Cameroun.
         </p>
 
         <div class="features">
             <div class="feature-box">
-                <h4>Paiement sécurisé</h4>
-                <p>Protection contre la fraude</p>
+                <h4>Sécurité Totale</h4>
+                <p>Cryptage de niveau militaire</p>
             </div>
 
             <div class="feature-box">
-                <h4>Transactions rapides</h4>
-                <p>Acceptée à l’international</p>
+                <h4>Multi-Opérateurs</h4>
+                <p>Wave, Orange, MTN, Moov</p>
             </div>
         </div>
     </div>
 
-    <!-- SECURITE -->
-    <div class="card">
-        <h2>Sécurité & Fiabilité</h2>
-        <p>
-            La sécurité est notre priorité. Coris Max utilise des technologies
-            avancées de cryptage et de protection des données afin de garantir
-            la confidentialité et la sécurité de vos transactions.
+    <div class="card" style="background: linear-gradient(135deg, #e32219 0%, #8b150f 100%);">
+        <h2 style="color: #fff;"><i class="fa-solid fa-earth-africa"></i> Notre Vision</h2>
+        <p style="color: rgba(255,255,255,0.8);">
+            Devenir la plateforme numéro 1 en Afrique de l'Ouest et Centrale en offrant une transparence totale et une accessibilité financière à chaque utilisateur, quel que soit son budget.
         </p>
     </div>
 
 </div>
 
 <div class="footer">
-    © 2026 Coris Max - Tous droits réservés
+    © 2026 PepsiBet Entertainment - Innover pour Gagner.<br>
+    Tous droits réservés.
 </div>
 
 </body>
 </html>
+

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Équipe - Crois Max</title>
+<title>Team - PepsiBet</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -16,286 +16,293 @@
 }
 
 body{
-    background:#4f74b8;
+    background:#000b1d; /* Fond PepsiBet */
+    color: #fff;
 }
 
 /* ===== HEADER ===== */
 .header{
-    background:#4f74b8;
+    background: linear-gradient(180deg, #0056b3 0%, #000b1d 100%);
     color:#fff;
-    padding:20px 16px 30px;
+    padding:25px 16px 40px;
     text-align:center;
-    font-size:22px;
-    font-weight:600;
-    position:relative;
-}
-
-.header i{
-    position:absolute;
-    left:15px;
-    top:22px;
     font-size:20px;
+    font-weight:700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 /* ===== MAIN CONTAINER ===== */
 .container{
-    background:#f4f6fb;
-    border-top-left-radius:30px;
-    border-top-right-radius:30px;
-    padding:20px 16px 100px;
+    background:#f8f9ff;
+    color: #333;
+    border-top-left-radius:35px;
+    border-top-right-radius:35px;
+    padding:30px 16px 110px;
     max-width:480px;
     margin:auto;
-    margin-top:-15px;
+    margin-top:-25px;
+    min-height: 100vh;
 }
 
 /* ===== INVITATION BOX ===== */
 .invite-box{
     background:#fff;
-    border-radius:18px;
-    padding:16px;
+    border-radius:20px;
+    padding:20px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    box-shadow:0 4px 10px rgba(0,0,0,0.05);
-    margin-bottom:20px;
+    box-shadow:0 10px 25px rgba(0, 86, 179, 0.1);
+    margin-bottom:25px;
+    border: 1px solid #e2e8f0;
 }
 
 .invite-left{
     display:flex;
-    align-items:flex-start;
-    gap:10px;
+    align-items:center;
+    gap:12px;
 }
 
-.invite-left span{
-    font-size:22px;
+.invite-icon{
+    width: 45px;
+    height: 45px;
+    background: #eef2ff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #0056b3;
 }
 
 .invite-title{
-    font-weight:600;
-    font-size:15px;
-    margin-bottom:5px;
+    font-weight:700;
+    font-size:14px;
+    color: #001a3d;
 }
 
 .invite-link{
-    font-size:13px;
-    color:#4f74b8;
+    font-size:12px;
+    color:#64748b;
     word-break:break-all;
+    max-width: 180px;
 }
 
 .copy-btn{
-    background:#5a7cd3;
+    background:#0056b3;
     border:none;
     color:#fff;
-    padding:8px 14px;
-    border-radius:20px;
-    font-size:13px;
+    padding:10px 18px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight: 600;
     cursor:pointer;
+    transition: 0.3s;
 }
+
+.copy-btn:active{ transform: scale(0.95); background: #e32219; }
 
 /* ===== TEAM LEVEL SECTION ===== */
 .section-title{
-    font-size:16px;
-    font-weight:600;
+    font-size:17px;
+    font-weight:700;
     margin-bottom:4px;
+    color: #001a3d;
+    padding-left: 5px;
 }
 
 .section-sub{
-    font-size:13px;
-    color:#666;
-    margin-bottom:15px;
+    font-size:12px;
+    color:#64748b;
+    margin-bottom:20px;
+    padding-left: 5px;
 }
 
 .level-card{
-    border-radius:20px;
-    padding:18px;
-    margin-bottom:16px;
-    color:#333;
+    border-radius:24px;
+    padding:20px;
+    margin-bottom:18px;
+    color:#fff;
     position:relative;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
-/* Gold */
-.level1{
-    background:linear-gradient(135deg,#f6d365,#fda085);
-}
-
-/* Silver */
-.level2{
-    background:linear-gradient(135deg,#cfd9df,#e2ebf0);
-}
-
-/* Bronze */
-.level3{
-    background:linear-gradient(135deg,#fbc2eb,#a18cd1);
-}
+/* Level Themes */
+.level1{ background: linear-gradient(135deg, #0056b3, #00d4ff); }
+.level2{ background: linear-gradient(135deg, #1e293b, #475569); }
+.level3{ background: linear-gradient(135deg, #e32219, #ff5e57); }
 
 .level-badge{
     position:absolute;
-    top:15px;
-    right:15px;
-    font-size:22px;
+    top:-10px;
+    right:-10px;
+    font-size:60px;
+    opacity: 0.2;
 }
 
 .level-title{
     font-size:18px;
-    font-weight:600;
-    margin-bottom:15px;
+    font-weight:700;
+    margin-bottom:18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .level-stats{
     display:flex;
     justify-content:space-between;
-    text-align:center;
+    background: rgba(255,255,255,0.15);
+    padding: 15px;
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
 }
 
 .stat strong{
     display:block;
-    font-size:20px;
+    font-size:18px;
     font-weight:700;
 }
 
 .stat span{
-    font-size:12px;
+    font-size:11px;
+    opacity: 0.9;
 }
 
 /* ===== BOTTOM NAV ===== */
 .bottom-nav{
     position:fixed;
     bottom:0;
-    left:0;
+    left:50%;
+    transform: translateX(-50%);
     width:100%;
-    background:linear-gradient(to right,#3a5cb8,#5a7cd3);
+    max-width:480px;
+    background:#001a3d;
     display:flex;
     justify-content:space-around;
-    padding:10px 0;
-    border-top-left-radius:20px;
-    border-top-right-radius:20px;
+    padding:12px 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
 
 .bottom-nav a{
     text-decoration:none;
-    color:rgba(255,255,255,0.7);
-    font-size:12px;
+    color:#94a3b8;
+    font-size:11px;
     display:flex;
     flex-direction:column;
     align-items:center;
 }
 
 .bottom-nav a.active{
-    color:#fff;
-    font-weight:600;
+    color:#00d4ff;
+    font-weight:700;
 }
 
-.bottom-nav i{
-    margin-bottom:4px;
-}
+.bottom-nav i{ margin-bottom:4px; font-size: 18px; }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
 <div class="header">
-    <i class="fa-solid fa-chevron-left"></i>
-    équipe
+    Ambassadeur PepsiBet
 </div>
 
 <div class="container">
 
-    <!-- INVITATION -->
     <div class="invite-box">
         <div class="invite-left">
-            <span>🫂</span>
+            <div class="invite-icon">
+                <i class="fa-solid fa-share-nodes"></i>
+            </div>
             <div>
-                <div class="invite-title">Lien d'invitation</div>
-                <div class="invite-link" id="refLink">
-                    {{ referral_link }}
-                </div>
+                <div class="invite-title">Lien de parrainage</div>
+                <div class="invite-link" id="refLink">{{ referral_link }}</div>
             </div>
         </div>
-        <button class="copy-btn" onclick="copyLink()">Copier</button>
+        <button class="copy-btn" onclick="copyLink()">COPIER</button>
     </div>
 
-    <!-- TEAM LEVEL -->
-    <div class="section-title">Niveau d'équipe</div>
-    <div class="section-sub">1 Récompense d'activation: FCFA0</div>
+    <div class="section-title">Ma Structure d'Équipe</div>
+    <div class="section-sub">Cumulez des commissions sur 3 niveaux d'affiliation.</div>
 
-    <!-- LEVEL 1 -->
     <div class="level-card level1">
-        <div class="level-badge">🥇</div>
-        <div class="level-title">Level 1</div>
+        <div class="level-badge"><i class="fa-solid fa-award"></i></div>
+        <div class="level-title">💎 Niveau 1</div>
         <div class="level-stats">
             <div class="stat">
                 <strong>28%</strong>
-                <span>Remise Niveau 1</span>
+                <span>Commission</span>
             </div>
             <div class="stat">
                 <strong>{{ stats.level1 }}</strong>
-                <span>Total des invités</span>
+                <span>Invités</span>
             </div>
             <div class="stat">
                 <strong>0</strong>
-                <span>Actif</span>
+                <span>Actifs</span>
             </div>
         </div>
     </div>
 
-    <!-- LEVEL 2 -->
     <div class="level-card level2">
-        <div class="level-badge">🥈</div>
-        <div class="level-title">Level 2</div>
+        <div class="level-badge"><i class="fa-solid fa-medal"></i></div>
+        <div class="level-title">🥈 Niveau 2</div>
         <div class="level-stats">
             <div class="stat">
                 <strong>2%</strong>
-                <span>Remise Niveau 2</span>
+                <span>Commission</span>
             </div>
             <div class="stat">
                 <strong>{{ stats.level2 }}</strong>
-                <span>Total des invités</span>
+                <span>Invités</span>
             </div>
             <div class="stat">
                 <strong>0</strong>
-                <span>Actif</span>
+                <span>Actifs</span>
             </div>
         </div>
     </div>
 
-    <!-- LEVEL 3 -->
     <div class="level-card level3">
-        <div class="level-badge">🥉</div>
-        <div class="level-title">Level 3</div>
+        <div class="level-badge"><i class="fa-solid fa-shield-heart"></i></div>
+        <div class="level-title">🥉 Niveau 3</div>
         <div class="level-stats">
             <div class="stat">
                 <strong>1%</strong>
-                <span>Remise Niveau 3</span>
+                <span>Commission</span>
             </div>
             <div class="stat">
                 <strong>{{ stats.level3 }}</strong>
-                <span>Total des invités</span>
+                <span>Invités</span>
             </div>
             <div class="stat">
                 <strong>0</strong>
-                <span>Actif</span>
+                <span>Actifs</span>
             </div>
         </div>
     </div>
 
 </div>
 
-<!-- BOTTOM NAV -->
 <div class="bottom-nav">
-    <a href="/dashboard"><i class="fa-solid fa-house"></i>Accueil</a>
-    <a href="/produits_rapide"><i class="fa-solid fa-chart-line"></i>Investir</a>
-    <a href="/Team"><i class="fa-solid fa-users"></i>Team</a>
-    <a href="/profile" class="active"><i class="fa-solid fa-user"></i>Compte</a>
+    <a href="/dashboard"><i class="fa-solid fa-gamepad"></i>Accueil</a>
+    <a href="/produits_rapide"><i class="fa-solid fa-bolt"></i>Paris</a>
+    <a href="/team" class="active"><i class="fa-solid fa-user-group"></i>Équipe</a>
+    <a href="/profile"><i class="fa-solid fa-circle-user"></i>Moi</a>
 </div>
 
 <script>
 function copyLink(){
     const text = document.getElementById("refLink").innerText;
-    navigator.clipboard.writeText(text);
-    alert("Lien copié !");
+    navigator.clipboard.writeText(text).then(() => {
+        alert("Lien PepsiBet copié avec succès !");
+    });
 }
 </script>
 
 </body>
 </html>
+
