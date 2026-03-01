@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Connexion - PepsiCo</title>
+<title>Connexion - PepsiBet</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
 
@@ -13,9 +15,9 @@ body {
     display:flex;
     justify-content:center;
     align-items:center;
-    /* Dégradé cohérent avec l'inscription */
-    background: radial-gradient(circle at top right, #005cb4, #002d72);
+    background: radial-gradient(circle at top right, #005cb4, #000b1d);
     color:#333;
+    padding: 20px;
 }
 
 .container {
@@ -26,19 +28,35 @@ body {
     border-radius: 30px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     animation: fadeIn 0.8s ease-out;
-    border-top: 8px solid #e32219; /* Ligne rouge Pepsi */
+    border-top: 8px solid #e32219;
 }
 
-h2 { 
-    text-align:center; 
-    margin-bottom: 25px; 
-    color: #002d72; 
+.logo-area {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-area h1 {
+    color: #002d72;
+    font-size: 28px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+.logo-area span { color: #e32219; }
+
+h2 {
+    text-align:center;
+    margin-bottom: 25px;
+    color: #002d72;
     font-weight: 700;
     text-transform: uppercase;
+    font-size: 18px;
     letter-spacing: 1px;
 }
 
-label { display:block; margin-bottom:6px; font-weight:600; color:#002d72; font-size: 13px; }
+label { display:block; margin-bottom:6px; font-weight:600; color:#002d72; font-size: 12px; text-transform: uppercase; }
 
 input, select {
     width:100%;
@@ -49,12 +67,13 @@ input, select {
     outline:none;
     transition: all 0.3s ease;
     background: #f8f9fa;
+    font-size: 14px;
 }
 
-input:focus, select:focus { 
-    border-color:#005cb4; 
+input:focus, select:focus {
+    border-color:#005cb4;
     background: #fff;
-    box-shadow: 0 0 0 4px rgba(0,92,180,0.1); 
+    box-shadow: 0 0 0 4px rgba(0,92,180,0.1);
 }
 
 .otp-container { display:flex; gap: 10px; margin-bottom: 18px; }
@@ -66,107 +85,125 @@ input:focus, select:focus {
     border:none;
     border-radius:12px;
     font-weight: 600;
+    font-size: 13px;
     cursor:pointer;
     transition: 0.3s;
 }
 .otp-container button:hover { background:#002d72; }
 
 button.submit-btn {
-    width:100%; 
-    padding:15px; 
-    background:#e32219; 
-    color:#fff; 
+    width:100%;
+    padding:15px;
+    background:#e32219;
+    color:#fff;
     border:none;
-    border-radius:12px; 
-    font-size:16px; 
+    border-radius:12px;
+    font-size:16px;
     font-weight: 700;
-    cursor:pointer; 
+    cursor:pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(227, 34, 25, 0.3);
     text-transform: uppercase;
 }
 
-button.submit-btn:hover { 
-    background:#c4120b; 
+button.submit-btn:hover {
+    background:#c4120b;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(227, 34, 25, 0.4);
 }
 
-p.register-link { text-align:center; margin-top:20px; font-size:14px; color: #666; }
+p.register-link { text-align:center; margin-top:20px; font-size:13px; color: #666; }
 p.register-link a { color:#005cb4; font-weight:700; text-decoration:none; }
-p.register-link a:hover { text-decoration: underline; }
 
 @keyframes fadeIn { from {opacity:0; transform: translateY(-20px);} to {opacity:1; transform: translateY(0);} }
 
-.flash-message { 
-    background:#fff5f5; 
-    color:#c4120b; 
-    padding:12px; 
-    border-radius:12px; 
-    margin-bottom:20px; 
-    text-align:center; 
+.flash-message {
+    padding:12px;
+    border-radius:12px;
+    margin-bottom:20px;
+    text-align:center;
+    font-size: 13px;
     border-left: 5px solid #e32219;
 }
-.flash-success { background:#f0fff4; color:#2f855a; border-left: 5px solid #48bb78; }
+.flash-danger { background:#fff5f5; color:#c4120b; }
+.flash-success { background:#f0fff4; color:#2f855a; border-left-color: #48bb78; }
 </style>
 </head>
 <body>
+
 <div class="container">
-    <h2>Connexion</h2>
+    <div class="logo-area">
+        <h1>Pepsi<span>Bet</span></h1>
+    </div>
+
+    <h2>Ravi de vous revoir !</h2>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, msg in messages %}
-          <div class="flash-message {% if category == 'success' %}flash-success{% endif %}">
-            {% if msg.title %}<strong>{{ msg.title }}</strong><br>{% endif %}
-            {{ msg.message }}
+          <div class="flash-message {% if category == 'success' %}flash-success{% else %}flash-danger{% endif %}">
+            {{ msg.message if msg is mapping else msg }}
           </div>
         {% endfor %}
       {% endif %}
     {% endwith %}
 
     <form method="POST">
-        <label>Pays</label>
+        <label><i class="fa-solid fa-earth-africa"></i> Votre Pays</label>
         <select name="pays" required>
             <option value="">Sélectionnez votre pays</option>
-            <option value="Burkina Faso">Burkina Faso</option>
-            <option value="Bénin">Bénin</option>
-            <option value="Togo">Togo</option>
-            <option value="Cameroun">Cameroun</option>
-            <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+            <option value="Bénin">🇧🇯 Bénin</option>
+            <option value="Burkina Faso">🇧🇫 Burkina Faso</option>
+            <option value="Cameroun">🇨🇲 Cameroun</option>
+            <option value="Côte d'Ivoire">🇨🇮 Côte d'Ivoire</option>
+            <option value="Gabon">🇬🇦 Gabon</option>
+            <option value="Guinée">🇬🇳 Guinée</option>
+            <option value="Guinée-Bissau">🇬🇼 Guinée-Bissau</option>
+            <option value="Mali">🇲🇱 Mali</option>
+            <option value="Niger">🇳🇪 Niger</option>
+            <option value="Sénégal">🇸🇳 Sénégal</option>
+            <option value="Togo">🇹🇬 Togo</option>
         </select>
 
-        <label>Numéro de téléphone</label>
-        <input type="text" name="phone" placeholder="Votre numéro" required>
+        <label><i class="fa-solid fa-phone"></i> Numéro de téléphone</label>
+        <input type="text" name="phone" placeholder="Numéro sans indicatif" required>
 
-        <label>Mot de passe</label>
+        <label><i class="fa-solid fa-lock"></i> Mot de passe</label>
         <input type="password" name="password" placeholder="••••••••" required>
 
-        <label>Code de vérification (OTP)</label>
+        <label><i class="fa-solid fa-shield-halved"></i> Validation</label>
         <div class="otp-container">
             <input type="text" id="otp" name="otp" placeholder="Code OTP">
-            <button type="button" onclick="sendOTP()">Envoyer</button>
+            <button type="button" onclick="sendOTP()">OBTENIR</button>
         </div>
 
-        <button type="submit" class="submit-btn">Accéder à mon espace</button>
+        <button type="submit" class="submit-btn">Accéder au Dashboard</button>
     </form>
 
     <p class="register-link">
-        Nouveau chez PepsiCo ? <a href="{{ url_for('inscription_page') }}">Créer un compte</a>
+        Nouveau parieur ? <a href="{{ url_for('inscription_page') }}">Créer mon compte VIP</a>
     </p>
 </div>
 
 <script>
 function sendOTP() {
+    const btn = event.target;
+    btn.innerText = "...";
+    
     fetch('/generate-otp')
     .then(response => response.json())
     .then(data => {
-        document.getElementById('otp').value = data.otp; 
-        alert("Votre code de connexion PepsiCo : " + data.otp);
+        document.getElementById('otp').value = data.otp;
+        alert("PepsiBet Security : Votre code de connexion est " + data.otp);
+        btn.innerText = "OK";
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+        console.error(err);
+        btn.innerText = "Erreur";
+    });
 }
 </script>
+
 </body>
 </html>
 
