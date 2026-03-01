@@ -131,6 +131,11 @@ select, input{
     box-shadow: 0 5px 15px rgba(227, 34, 25, 0.3);
 }
 
+.btn-submit:disabled {
+    background: #555;
+    cursor: not-allowed;
+}
+
 /* ===== NOTICE ===== */
 .notice {
     margin-top: 25px;
@@ -165,17 +170,17 @@ select, input{
     </div>
 
     <div class="form-card">
-        <form action="https://my.moneyfusion.net/69932dd4efbbdc4f34565a60" method="GET">
-            
+        <form id="depositForm">
+
             <label>1. Choisir le montant (XOF)</label>
             <input type="number" name="amount" id="amountInput" placeholder="Minimum 2 500" required>
-            
+
             <div class="amount-grid">
                 <div class="amount-btn" onclick="setAmount(2500)">2 500</div>
                 <div class="amount-btn" onclick="setAmount(5000)">5 000</div>
                 <div class="amount-btn" onclick="setAmount(10000)">10 000</div>
                 <div class="amount-btn" onclick="setAmount(25000)">25 000</div>
-                <div class="amount-btn" onclick="setAmount(50000)">50 000</div>
+                <div class="amount-btn" onclick="setAmount(50000)"> 50 000</div>
                 <div class="amount-btn" onclick="setAmount(100000)">100 000</div>
             </div>
 
@@ -200,18 +205,17 @@ select, input{
                 <option value="">Choisissez le pays d'abord</option>
             </select>
 
-            <button type="submit" class="btn-submit">Procéder au paiement</button>
+            <button type="submit" id="submitBtn" class="btn-submit">Procéder au paiement</button>
         </form>
     </div>
 
     <div class="notice">
-        <p><strong>Note :</strong> Après avoir cliqué sur le bouton, vous serez redirigé vers notre passerelle sécurisée <strong>MoneyFusion</strong> pour finaliser la transaction. Votre solde sera mis à jour automatiquement dès confirmation.</p>
+        <p><strong>Note :</strong> Après avoir cliqué sur le bouton, votre demande sera enregistrée et vous serez redirigé vers <strong>MoneyFusion</strong>. Votre solde sera crédité après validation de l'administrateur.</p>
     </div>
 
 </div>
 
 <script>
-// Configuration des opérateurs par pays
 const operatorsData = {
     "Bénin": ["MTN Mobile Money", "Moov Money"],
     "Burkina Faso": ["Orange Money", "Moov Money"],
@@ -229,9 +233,7 @@ const operatorsData = {
 function updateOperators() {
     const country = document.getElementById("countrySelect").value;
     const operatorSelect = document.getElementById("operatorSelect");
-    
     operatorSelect.innerHTML = '<option value="">Sélectionnez un opérateur</option>';
-    
     if (operatorsData[country]) {
         operatorsData[country].forEach(op => {
             let option = document.createElement("option");
@@ -244,11 +246,50 @@ function updateOperators() {
 
 function setAmount(val) {
     document.getElementById("amountInput").value = val;
-    // Optionnel : ajouter une classe active sur le bouton cliqué
     const btns = document.querySelectorAll('.amount-btn');
     btns.forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
 }
+
+// === GESTION DE L'ENVOI (Lien avec Python Admin) ===
+document.getElementById('depositForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const submitBtn = document.getElementById('submitBtn');
+    const amount = document.getElementById('amountInput').value;
+    
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Traitement...";
+
+    // 1. Envoyer la demande au serveur Python pour affichage Admin
+    fetch('/create-deposit', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            montant: amount
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // 2. Si l'enregistrement Admin a réussi, on redirige vers MoneyFusion
+            const moneyFusionBaseUrl = "https://my.moneyfusion.net/69932dd4efbbdc4f34565a60";
+            window.location.href = `${moneyFusionBaseUrl}?amount=${amount}`;
+        } else {
+            alert("Erreur: " + data.message);
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Procéder au paiement";
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Une erreur de connexion est survenue.");
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Procéder au paiement";
+    });
+});
 </script>
 
 </body>

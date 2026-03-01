@@ -1145,34 +1145,24 @@ def generate_depot_id():
 @app.route("/create-deposit", methods=["POST"])
 @login_required
 def create_deposit():
-
     data = request.get_json()
+    montant = float(data.get("montant", 0))
 
-    if not data or "montant" not in data:
-        return jsonify({"success": False, "message": "Montant manquant"}), 400
+    if montant < 2500: # Cohérence avec ton HTML
+        return jsonify({"success": False, "message": "Montant minimum 2500"}), 400
 
-    try:
-        montant = float(data.get("montant"))
-    except (TypeError, ValueError):
-        return jsonify({"success": False, "message": "Montant invalide"}), 400
-
-    if montant < 3000:
-        return jsonify({"success": False, "message": "Montant minimum 3000"}), 400
-
-    # Création dépôt
-    depot = Depot(
-        phone=session.get("phone"),  # adapte selon ton système
+    # Création du dépôt en base de données
+    new_depot = Depot(
+        phone=session.get("phone"), # Vérifie que 'phone' est bien en session
         montant=montant,
         statut="en_attente"
     )
 
-    db.session.add(depot)
+    db.session.add(new_depot)
     db.session.commit()
 
-    return jsonify({
-        "success": True,
-        "depot_id": depot.id
-    })
+    return jsonify({"success": True, "depot_id": new_depot.id})
+
 
 @app.route("/nous")
 def nous_page():
