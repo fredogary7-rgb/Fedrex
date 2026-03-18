@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation du paiement - Modern Threads</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #050505; color: white; }
+        
+        .pulse-blue { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+
+    <div class="max-w-md w-full bg-[#0f0f0f] border border-gray-800 rounded-[2.5rem] p-8 text-center shadow-2xl">
+        <div class="relative w-24 h-24 mx-auto mb-8">
+            <div class="absolute inset-0 border-4 border-blue-600/20 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-t-blue-600 rounded-full animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <i data-lucide="smartphone" class="w-10 h-10 text-blue-500 pulse-blue"></i>
+            </div>
+        </div>
+
+        <h1 class="text-2xl font-black mb-2 uppercase tracking-tighter">Action requise</h1>
+        <p class="text-gray-400 text-sm mb-8 leading-relaxed">
+            Un message de confirmation a été envoyé au <span class="text-white font-bold">{{ paiement.telephone }}</span>.<br>
+            Veuillez saisir votre code PIN secret pour autoriser le débit de <span class="text-blue-500 font-bold">{{ paiement.montant }} XOF</span>.
+        </p>
+
+        <div class="text-left space-y-4 mb-8">
+            <div class="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/5">
+                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold">1</div>
+                <p class="text-xs font-medium text-gray-300">Regardez l'écran de votre téléphone</p>
+            </div>
+            <div class="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/5">
+                <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold">2</div>
+                <p class="text-xs font-medium text-gray-300">Tapez votre code secret Mobile Money</p>
+            </div>
+        </div>
+
+        <div class="space-y-3">
+            <p class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Attente de confirmation automatique...</p>
+            <div class="h-1.5 w-full bg-gray-900 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-600 w-1/3 animate-[progress_10s_ease-in-out_infinite]"></div>
+            </div>
+        </div>
+
+        <a href="/" class="inline-block mt-8 text-xs font-bold text-gray-500 hover:text-white transition-colors">
+            Retourner à l'accueil
+        </a>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        
+        // Simulation de vérification de statut (Polling)
+        // Dans un vrai projet, on ferait un fetch toutes les 5 secondes pour voir si le statut est passé à 'payé'
+        setInterval(async () => {
+            const response = await fetch('/api/check-status/{{ paiement.reference }}');
+            const data = await response.json();
+            if(data.status === 'payé') {
+                window.location.href = "/commande-terminee/{{ paiement.reference }}";
+            }
+        }, 5000);
+    </script>
+
+    <style>
+        @keyframes progress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(300%); }
+        }
+    </style>
+</body>
+</html>
+

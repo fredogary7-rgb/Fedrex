@@ -1,212 +1,187 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Paramètres - PepsiBet</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
-body{
-    background:#000b1d; /* Fond PepsiBet */
-    color: #fff;
-    padding: 20px;
-}
-
-.container{
-    max-width:500px;
-    margin:auto;
-}
-
-.header{
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.back-btn {
-    color: #fff;
-    font-size: 20px;
-    text-decoration: none;
-    background: rgba(255,255,255,0.1);
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-}
-
-.header h1{
-    font-size:20px;
-    font-weight: 700;
-    text-transform: uppercase;
-}
-
-.card{
-    background:#001a3d;
-    border-radius:25px;
-    padding:25px;
-    border: 1px solid rgba(0, 86, 179, 0.2);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    margin-bottom:25px;
-}
-
-h2{
-    font-size:15px;
-    margin-bottom:20px;
-    color:#00d4ff;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-input, select{
-    width:100%;
-    padding:14px;
-    border-radius:12px;
-    border: 1px solid rgba(0, 86, 179, 0.3);
-    background: #000b1d;
-    color: #fff;
-    margin-bottom:15px;
-    font-size:14px;
-    transition:0.3s;
-}
-
-input:focus{
-    border-color:#00d4ff;
-    outline:none;
-    box-shadow: 0 0 10px rgba(0, 212, 255, 0.1);
-}
-
-button{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:15px;
-    background: #e32219; /* Rouge Pepsi */
-    color:#fff;
-    font-weight:700;
-    cursor:pointer;
-    transition:0.3s;
-    text-transform: uppercase;
-    font-size: 13px;
-    box-shadow: 0 5px 15px rgba(227, 34, 25, 0.2);
-}
-
-button:active{
-    transform: scale(0.98);
-}
-
-/* FLASH MESSAGES */
-.flash{
-    padding:15px;
-    border-radius:15px;
-    margin-bottom:20px;
-    font-size:13px;
-    text-align:center;
-    font-weight: 500;
-}
-
-.flash.success{
-    background: rgba(0, 212, 255, 0.1);
-    color: #00d4ff;
-    border: 1px solid rgba(0, 212, 255, 0.2);
-}
-
-.flash.danger{
-    background: rgba(227, 34, 25, 0.1);
-    color: #ff5e57;
-    border: 1px solid rgba(227, 34, 25, 0.2);
-}
-
-.info-text{
-    font-size:12px;
-    color:#94a3b8;
-    margin-bottom:15px;
-    line-height: 1.6;
-}
-
-::placeholder {
-    color: #475569;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramètres - T-Express</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0b0b; }
+        .glass-card { background: rgba(22, 22, 22, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .input-pro { @apply w-full bg-[#1a1a1a] border border-gray-800 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-blue-600 transition-all text-sm text-white placeholder-gray-600 font-bold; }
+        .section-label { @apply text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-4 flex items-center gap-2; }
+        
+        .badge-verified { background: linear-gradient(135deg, #3b82f6, #1d4ed8); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
+        .shimmer { position: relative; overflow: hidden; }
+        .shimmer::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent); transform: rotate(45deg); animation: shimmer 3s infinite; }
+        @keyframes shimmer { 0% { transform: translateX(-100%) rotate(45deg); } 100% { transform: translateX(100%) rotate(45deg); } }
+    </style>
 </head>
+<body class="text-gray-200 antialiased overflow-x-hidden">
 
-<body>
+    <div class="flex h-screen overflow-hidden">
 
-<div class="container">
+        <aside class="w-72 bg-[#121212] border-r border-gray-800 flex flex-col hidden lg:flex">
+            <div class="p-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+                        <i data-lucide="zap" class="text-white fill-current"></i>
+                    </div>
+                    <span class="text-xl font-black text-white uppercase tracking-tighter italic">T-Express</span>
+                </div>
+            </div>
+            <nav class="flex-1 px-6 space-y-2">
+                <a href="/dashboard" class="flex items-center gap-3 px-4 py-3.5 text-gray-400 hover:bg-white/5 rounded-2xl transition-all font-bold">
+                    <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
+                </a>
+                <a href="/parametres" class="flex items-center gap-3 px-4 py-3.5 bg-blue-600 text-white rounded-2xl font-black shadow-xl shadow-blue-600/20">
+                    <i data-lucide="settings" class="w-5 h-5"></i> Paramètres
+                </a>
+            </nav>
+        </aside>
 
-    <div class="header">
-        <a href="/profile" class="back-btn"><i class="fa-solid fa-chevron-left"></i></a>
-        <h1>Paramètres</h1>
+        <main class="flex-1 overflow-y-auto bg-[#0f0f0f] pb-20">
+
+            <header class="sticky top-0 z-30 glass-card px-8 py-6 flex justify-between items-center border-b border-gray-800">
+                <div class="flex items-center gap-4">
+                    <a href="/dashboard" class="lg:hidden p-2 bg-gray-800 rounded-xl"><i data-lucide="chevron-left"></i></a>
+                    <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic">Paramètres</h1>
+                </div>
+
+                {% if user.is_verified %}
+                <div class="flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 px-4 py-2 rounded-full shimmer">
+                    <i data-lucide="badge-check" class="w-4 h-4 text-blue-500 fill-current"></i>
+                    <span class="text-[10px] font-black text-blue-500 uppercase tracking-widest">Compte Certifié</span>
+                </div>
+                {% else %}
+                <div class="flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 px-4 py-2 rounded-full">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 text-yellow-500"></i>
+                    <span class="text-[10px] font-black text-yellow-500 uppercase tracking-widest">Non Vérifié</span>
+                </div>
+                {% endif %}
+            </header>
+
+            <div class="p-4 lg:p-12 max-w-4xl mx-auto space-y-10">
+
+                <div class="space-y-6">
+                    <h2 class="section-label"><i data-lucide="verified" class="w-3 h-3"></i> Certification d'identité</h2>
+                    
+                    {% if not user.is_verified %}
+                    <div class="glass-card p-8 rounded-[2.5rem] border-yellow-500/20 bg-gradient-to-br from-[#161616] to-transparent">
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <div class="w-20 h-20 bg-yellow-500/10 rounded-3xl flex items-center justify-center border border-yellow-500/20">
+                                <i data-lucide="shield-alert" class="w-10 h-10 text-yellow-500"></i>
+                            </div>
+                            <div class="flex-1 text-center md:text-left">
+                                <h3 class="text-xl font-black text-white uppercase italic">Vérifiez votre identité</h3>
+                                <p class="text-gray-500 text-sm mt-2 font-medium">Pour protéger la communauté et débloquer toutes les fonctionnalités, nous devons confirmer vos informations.</p>
+                            </div>
+                            <a href="/verifier-mon-compte" class="w-full md:w-auto bg-yellow-500 text-black font-black px-8 py-4 rounded-2xl hover:bg-yellow-400 transition-all uppercase text-xs tracking-widest shadow-lg shadow-yellow-500/20">
+                                Vérifier maintenant
+                            </a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="glass-card p-8 rounded-[2.5rem] border-blue-600/20 bg-blue-600/5">
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <div class="w-20 h-20 badge-verified rounded-3xl flex items-center justify-center shimmer">
+                                <i data-lucide="badge-check" class="w-10 h-10 text-white fill-current"></i>
+                            </div>
+                            <div class="flex-1 text-center md:text-left">
+                                <h3 class="text-xl font-black text-white uppercase italic">Vous êtes certifié !</h3>
+                                <p class="text-gray-400 text-sm mt-2 font-medium">Votre profil arbore désormais le badge de confiance. Vos annonces sont prioritaires.</p>
+                            </div>
+                            <div class="px-6 py-2 bg-white/5 rounded-xl border border-white/5 text-[10px] font-black uppercase text-gray-500 tracking-tighter">
+                                ID: {{ user.id }}VERIF
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <h2 class="section-label"><i data-lucide="wallet" class="w-3 h-3"></i> Retrait des revenus</h2>
+                        <div class="glass-card p-6 rounded-[2.5rem] border-blue-600/20">
+                            <form action="/parametres" method="POST" class="space-y-4">
+                                <input type="hidden" name="action" value="wallet">
+                                <div>
+                                    <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block ml-2">Pays</label>
+                                    <select name="wallet_country" class="input-pro appearance-none">
+                                        <option value="Togo" {% if user.wallet_country == 'Togo' %}selected{% endif %}>Togo 🇹🇬</option>
+                                        <option value="Bénin" {% if user.wallet_country == 'Bénin' %}selected{% endif %}>Bénin 🇧🇯</option>
+                                        <option value="Côte d'Ivoire" {% if user.wallet_country == "Côte d'Ivoire" %}selected{% endif %}>Côte d'Ivoire 🇨🇮</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block ml-2">Opérateur</label>
+                                    <select name="wallet_operator" class="input-pro appearance-none">
+                                        <option value="TMoney" {% if user.wallet_operator == 'TMoney' %}selected{% endif %}>TMoney</option>
+                                        <option value="Moov Money" {% if user.wallet_operator == 'Moov Money' %}selected{% endif %}>Moov Money</option>
+                                        <option value="Wave" {% if user.wallet_operator == 'Wave' %}selected{% endif %}>Wave</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="w-full bg-white text-black font-black py-4 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all uppercase text-[10px] tracking-widest mt-2 shadow-xl">
+                                    Enregistrer le Wallet
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <h2 class="section-label"><i data-lucide="shield-lock" class="w-3 h-3"></i> Sécurité</h2>
+                        <div class="glass-card p-6 rounded-[2.5rem]">
+                            <form action="/parametres" method="POST" class="space-y-4">
+                                <input type="hidden" name="action" value="password">
+                                <div>
+                                    <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block ml-2">Ancien mot de passe</label>
+                                    <input type="password" name="current_password" required class="input-pro" placeholder="••••••••">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block ml-2">Nouveau mot de passe</label>
+                                    <input type="password" name="new_password" required class="input-pro" placeholder="••••••••">
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 text-white font-black py-4 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all uppercase text-[10px] tracking-widest mt-2 shadow-xl shadow-blue-600/20">
+                                    Mettre à jour
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-8 rounded-[3rem] border-dashed border-gray-800">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="flex items-center gap-4">
+                            <div class="relative">
+                                <div class="w-16 h-16 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-white/5">
+                                    <i data-lucide="user" class="w-8 h-8 text-blue-500"></i>
+                                </div>
+                                {% if user.is_verified %}
+                                <div class="absolute -top-2 -right-2 bg-blue-600 rounded-full p-1 border-4 border-[#0b0b0b]">
+                                    <i data-lucide="check" class="w-3 h-3 text-white"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h3 class="font-black text-xl text-white italic tracking-tighter">{{ user.prenom }} {{ user.nom }}</h3>
+                                <p class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">{{ user.phone }}</p>
+                            </div>
+                        </div>
+                        <a href="/logout" class="flex items-center gap-2 text-red-500 font-black hover:bg-red-500/10 px-8 py-4 rounded-2xl transition-all uppercase text-xs tracking-widest">
+                            <i data-lucide="log-out" class="w-4 h-4 text-red-500"></i> Déconnexion
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </main>
     </div>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="flash {{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-    <div class="card">
-        <h2><i class="fa-solid fa-lock"></i> Sécurité</h2>
-        <div class="info-text">Protégez votre compte en mettant à jour votre mot de passe régulièrement.</div>
-
-        <form method="POST">
-            <input type="hidden" name="action" value="password">
-
-            <input type="password" name="current_password" placeholder="Mot de passe actuel" required>
-            <input type="password" name="new_password" placeholder="Nouveau mot de passe" required>
-            <input type="password" name="confirm_password" placeholder="Confirmer le nouveau mot de passe" required>
-
-            <button type="submit">Mettre à jour l'accès</button>
-        </form>
-    </div>
-
-    <div class="card">
-        <h2><i class="fa-solid fa-wallet"></i> Méthode de retrait</h2>
-
-        <div class="info-text">
-            Ces informations seront utilisées pour l'envoi de vos gains. Assurez-vous qu'elles sont correctes.
-        </div>
-
-        <form method="POST">
-            <input type="hidden" name="action" value="wallet">
-
-            <input type="text" name="wallet_country"
-                   value="{{ user.wallet_country or '' }}"
-                   placeholder="Votre Pays (ex: Côte d'Ivoire)" required>
-
-            <input type="text" name="wallet_operator"
-                   value="{{ user.wallet_operator or '' }}"
-                   placeholder="Opérateur (Wave, MTN, Orange...)" required>
-
-            <input type="text" name="wallet_number"
-                   value="{{ user.wallet_number or '' }}"
-                   placeholder="Numéro de téléphone mobile money" required>
-
-            <button type="submit" style="background: transparent; border: 1px solid #00d4ff; color: #00d4ff; box-shadow: none;">
-                Enregistrer le Wallet
-            </button>
-        </form>
-    </div>
-
-</div>
-
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
 

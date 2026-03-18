@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Vendor Hub | Modern Threads</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        
+        :root { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: #050505; color: #e5e7eb; }
+
+        .glass-panel { 
+            background: rgba(15, 15, 15, 0.7); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.05); 
+        }
+
+        .input-group { @apply relative mb-4; }
+        .input-field { 
+            @apply w-full bg-[#0f0f0f] border border-gray-800 rounded-2xl py-4 pl-12 pr-4 
+            outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-500 
+            transition-all duration-300 text-sm placeholder-gray-600; 
+        }
+        .input-icon { @apply absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 w-5 h-5 transition-colors; }
+        .input-field:focus + .input-icon { @apply text-blue-500; }
+
+        /* Loader */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .is-loading .spinner { display: block; }
+        .is-loading .btn-text { display: none; }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
+        
+        .main-container { @apply mx-auto w-full px-4 md:px-8 lg:px-12 py-12 max-w-7xl; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="glass-panel sticky top-0 z-40 border-b border-gray-900">
+        <div class="main-container py-5 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="h-11 w-11 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/20">
+                    <i data-lucide="globe" class="text-white w-6 h-6"></i>
+                </div>
+                <h1 class="font-extrabold text-xl lg:text-2xl tracking-tighter uppercase text-white">Modern Threads</h1>
+            </div>
+            <nav class="flex items-center gap-4">
+                <a href="/dashboard" class="text-sm font-bold text-gray-400 hover:text-white transition-all">Dashboard</a>
+                <a href="/logout" class="p-2 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container space-y-12 pb-24">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 p-8 glass-panel rounded-[2rem] border border-gray-900 shadow-2xl">
+            <div>
+                <p class="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] mb-1">Global Marketplace</p>
+                <h2 class="text-3xl font-extrabold text-white tracking-tight">Catalogue Professionnel</h2>
+            </div>
+            <div class="relative group">
+                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-hover:text-blue-500"></i>
+                <input type="text" id="searchInput" placeholder="Rechercher..." 
+                       class="bg-[#111] border border-gray-800 rounded-full py-3.5 px-12 outline-none focus:border-blue-500 text-sm transition-all w-full md:w-64">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-12">
+            
+            <section class="max-w-4xl mx-auto w-full">
+                <div class="glass-panel p-8 md:p-12 rounded-[3rem] border border-white/5 shadow-inner">
+                    <div class="flex items-center gap-4 mb-10 pb-6 border-b border-gray-900">
+                        <div class="p-3 bg-blue-600 rounded-2xl shadow-lg shadow-blue-600/20"><i data-lucide="plus" class="text-white"></i></div>
+                        <h3 class="text-2xl font-black text-white uppercase tracking-tighter">Nouvelle Annonce</h3>
+                    </div>
+
+                    <form id="addForm" action="/ajouter-produit" method="POST" enctype="multipart/form-data" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="input-group">
+                                    <input type="text" name="nom" placeholder="Nom du produit" required class="input-field">
+                                    <i data-lucide="tag" class="input-icon"></i>
+                                </div>
+                                <div class="input-group">
+                                    <textarea name="description" placeholder="Description complète..." rows="4" required class="input-field py-4 h-40 resize-none"></textarea>
+                                    <i data-lucide="align-left" class="input-icon top-6"></i>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="input-group">
+                                        <input type="number" name="prix" placeholder="Prix (XOF)" required class="input-field">
+                                        <i data-lucide="banknote" class="input-icon"></i>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="number" name="prix_promo" placeholder="Promo (Opt)" class="input-field">
+                                        <i data-lucide="percent" class="input-icon"></i>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" name="pays" placeholder="Pays (ex: Togo, France...)" required class="input-field">
+                                    <i data-lucide="map-pin" class="input-icon"></i>
+                                </div>
+                                <div class="input-group">
+                                    <input type="tel" name="numero" placeholder="WhatsApp (ex: +22890...)" required class="input-field">
+                                    <i data-lucide="message-circle" class="input-icon"></i>
+                                </div>
+                                <div class="input-group">
+                                    <input type="email" name="email" placeholder="Email (Optionnel)" class="input-field">
+                                    <i data-lucide="mail" class="input-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative group">
+                            <input type="file" name="images" id="imgInp" multiple accept="image/*" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                            <div class="border-2 border-dashed border-gray-800 rounded-[2rem] py-12 flex flex-col items-center group-hover:border-blue-500 transition-all bg-[#080808]">
+                                <i data-lucide="camera" class="text-gray-600 w-10 h-10 mb-2"></i>
+                                <span class="text-xs font-bold text-gray-500 uppercase tracking-widest" id="imgCounter">Ajouter des photos</span>
+                            </div>
+                            <div id="previewGrid" class="grid grid-cols-5 gap-3 mt-6 hidden"></div>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="w-full bg-blue-600 text-white font-black py-5 rounded-[2rem] hover:bg-blue-700 transition-all flex items-center justify-center gap-4 shadow-xl shadow-blue-600/20 uppercase tracking-[0.2em] text-xs">
+                            <span class="spinner"></span>
+                            <span class="btn-text">Publier l'annonce</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section>
+                <div class="glass-panel rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-black/40 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
+                                <tr>
+                                    <th class="px-8 py-6">Article</th>
+                                    <th class="px-8 py-6">Prix / Pays</th>
+                                    <th class="px-8 py-6 text-center">Contact</th>
+                                    <th class="px-8 py-6 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-900" id="productTableBody">
+                                {% for p in produits %}
+                                <tr class="hover:bg-white/[0.01] transition-all product-row group">
+                                    <td class="px-8 py-6">
+                                        <div class="flex items-center gap-4">
+                                            <img src="{{ url_for('static', filename='vlogs/' + p.images.split(',')[0].strip()) }}" 
+                                                 class="w-14 h-14 object-cover rounded-2xl border border-gray-800"
+                                                 onerror="this.src='https://placehold.co/100x100/121212/blue?text=Item'">
+                                            <span class="font-bold text-white product-name">{{ p.nom }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-6">
+                                        <div class="text-blue-500 font-extrabold">{{ "{:,.0f}".format(p.prix) }} XOF</div>
+                                        <div class="text-[10px] text-gray-600 uppercase font-bold">{{ p.pays }}</div>
+                                    </td>
+                                    <td class="px-8 py-6">
+                                        <div class="flex justify-center gap-2">
+                                            <div class="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center text-green-500"><i data-lucide="phone" class="w-4 h-4"></i></div>
+                                            <button onclick="copyToClipboard('{{ request.host_url }}achat/{{ p.slug }}')" class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500 hover:bg-blue-500 hover:text-white transition-all"><i data-lucide="link" class="w-4 h-4"></i></button>
+                                        </div>
+                                    </td>
+                                    <td class="px-8 py-6 text-right">
+                                        <div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                                            <button onclick="openEditModal('{{ p.id }}', '{{ p.nom }}', '{{ p.prix }}', '{{ p.description }}', '{{ p.numero }}', '{{ p.email }}', '{{ p.pays }}', '{{ p.prix_promo }}')" class="p-2 bg-white/5 hover:bg-blue-600 rounded-lg transition-all"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                                            <a href="/supprimer/{{ p.id }}" class="p-2 bg-white/5 hover:bg-red-600 rounded-lg transition-all"><i data-lucide="trash-2" class="w-4 h-4"></i></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div id="editModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-xl p-4">
+        <div class="glass-panel w-full max-w-2xl p-10 rounded-[3rem] shadow-2xl relative border border-white/10">
+            <button onclick="closeEditModal()" class="absolute top-8 right-8 text-gray-500 hover:text-white"><i data-lucide="x" class="w-8 h-8"></i></button>
+            <h2 class="text-3xl font-black text-white mb-8 tracking-tighter uppercase">Modifier</h2>
+            <form id="editForm" action="/modifier-produit" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input type="hidden" name="id" id="editId">
+                <div class="md:col-span-2"><input type="text" name="nom" id="editNom" class="input-field" placeholder="Nom"></div>
+                <div class="md:col-span-2"><textarea name="description" id="editDesc" class="input-field h-32" placeholder="Description"></textarea></div>
+                <input type="number" name="prix" id="editPrix" class="input-field" placeholder="Prix">
+                <input type="number" name="prix_promo" id="editPrixPromo" class="input-field" placeholder="Prix Promo">
+                <input type="text" name="pays" id="editPays" class="input-field" placeholder="Pays">
+                <input type="tel" name="numero" id="editNumero" class="input-field" placeholder="WhatsApp">
+                <input type="email" name="email" id="editEmail" class="input-field" placeholder="Email">
+                <button type="submit" class="md:col-span-2 bg-blue-600 py-5 rounded-[2rem] font-black text-white hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/30 uppercase tracking-[0.2em] text-xs">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-white text-black px-10 py-5 rounded-full font-black shadow-2xl opacity-0 translate-y-20 transition-all duration-500 z-50 flex items-center gap-4 text-xs tracking-widest uppercase">
+        <i data-lucide="check" class="w-5 h-5 text-blue-600"></i> Lien copié
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        document.getElementById('addForm').onsubmit = function() {
+            const btn = document.getElementById('submitBtn');
+            btn.classList.add('is-loading');
+            btn.disabled = true;
+        };
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
+            });
+        }
+
+        document.getElementById('imgInp').onchange = function() {
+            const pg = document.getElementById('previewGrid');
+            pg.innerHTML = '';
+            if(this.files.length > 0) {
+                pg.classList.remove('hidden');
+                document.getElementById('imgCounter').innerText = this.files.length + " Photos";
+                Array.from(this.files).forEach(f => {
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(f);
+                    img.className = "w-full h-16 object-cover rounded-xl border border-gray-800";
+                    pg.appendChild(img);
+                });
+            }
+        };
+
+        function openEditModal(id, nom, prix, desc, numero, email, pays, promo) {
+            document.getElementById('editId').value = id;
+            document.getElementById('editNom').value = nom;
+            document.getElementById('editPrix').value = prix;
+            document.getElementById('editDesc').value = desc;
+            document.getElementById('editNumero').value = numero;
+            document.getElementById('editEmail').value = email;
+            document.getElementById('editPays').value = pays;
+            document.getElementById('editPrixPromo').value = promo === 'None' ? '' : promo;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+        function closeEditModal() { document.getElementById('editModal').style.display = 'none'; }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.product-row').forEach(row => {
+                const name = row.querySelector('.product-name').textContent.toLowerCase();
+                row.style.display = name.includes(term) ? 'table-row' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
+

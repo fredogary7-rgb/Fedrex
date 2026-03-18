@@ -2,6 +2,7 @@ import random
 import string
 from flask import jsonify
 import os
+import secrets
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 from functools import wraps
@@ -14,32 +15,29 @@ from datetime import datetime, timedelta, date
 from urllib.parse import urlencode
 import sqlite3
 
-
 app = Flask(__name__, template_folder="templates", static_folder="static")
 app.secret_key = "ma_cle_ultra_secrete"
 
 load_dotenv()
-load_dotenv()
 
-SENDAVAPAY_API_KEY = os.getenv("SENDAVAPAY_API_KEY")
-WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
-SENDAVAPAY_BASE_URL = os.getenv("SENDAVAPAY_BASE_URL")
-UPLOAD_FOLDER = "static/vlogs"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+# 1. Définir le dossier (tu as choisi 'static/vlogs')
+# Utilise app.config pour que Flask le reconnaisse partout
+app.config["UPLOAD_FOLDER"] = "static/vlogs"
+
+# 2. Créer le dossier physiquement
+os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 DATABASE_URL = "postgresql://neondb_owner:npg_NYzc6Ap8gHah@ep-tiny-moon-abgyer8p-pooler.eu-west-2.aws.neon.tech/neondb?>"
 
-# ⚡ Utilisation correcte dans Flask
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "pool_pre_ping": True,      # Vérifie si la connexion est encore vivante
-    "pool_recycle": 280,        # Recycle la connexion avant expiration
-    "pool_timeout": 20          # Timeout raisonnable
+    "pool_pre_ping": True,
+    "pool_recycle": 280,
+    "pool_timeout": 20
 }
 
 db = SQLAlchemy(app)
-
 
 from sqlalchemy import text
 from flask_migrate import Migrate
@@ -76,27 +74,82 @@ class User(db.Model):
 
     phone = db.Column(db.String(30), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-
-    # 🔥 Nouveau système
+    prenom = db.Column(db.String(50), nullable=True) # Change ici
+    nom = db.Column(db.String(50), nullable=True)    # Change ici
+    id_card_number = db.Column(db.String(100), unique=True)
     code_parrainage = db.Column(db.String(5), unique=True, nullable=False, default=generate_unique_ref_code)
     parrain = db.Column(db.String(5), nullable=True)  # stocke le code du parrain
 
     commission_total = db.Column(db.Float, default=0.0)
-
+    email = db.Column(db.String(120), unique=True)
+    email_verifie = db.Column(db.Boolean, default=False)
+    otp_code = db.Column(db.String(6)) # Stocke le code temporaire
     wallet_country = db.Column(db.String(50))
     wallet_operator = db.Column(db.String(50))
     wallet_number = db.Column(db.String(30))
 
-    solde_total = db.Column(db.Float, default=0.0)
-    solde_depot = db.Column(db.Float, default=0.0)
     solde_parrainage = db.Column(db.Float, default=0.0)
     solde_revenu = db.Column(db.Float, default=0.0)
 
-    premier_depot = db.Column(db.Boolean, default=False)
-    last_gift_date = db.Column(db.Date)
     is_admin = db.Column(db.Boolean, default=False)
     is_banned = db.Column(db.Boolean, default=False)
+    is_verified = db.Column(db.Boolean, default=False)
+    date_creation = db.Column(db.DateTime, default=datetime.utcnow)
 
+    is_verified = db.Column(db.Boolean, default=False) 
+
+# Modèle pour stocker les demandes de vérification
+class VerificationRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    nom_saisi = db.Column(db.String(100), nullable=False)
+    prenom_saisi = db.Column(db.String(100), nullable=False)
+    dob = db.Column(db.String(20), nullable=False)
+    photo_recto = db.Column(db.String(200), nullable=False)
+    photo_verso = db.Column(db.String(200), nullable=True)  # <-- AJOUTE ÇA
+    motif_rejet = db.Column(db.Text, nullable=True)         # <-- AJOUTE ÇA
+    status = db.Column(db.String(20), default='En attente')
+    date_soumission = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref=db.backref('verifications', lazy=True))
+
+
+class MessageVendeur(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nom_client = db.Column(db.String(100), nullable=False)
+    contenu = db.Column(db.Text, nullable=False)
+    date_envoi = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Liens
+    produit_id = db.Column(db.Integer, db.ForeignKey('produit.id'), nullable=False)
+    vendeur_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    # Relation pour accéder facilement aux infos du produit
+    produit = db.relationship('Produit', backref='messages_recus')
+
+class Produit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True) 
+    nom = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    prix = db.Column(db.Float, nullable=False)
+    prix_promo = db.Column(db.Float, nullable=True)
+    pays = db.Column(db.String(50), nullable=False)
+    numero = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(100), nullable=True)
+    images = db.Column(db.Text, nullable=False) # Liste de noms séparés par des virgules
+    slug = db.Column(db.String(150), unique=True, nullable=False)
+    vues = db.Column(db.Integer, default=0) # Ajoute cette ligne
+    paiements = db.relationship('Paiement', backref='produit', lazy=True)
+    date_creation = db.Column(db.DateTime, default=db.func.now())
+
+class Paiement(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    produit_id = db.Column(db.Integer, db.ForeignKey('produit.id'), nullable=False)
+    montant = db.Column(db.Float, nullable=False)
+    telephone = db.Column(db.String(20), nullable=False) # Numéro de celui qui a payé
+    statut = db.Column(db.String(20), default='en_attente') # 'en_attente' ou 'payé'
+    reference = db.Column(db.String(100), unique=True, nullable=False)
     date_creation = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Depot(db.Model):
@@ -173,6 +226,29 @@ class SupportMessage(db.Model):
     message = db.Column(db.Text, nullable=False)
     is_read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+# Ta fonction send_otp modifiée
+def send_otp(recipient_email, code_otp):
+    try:
+        # On génère le HTML à partir du template
+        html_content = render_template('email_otp.html', 
+                                      otp_code=code_otp, 
+                                      user_email=recipient_email)
+        
+        msg = Message(
+            subject="Votre code de sécurité T-Express",
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[recipient_email]
+        )
+        msg.html = html_content # On utilise msg.html au lieu de msg.body
+        
+        mail.send(msg)
+        return True
+    except Exception as e:
+        print(f"Erreur d'envoi : {e}")
+        return False
+
 
 def donner_commission(filleul, montant):
 
@@ -260,102 +336,377 @@ def init_db():
     db.create_all()
     print("✅ Base de données initialisée avec succès !")
 
-@app.route("/inscription", methods=["GET", "POST"])
+from flask_mail import Mail, Message
+import random
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'fredogary7@gmail.com'
+app.config['MAIL_PASSWORD'] = 'adml ziin jesf ehdk'
+app.config['MAIL_DEFAULT_SENDER'] = app.config['MAIL_USERNAME']  # ✅ AJOUT
+
+mail = Mail(app)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+@app.route('/inscription', methods=['GET', 'POST'])
 def inscription_page():
-    code_ref = request.args.get("ref", "").strip().upper()
+    if request.method == 'POST':
+        # On nettoie les anciennes sessions pour repartir sur une base saine
+        session.pop('otp', None)
+        session.pop('temp_user', None)
+        session.pop('mode', None)
 
-    if request.method == "POST":
-        phone = request.form.get("phone", "").strip()
-        password = request.form.get("password", "").strip()
-        confirm = request.form.get("confirm_password", "").strip()
-        code_invitation = request.form.get("code_invitation", "").strip().upper()
-        pays = request.form.get("pays", "").strip()
-        otp = request.form.get("otp", "").strip()
+        # Récupération et nettoyage des données
+        email = request.form.get('email', '').strip().lower()
+        phone = request.form.get('phone', '').strip()
 
-        if not phone or not password or not pays or not otp:
-            flash({"title": "Erreur", "message": "Tous les champs sont obligatoires."}, "danger")
-            return redirect(url_for("inscription_page"))
+        # 1. Vérification de sécurité (Éviter les doublons avant l'OTP)
+        user_exists = User.query.filter(
+            (User.email == email) | (User.phone == phone)
+        ).first()
 
-        if password != confirm:
-            flash({"title": "Erreur", "message": "Les mots de passe ne correspondent pas."}, "danger")
-            return redirect(url_for("inscription_page"))
+        if user_exists:
+            if user_exists.phone == phone:
+                flash("Ce numéro de téléphone est déjà utilisé.", "danger")
+            else:
+                flash("Cette adresse email est déjà enregistrée.", "danger")
+            return redirect(url_for('inscription_page'))
 
-        if User.query.filter_by(phone=phone).first():
-            flash({"title": "Erreur", "message": "Ce numéro est déjà enregistré."}, "danger")
-            return redirect(url_for("inscription_page"))
+        # 2. Générer l'OTP
+        otp = str(random.randint(100000, 999999))
 
-        # Vérification OTP
-        if "otp_code" not in session or otp != session["otp_code"]:
-            flash({"title": "Erreur", "message": "OTP incorrect."}, "danger")
-            return redirect(url_for("inscription_page"))
+        # 3. Tentative d'envoi
+        try:
+            if send_otp(email, otp):
+                # On stocke tout en session pour la route /verify
+                session['otp'] = otp
+                session['temp_user'] = request.form.to_dict()
+                session['mode'] = 'inscription'
+                
+                return redirect(url_for('verify_page'))
+            else:
+                flash("Le service d'envoi est indisponible. Réessayez plus tard.", "danger")
+        except Exception as e:
+            print(f"Erreur critique envoi OTP: {e}")
+            flash("Une erreur technique est survenue lors de l'envoi.", "danger")
 
-        # Vérification du code parrainage
-        parrain_user = None
-        if code_invitation:
-            parrain_user = User.query.filter_by(code_parrainage=code_invitation).first()
-            if not parrain_user:
-                flash({"title": "Erreur", "message": "Code d'invitation invalide."}, "warning")
-                return redirect(url_for("inscription_page"))
+    return render_template('inscription.html')
 
-        new_user = User(
-            phone=phone,
-            password=password,
-            solde_total=1000,
-            solde_depot=1000,
-            solde_revenu=0,
-            solde_parrainage=0,
-            parrain=parrain_user.code_parrainage if parrain_user else None
-        )
 
-        db.session.add(new_user)
-        db.session.commit()
-        session["phone"] = phone
-        session.pop("otp_code", None)  # Supprime l'OTP après validation
+@app.route('/test-mail')
+def test_mail():
+    print("TEST ENVOI EMAIL...")
 
-        flash({"title": "Succès", "message": "Inscription réussie ! Connectez-vous maintenant."}, "success")
-        return redirect(url_for("dashboard_page"))
+    success = send_otp("1xthom14@gmail.com", "123456")
 
-    # Générer OTP **uniquement si pas déjà généré**
-    if "otp_code" not in session:
-        import random
-        session["otp_code"] = str(random.randint(100000, 999999))
+    print("RESULTAT :", success)
 
-    return render_template("inscription.html", code_ref=code_ref)
+    return "OK"
 
-@app.route("/connexion", methods=["GET", "POST"])
+@app.route('/connexion', methods=['GET', 'POST'])
 def connexion_page():
-    if request.method == "POST":
-        phone = request.form.get("phone", "").strip()
-        password = request.form.get("password", "").strip()
-        otp = request.form.get("otp", "").strip()
-        pays = request.form.get("pays", "").strip()
+    if request.method == 'POST':
+        phone = request.form.get('phone') # On récupère le téléphone
+        password = request.form.get('password')
 
-        if not phone or not password or not otp or not pays:
-            flash({"title": "Erreur", "message": "Veuillez remplir tous les champs."}, "danger")
-            return redirect(url_for("connexion_page"))
+        # 1. Rechercher l'utilisateur par son numéro de téléphone
+        user = User.query.filter_by(phone=phone).first()
+        
+        # Vérification de l'existence et du mot de passe
+        if not user or user.password != password:
+            flash("Numéro ou mot de passe incorrect.", "danger")
+            return redirect(url_for('connexion_page'))
+
+        # 2. Générer l'OTP et l'envoyer à l'email enregistré du compte
+        otp = str(random.randint(100000, 999999))
+        
+        # On utilise l'email stocké dans l'objet 'user' trouvé
+        if send_otp(user.email, otp):
+            session['otp'] = otp
+            session['login_user_id'] = user.id
+            session['mode'] = 'connexion'
+            
+            # Optionnel: on peut stocker le phone en session pour l'affichage
+            session['user_phone'] = user.phone 
+            
+            return redirect(url_for('verify_page'))
+        else:
+            flash("Erreur d'envoi du code à votre email de récupération.", "danger")
+
+    return render_template('connexion.html')
+
+@app.route('/mot-de-passe-oublie', methods=['GET', 'POST'])
+def forgot_password_page():
+    if request.method == 'POST':
+        phone = request.form.get('phone').strip()
+        new_password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+
+        # 1. Vérifications de base
+        if new_password != confirm_password:
+            flash("Les mots de passe ne correspondent pas.", "danger")
+            return redirect(url_for('forgot_password_page'))
 
         user = User.query.filter_by(phone=phone).first()
         if not user:
-            flash({"title": "Erreur", "message": "Numéro introuvable."}, "danger")
-            return redirect(url_for("connexion_page"))
+            flash("Aucun compte associé à ce numéro.", "danger")
+            return redirect(url_for('forgot_password_page'))
 
-        if user.password != password:
-            flash({"title": "Erreur", "message": "Mot de passe incorrect."}, "danger")
-            return redirect(url_for("connexion_page"))
+        # 2. Préparation du changement (en attente d'OTP)
+        otp = str(random.randint(100000, 999999))
+        
+        if send_otp(user.email, otp):
+            session['otp'] = otp
+            session['mode'] = 'reset_password'
+            session['reset_user_id'] = user.id
+            session['pending_password'] = new_password # On stocke le nouveau MDP temporairement
+            
+            flash(f"Code de sécurité envoyé à l'adresse liée au compte.", "info")
+            return redirect(url_for('verify_page'))
+        else:
+            flash("Erreur lors de l'envoi du code. Réessayez.", "danger")
 
-        # Vérification OTP
-        if "otp_code" not in session or otp != session["otp_code"]:
-            flash({"title": "Erreur", "message": "OTP incorrect."}, "danger")
-            return redirect(url_for("connexion_page"))
+    return render_template('forgot_password.html')
 
-        # Connexion réussie
-        session["phone"] = user.phone
-        session.pop("otp_code", None)  # Supprime l'OTP après validation
 
-        flash({"title": "Connexion réussie", "message": f"Bienvenue sur Coris Max !"}, "success")
-        return redirect(url_for("dashboard_page"))
+@app.route('/verify', methods=['GET', 'POST'])
+def verify_page():
+    # Sécurité : si aucun OTP n'est en session, on redirige vers l'accueil
+    if 'otp' not in session:
+        flash("Session expirée ou invalide.", "danger")
+        return redirect(url_for('connexion_page'))
 
-    return render_template("connexion.html")
+    if request.method == 'POST':
+        code_saisi = request.form.get('code')
+        mode = session.get('mode')
+
+        # 1. Vérification du code
+        if code_saisi != session.get('otp'):
+            flash("Code de vérification incorrect.", "danger")
+            return redirect(url_for('verify_page'))
+
+        try:
+            # --- MODE INSCRIPTION ---
+            if mode == 'inscription':
+                data = session.get('temp_user')
+                # On vérifie une dernière fois avant commit (Sécurité anti-doublon)
+                if User.query.filter_by(phone=data['phone']).first():
+                    flash("Ce numéro a été enregistré entre-temps.", "danger")
+                    return redirect(url_for('inscription_page'))
+                
+                user_to_log = User(
+                    prenom=data['prenom'], 
+                    nom=data['nom'],
+                    email=data['email'], 
+                    phone=data['phone'],
+                    password=data['password']
+                )
+                db.session.add(user_to_log)
+                db.session.commit()
+
+            # --- MODE RÉINITIALISATION MOT DE PASSE ---
+            elif mode == 'reset_password':
+                user_to_log = User.query.get(session.get('reset_user_id'))
+                if user_to_log:
+                    user_to_log.password = session.get('pending_password')
+                    db.session.commit()
+                    flash("Mot de passe mis à jour ! Connectez-vous.", "success")
+                    # On nettoie et on force la reconnexion pour sécurité
+                    session.clear()
+                    return redirect(url_for('connexion_page'))
+                else:
+                    flash("Utilisateur introuvable.", "danger")
+                    return redirect(url_for('forgot_password_page'))
+
+            # --- MODE CONNEXION ---
+            else:
+                user_to_log = User.query.get(session.get('login_user_id'))
+
+            # 2. Finalisation de la session (si pas en mode reset)
+            if user_to_log:
+                session['user_id'] = user_to_log.id
+                session['phone'] = user_to_log.phone
+                
+                # Nettoyage complet de la session temporaire
+                session.pop('otp', None)
+                session.pop('temp_user', None)
+                session.pop('login_user_id', None)
+                session.pop('mode', None)
+                session.pop('pending_password', None)
+                session.pop('reset_user_id', None)
+
+                return redirect(url_for('dashboard_page'))
+
+        except Exception as e:
+            db.session.rollback() # Annule la transaction en cas d'erreur
+            print(f"Erreur Database: {e}")
+            flash("Une erreur est survenue lors de l'enregistrement.", "danger")
+            return redirect(url_for('inscription_page'))
+
+    return render_template('verify.html')
+
+
+@app.route('/modifier-produit', methods=['POST'])
+def modifier_produit():
+    # Récupération des données du formulaire modal
+    produit_id = request.form.get('id')
+    nouveau_nom = request.form.get('nom')
+    nouveau_prix = request.form.get('prix')
+    nouvelle_desc = request.form.get('description')
+
+    # On cherche le produit dans la base de données
+    produit = Produit.query.get_or_404(produit_id)
+
+    try:
+        # Mise à jour des champs
+        produit.nom = nouveau_nom
+        produit.prix = float(nouveau_prix)
+        produit.description = nouvelle_desc
+        
+        # On génère un nouveau slug si le nom a changé (optionnel mais conseillé)
+        # produit.slug = nouveau_nom.lower().replace(' ', '-') 
+
+        db.session.commit()
+        flash(f"Le produit '{nouveau_nom}' a été mis à jour avec succès !", "success")
+        
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Erreur lors de la modification : {str(e)}", "error")
+
+    # Redirection vers le catalogue
+    return redirect(url_for('page_produits'))
+
+@app.route('/verifier-email', methods=['GET', 'POST'])
+def verifier_email():
+    if request.method == 'POST':
+        code_saisi = request.form.get('otp')
+        user_id = session.get('user_id') # Récupère l'ID de l'utilisateur connecté
+        user = User.query.get(user_id)
+
+        if user.otp_code == code_saisi:
+            user.email_verifie = True
+            user.otp_code = None # Efface le code après usage
+            db.session.commit()
+            flash("Email vérifié avec succès !", "success")
+            return redirect(url_for('dashboard'))
+        else:
+            flash("Code incorrect.", "danger")
+            
+    return render_template('auth/verify_otp.html')
+
+
+@app.route('/mes-messages')
+def voir_messages():
+    phone = get_logged_in_user_phone()
+    user = User.query.filter_by(phone=phone).first()
+    
+    if not user:
+        return redirect(url_for('connexion'))
+
+    # Récupérer tous les messages destinés à ce vendeur
+    messages = MessageVendeur.query.filter_by(vendeur_id=user.id).order_by(MessageVendeur.date_envoi.desc()).all()
+    
+    return render_template('dashboard_messages.html', messages=messages)
+
+
+@app.route('/contacter-vendeur', methods=['POST'])
+def contacter_vendeur():
+    produit_id = request.form.get('produit_id')
+    nom_client = request.form.get('nom_client')
+    message_contenu = request.form.get('message')
+
+    # 1. Trouver le produit
+    produit = Produit.query.get_or_404(produit_id)
+
+    try:
+        # 2. Création du message
+        nouveau_message = MessageVendeur(
+            nom_client=nom_client,
+            contenu=message_contenu,
+            produit_id=produit.id,
+            vendeur_id=produit.user_id 
+        )
+
+        db.session.add(nouveau_message)
+        db.session.commit()
+
+        # 3. LE POINT CLÉ : Utiliser flash pour envoyer le message au HTML
+        flash(f"Merci {nom_client}, votre message a bien été envoyé au vendeur !", "success")
+
+        # 4. Rediriger l'utilisateur sur la page du produit (en utilisant son slug)
+        return redirect(url_for('page_achat', slug=produit.slug))
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Une erreur est survenue : {str(e)}", "error")
+        return redirect(url_for('page_achat', slug=produit.slug))
+
+@app.route('/supprimer/<int:id>')
+def supprimer_produit(id):
+    produit = Produit.query.get_or_404(id)
+    
+    try:
+        # A. Suppression des fichiers physiques (les photos)
+        upload_path = app.config.get('UPLOAD_FOLDER', 'static/uploads')
+        if produit.images:
+            for img_nom in produit.images.split(','):
+                chemin = os.path.join(upload_path, img_nom.strip())
+                if os.path.exists(chemin):
+                    os.remove(chemin)
+
+        # B. Suppression des messages liés à ce produit (Important !)
+        # Si tu as une table MessageVendeur, on nettoie d'abord
+        messages_lies = MessageVendeur.query.filter_by(produit_id=id).all()
+        for msg in messages_lies:
+            db.session.delete(msg)
+
+        # C. Enfin, suppression du produit en base de données
+        db.session.delete(produit)
+        
+        # D. On valide TOUT d'un coup
+        db.session.commit()
+        
+        flash("L'article et ses données ont été entièrement supprimés.", "success")
+    
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Erreur technique : {str(e)}", "error")
+
+    return redirect(url_for('dashboard_page'))
+@app.route('/checkout', methods=['POST'])
+def checkout():
+    # On récupère les données du formulaire de la page d'achat
+    produit_id = request.form.get('produit_id')
+    methode = request.form.get('methode')
+    phone = request.form.get('phone_paiement')
+    
+    produit = Produit.query.get_or_404(produit_id)
+    
+    # On affiche la page de confirmation avec les infos
+    return render_template('checkout.html', 
+                           produit=produit, 
+                           methode=methode, 
+                           phone=phone)
+
+
+@app.route('/achat/<slug>')
+def page_achat(slug):
+    produit = Produit.query.filter_by(slug=slug).first_or_404()
+    
+    # On augmente le nombre de vues
+    produit.vues = (produit.vues or 0) + 1
+    db.session.commit()
+    
+    # On sépare les images pour le template
+    images = produit.images.split(',') if produit.images else []
+    
+    return render_template('achat.html', produit=produit, images=images)
+
 
 @app.route("/generate-otp")
 def generate_otp():
@@ -379,29 +730,33 @@ def get_global_stats():
 
     return total_users, total_deposits, total_invested, total_withdrawn
 
-@app.route("/dashboard")
-@login_required
+@app.route('/dashboard')
 def dashboard_page():
     phone = get_logged_in_user_phone()
     user = User.query.filter_by(phone=phone).first()
-
     if not user:
-        session.clear()
-        flash("Session invalide, veuillez vous reconnecter.", "danger")
-        return redirect(url_for("connexion_page"))
+        return redirect(url_for('connexion_page'))
 
-    total_users, total_deposits, total_invested, total_withdrawn = get_global_stats()
+    # 1. Chiffre d'affaires total du vendeur (Somme des prix des produits vendus)
+    # Note : Cela suppose que tu as une table 'Commande'. 
+    # Si tu n'as pas encore de table commande, on peut simuler avec la valeur du stock total.
+    chiffre_affaire = db.session.query(func.sum(Produit.prix)).filter(Produit.user_id == user.id).scalar() or 0
 
-    # 🔥 Revenu cumulé = commissions + revenus investissements
-    revenu_cumule = (user.solde_parrainage or 0) + (user.solde_revenu or 0)
+    # 2. Nombre total de produits
+    total_produits = Produit.query.filter_by(user_id=user.id).count()
 
-    return render_template(
-        "dashboard.html",
-        user=user,
-        revenu_cumule=revenu_cumule,  # 🔥 envoi au HTML
-        total_users=total_users,
-        total_invested=total_invested,
-    )
+    # 3. Nombre de messages reçus
+    total_messages = MessageVendeur.query.filter_by(vendeur_id=user.id).count()
+
+    # 4. Liste des produits pour la grille
+    produits = Produit.query.filter_by(user_id=user.id).order_by(Produit.date_creation.desc()).all()
+
+    return render_template('dashboard.html', 
+                           user=user, 
+                           chiffre_affaire=chiffre_affaire,
+                           total_produits=total_produits,
+                           total_messages=total_messages,
+                           produits=produits)
 
 # ===== Décorateur admin =====
 def admin_required(f):
@@ -473,6 +828,185 @@ def voir_parrain(phone):
 
     return jsonify(response_data)
 
+SOLEAS_API_KEY = "SP_y7QKkaamPsVTlw8GDDGyzlJ7bmPUvdLorOQqWUXfRLI_AP"
+SOLEAS_WEBHOOK_SECRET = "d3babfd8013edc16ef47f1b1b7caa088518056067af81ff6defac5e8aefb0ef947c32b4ceac5b11e3b89ac9d79685d6fd424f5da53f831cfd2fb3af9efeae566"
+
+SERVICES = {
+
+    # 🇨🇲 CAMEROUN
+    "CM": [
+        {"id": 1, "name": "MOMO CM", "description": "MTN MOBILE MONEY CAMEROUN"},
+        {"id": 2, "name": "OM CM", "description": "ORANGE MONEY CAMEROUN"},
+    ],
+
+    # 🇨🇮 CÔTE D’IVOIRE
+    "CI": [
+        {"id": 29, "name": "OM CI", "description": "ORANGE MONEY COTE D'IVOIRE"},
+        {"id": 30, "name": "MOMO CI", "description": "MTN MONEY COTE D'IVOIRE"},
+        {"id": 31, "name": "MOOV CI", "description": "MOOV COTE D'IVOIRE"},
+        {"id": 32, "name": "WAVE CI", "description": "WAVE COTE D'IVOIRE"},
+    ],
+
+    # 🇧🇫 BURKINA FASO
+    "BF": [
+        {"id": 33, "name": "MOOV BF", "description": "MOOV BURKINA FASO"},
+        {"id": 34, "name": "OM BF", "description": "ORANGE MONEY BURKINA FASO"},
+    ],
+
+    # 🇧🇯 BENIN
+    "BJ": [
+        {"id": 35, "name": "MOMO BJ", "description": "MTN MONEY BENIN"},
+        {"id": 36, "name": "MOOV BJ", "description": "MOOV BENIN"},
+    ],
+
+    # 🇹🇬 TOGO
+    "TG": [
+        {"id": 37, "name": "T-MONEY TG", "description": "T-MONEY TOGO"},
+        {"id": 38, "name": "MOOV TG", "description": "MOOV TOGO"},
+    ],
+
+    # 🇨🇩 CONGO DRC
+    "COD": [
+        {"id": 52, "name": "VODACOM COD", "description": "VODACOM CONGO DRC"},
+        {"id": 53, "name": "AIRTEL COD", "description": "AIRTEL CONGO DRC"},
+        {"id": 54, "name": "ORANGE COD", "description": "ORANGE CONGO DRC"},
+    ],
+
+    # 🇨🇬 CONGO BRAZZAVILLE
+    "COG": [
+        {"id": 55, "name": "AIRTEL COG", "description": "AIRTEL CONGO"},
+        {"id": 56, "name": "MOMO COG", "description": "MTN MOMO CONGO"},
+    ],
+
+    # 🇬🇦 GABON
+    "GAB": [
+        {"id": 57, "name": "AIRTEL GAB", "description": "AIRTEL GABON"},
+    ],
+
+    # 🇺🇬 UGANDA
+    "UGA": [
+        {"id": 58, "name": "AIRTEL UGA", "description": "AIRTEL UGANDA"},
+        {"id": 59, "name": "MOMO UGA", "description": "MTN MOMO UGANDA"},
+    ],
+}
+
+COUNTRY_CODE = {
+    # Cameroun
+    "Cameroun": "CM",
+    "Cameroon": "CM",
+
+    # Côte d'Ivoire
+    "Côte d'Ivoire": "CI",
+    "Cote d Ivoire": "CI",
+    "Ivory Coast": "CI",
+
+    # Burkina Faso
+    "Burkina Faso": "BF",
+
+    # Bénin
+    "Bénin": "BJ",
+    "Benin": "BJ",
+
+    # Togo
+    "Togo": "TG",
+
+    # Congo DRC
+    "Congo DRC": "COD",
+    "RDC": "COD",
+    "République Démocratique du Congo": "COD",
+
+    # Congo Brazzaville
+    "Congo": "COG",
+    "Congo Brazzaville": "COG",
+
+    # Gabon
+    "Gabon": "GAB",
+
+    # Uganda
+    "Uganda": "UGA",
+}
+
+
+
+@app.route('/mes-commandes')
+def mes_commandes():
+    # On récupère les paiements confirmés (statut 'payé') 
+    # ordonnés par la date la plus récente
+    commandes = Paiement.query.filter_by(statut='payé').order_by(Paiement.date_creation.desc()).all()
+    
+    # Calcul du revenu total
+    revenu_total = sum(c.montant for c in commandes)
+    
+    return render_template('commandes.html', 
+                           commandes=commandes, 
+                           revenu_total=revenu_total)
+
+
+@app.route('/produits', methods=['GET'])
+def page_produits():
+    # Remplace cette liste par une requête SQLAlchemy comme: Produit.query.all()
+    # Si l'utilisateur est connecté, tu peux filtrer: Produit.query.filter_by(user_id=session['user_id']).all()
+    liste_produits = Produit.query.all() 
+    return render_template('produits.html', produits=liste_produits)
+
+@app.route('/ajouter-produit', methods=['POST'])
+def ajouter_produit():
+    user_phone = get_logged_in_user_phone()
+    if not user_phone:
+        return redirect(url_for('login'))
+
+    user = User.query.filter_by(phone=user_phone).first()
+
+    try:
+        nom = request.form.get('nom')
+        # ... (récupère les autres champs : prix, description, etc.)
+
+        # --- GÉNÉRATION DU SLUG UNIQUE ---
+        # 1. On crée une base propre (minuscules, remplace espaces par tirets)
+        base_slug = nom.lower().strip().replace(' ', '-').replace("'", "-")
+        # 2. On retire les caractères spéciaux pour ne garder que lettres, chiffres et tirets
+        base_slug = "".join(e for e in base_slug if e.isalnum() or e == '-')
+        # 3. On ajoute un code unique de 4 caractères (ex: tennis-basket-a8f2)
+        unique_id = str(uuid.uuid4())[:4]
+        slug_final = f"{base_slug}-{unique_id}"
+
+        # --- GESTION DES IMAGES ---
+        fichiers = request.files.getlist('images')
+        noms_images = []
+        for file in fichiers:
+            if file and file.filename != '':
+                # On utilise secrets ou uuid pour le nom du fichier aussi
+                ext = file.filename.rsplit('.', 1)[1].lower()
+                nom_img = f"{secrets.token_hex(8)}.{ext}"
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], nom_img))
+                noms_images.append(nom_img)
+
+        # --- SAUVEGARDE ---
+        nouveau_produit = Produit(
+            nom=nom,
+            description=request.form.get('description'),
+            prix=float(request.form.get('prix')),
+            prix_promo=float(request.form.get('prix_promo')) if request.form.get('prix_promo') else None,
+            images=",".join(noms_images),
+            pays=request.form.get('pays', 'Togo'),
+            numero=request.form.get('numero'),
+            email=request.form.get('email'),
+            slug=slug_final, # On utilise le slug avec l'ID unique
+            user_id=user.id
+        )
+
+        db.session.add(nouveau_produit)
+        db.session.commit()
+        
+        flash("Produit ajouté avec succès !", "success")
+        return redirect(url_for('dashboard_page'))
+
+    except Exception as e:
+        db.session.rollback()
+        return f"Erreur lors de la sauvegarde : {str(e)}", 400
+
+
+# --- Route pour supprimer un produit ---
 
 # ===== Liste utilisateurs =====
 @app.route("/admin/users")
@@ -566,7 +1100,7 @@ def admin_login():
         if phone == "98789878" and password == "ProjetCoris":
             session["admin"] = True
             flash("Connexion admin réussie ✅", "success")
-            return redirect("/admin/users")
+            return redirect("/admin/verifications")
         else:
             flash("Identifiants incorrects ❌", "danger")
 
@@ -678,17 +1212,6 @@ def historique_page():
     )
 
 
-@app.route("/burkina-payment")
-def burkina_payment():
-    fullname = request.args.get("fullname")
-    phone = request.args.get("phone")
-    montant = request.args.get("montant")
-
-    return render_template("burkina_payment.html",
-                           fullname=fullname,
-                           phone=phone,
-                           montant=montant)
-
 @app.route('/team')
 @login_required
 def team_page():
@@ -758,6 +1281,88 @@ def team_page():
         referral_link=referral_link,
         stats=stats
     )
+
+@app.route('/confirmer-achat-final', methods=['POST'])
+def confirmer_achat_final():
+    # 1. Récupération des données du formulaire de checkout
+    produit_id = request.form.get('produit_id')
+    methode_nom = request.form.get('methode')
+    phone = request.form.get('phone_paiement').replace(" ", "")
+    nom_payeur = request.form.get('nom_payeur')
+    adresse = request.form.get('adresse_livraison')
+    email = request.form.get('email_payeur')
+
+    produit = Produit.query.get_or_404(produit_id)
+
+    # 2. Identification du service SoleasPay (Togo par défaut si non spécifié)
+    code_pays = COUNTRY_CODE.get(produit.pays, "TG")
+    service_id = None
+    
+    # On boucle pour trouver l'ID (ex: 37 pour T-Money)
+    for s in SERVICES.get(code_pays, []):
+        if methode_nom.upper() in s['name'].upper():
+            service_id = s['id']
+            break
+
+    if not service_id:
+        flash("Ce mode de paiement n'est pas disponible pour ce pays.", "danger")
+        return redirect(url_for('page_achat', slug=produit.slug))
+
+    # 3. Création de l'enregistrement Paiement en BDD
+    reference_unique = f"PAY-{uuid.uuid4().hex[:8].upper()}"
+    nouveau_paiement = Paiement(
+        produit_id=produit.id,
+        montant=produit.prix,
+        telephone=phone,
+        nom_client=nom_payeur, # Assure-toi d'avoir ces colonnes dans ton modèle Paiement
+        adresse_livraison=adresse,
+        statut="en_attente",
+        reference=reference_unique
+    )
+    db.session.add(nouveau_paiement)
+    db.session.commit()
+
+    # 4. Préparation du Payload pour SoleasPay
+    payload = {
+        "wallet": phone,
+        "amount": int(produit.prix),
+        "currency": "XOF",
+        "order_id": reference_unique,
+        "description": f"Achat {produit.nom} par {nom_payeur}",
+        "payer": nom_payeur,
+        "successUrl": url_for('paiement_succes', ref=reference_unique, _external=True),
+        "failureUrl": url_for('paiement_echec', _external=True),
+    }
+
+    headers = {
+        "x-api-key": SOLEAS_API_KEY,
+        "operation": "2", # 2 = Débit Direct (Push USSD)
+        "service": str(service_id),
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.post(
+            "https://soleaspay.com/api/agent/bills/v3", 
+            headers=headers, 
+            json=payload, 
+            timeout=30
+        )
+        result = response.json()
+
+        if result.get("succès") or result.get("status") == "success":
+            # Redirection vers une page d'attente (Le client doit taper son code PIN sur son tel)
+            return render_template('attente_paiement.html', ref=reference_unique, phone=phone)
+        else:
+            error_msg = result.get('message', 'Erreur inconnue')
+            flash(f"Erreur de paiement : {error_msg}", "danger")
+            return redirect(url_for('page_achat', slug=produit.slug))
+
+    except Exception as e:
+        flash("Impossible de contacter le service de paiement. Vérifiez votre connexion.", "danger")
+        return redirect(url_for('page_achat', slug=produit.slug))
+
+
 
 @app.route("/produits_rapide/valider/<int:vip_id>", methods=["POST"])
 @login_required
@@ -997,58 +1602,185 @@ def webhook_bkapay():
     return jsonify({"received": True})
 
 import requests
+@app.route('/attente-validation')
+def attente_validation():
+    phone = get_logged_in_user_phone()
+    if not phone:
+        return redirect(url_for('login'))
+        
+    user = User.query.filter_by(phone=phone).first()
+    
+    # Si l'utilisateur est déjà vérifié, on le redirige vers son profil
+    if user and user.is_verified:
+        return redirect(url_for('profil')) # Remplace 'profil' par ta route réelle
+        
+    return render_template('attente_validation.html')
 
-@app.route("/verify-bkapay", methods=["POST"])
-def verify_bkapay():
 
-    data = request.get_json()
-    transaction_id = data.get("transactionId")
-    depot_id = data.get("depot_id")
+from functools import wraps
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
+import os
 
-    depot = Depot.query.get(depot_id)
+# --- ROUTES UTILISATEUR ---
 
-    if not depot or depot.statut != "pending":
-        return jsonify({"success": False})
+@app.route('/verifier-mon-compte')
+def verifier_compte():
+    phone = get_logged_in_user_phone()
+    if not phone:
+        return redirect(url_for('connexion_page'))
 
-    # 🔥 Vérification auprès de BKApay
+    user = User.query.filter_by(phone=phone).first()
+    if user.is_verified:
+        flash("Votre compte est déjà certifié.", "info")
+        return redirect(url_for('parametres_page'))
+
+    # 1. Vérifier s'il y a une demande en attente
+    demande_en_attente = VerificationRequest.query.filter_by(
+        user_id=user.id, status='En attente'
+    ).first()
+    if demande_en_attente:
+        return render_template('attente_validation.html')
+
+    # 2. Vérifier s'il y a eu un rejet récent pour afficher le motif
+    demande_rejetee = VerificationRequest.query.filter_by(
+        user_id=user.id, status='Rejeté'
+    ).order_by(VerificationRequest.date_soumission.desc()).first()
+
+    return render_template('verification.html', user=user, demande_rejetee=demande_rejetee)
+
+# --- ROUTES ADMIN ---
+
+
+
+@app.route('/soumettre-verification', methods=['POST'])
+def soumettre_verification():
+    # Utilisation de ta logique pour récupérer le téléphone
+    phone = get_logged_in_user_phone()
+    
+    if not phone:
+        return jsonify({"status": "error", "message": "Veuillez vous connecter."}), 401
+
+    # Récupérer l'utilisateur en base de données
+    user = User.query.filter_by(phone=phone).first()
+    if not user:
+        return jsonify({"status": "error", "message": "Utilisateur introuvable."}), 404
+
+    nom_saisi = request.form.get('nom', '').strip().upper()
+    prenom_saisi = request.form.get('prenom', '').strip().upper()
+    dob_saisi = request.form.get('dob') 
+    file_recto = request.files.get('recto')
+
+    if not all([nom_saisi, prenom_saisi, dob_saisi, file_recto]):
+        return jsonify({"status": "error", "message": "Veuillez remplir tous les champs et fournir la photo."})
+
+    # --- 1. FILTRE IA : VÉRIFICATION DE L'ÂGE ---
     try:
-        r = requests.get(
-            f"https://bkapay.com/api/inline-pay/status/{transaction_id}"
-        )
-        response = r.json()
+        birth_date = datetime.strptime(dob_saisi, '%Y-%m-%d')
+        today = datetime.today()
+        age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
 
-        if response.get("status") == "completed":
+        if age < 18:
+            return jsonify({
+                "status": "error",
+                "message": f"ERREUR IA : Accès refusé aux mineurs ({age} ans détectés)."
+            })
+    except ValueError:
+        return jsonify({"status": "error", "message": "Date de naissance invalide."})
 
-            user = User.query.filter_by(phone=depot.phone).first()
+    # --- 2. TRAITEMENT DE L'IMAGE & OCR TESSERACT ---
+    filename = secure_filename(f"verif_{phone}_{file_recto.filename}")
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file_recto.save(filepath)
 
-            if not user:
-                return jsonify({"success": False})
-
-            # 💰 Crédit
-            user.solde_total += depot.montant
-            user.solde_depot += depot.montant
-            depot.statut = "valide"
-
-            # 🎁 Commission parrain (si premier dépôt)
-            deja_valide = Depot.query.filter(
-                Depot.phone == user.phone,
-                Depot.statut == "valide"
-            ).count()
-
-            if deja_valide == 0 and user.parrain:
-                donner_commission(user, depot.montant)
-
-            db.session.commit()
-
-            return jsonify({"success": True})
-
-        else:
-            return jsonify({"success": False})
+    try:
+        # L'IA analyse l'image
+        image_complete = Image.open(filepath)
+        texte_ia = pytesseract.image_to_string(image_complete, lang='fra').upper()
+        
+        # --- 3. VÉRIFICATION DE POSITIONNEMENT & COHÉRENCE ---
+        # Si le nom n'est pas du tout détecté sur l'image, on rejette tout de suite
+        if nom_saisi not in texte_ia:
+            os.remove(filepath) # On supprime la mauvaise photo
+            return jsonify({
+                "status": "error",
+                "message": "ERREUR IA : Le nom saisi ne correspond pas à celui détecté sur la carte. Assurez-vous que la photo est nette et bien centrée."
+            })
 
     except Exception as e:
-        print("Erreur verification:", e)
-        return jsonify({"success": False})
+        print(f"Erreur OCR : {e}")
+        # En cas d'erreur technique OCR, on laisse l'admin décider (optionnel)
 
+    # --- 4. ENREGISTREMENT DE LA DEMANDE ---
+    # Supprimer l'ancienne demande si elle existe pour éviter les doublons
+    VerificationRequest.query.filter_by(user_id=user.id, status='En attente').delete()
+
+    nouvelle_demande = VerificationRequest(
+        user_id=user.id,
+        nom_saisi=nom_saisi,
+        prenom_saisi=prenom_saisi,
+        dob=dob_saisi,
+        photo_recto=filename,
+        status='En attente'
+    )
+    db.session.add(nouvelle_demande)
+    db.session.commit()
+
+    return jsonify({
+        "status": "success",
+        "message": "Analyse IA réussie. Vos documents sont en cours de validation finale par l'admin."
+    })
+
+
+@app.route('/admin/verifications')
+@admin_required  # Utilisation de ton décorateur
+def admin_verifications():
+    # On récupère les demandes 'En attente' avec les infos utilisateurs
+    demandes = VerificationRequest.query.filter_by(status='En attente').order_by(
+        VerificationRequest.date_soumission.desc()
+    ).all()
+
+    return render_template('admin/verif_list.html', demandes=demandes)
+
+@app.route('/admin/valider-demande/<int:demande_id>/<string:action>', methods=['GET', 'POST'])
+@admin_required
+def traiter_demande(demande_id, action):
+    demande = VerificationRequest.query.get_or_404(demande_id)
+    user = User.query.get(demande.user_id)
+
+    if not user:
+        flash("Utilisateur introuvable.", "danger")
+        return redirect(url_for('admin_verifications'))
+
+    if action == 'approuver':
+        demande.status = 'Approuvé'
+        demande.motif_rejet = None
+        user.is_verified = True
+        user.nom_officiel = demande.nom_saisi
+        user.prenom_officiel = demande.prenom_saisi
+        flash(f"✅ Compte de {user.phone} certifié !", "success")
+
+    elif action == 'rejeter':
+        motif = request.form.get('motif') or request.args.get('motif')
+        if not motif:
+            flash("⚠️ Motif de rejet obligatoire.", "warning")
+            return redirect(url_for('admin_verifications'))
+
+        demande.status = 'Rejeté'
+        demande.motif_rejet = motif
+        user.is_verified = False 
+
+        # Nettoyage sécurisé des fichiers
+        # On utilise getattr pour éviter de planter si la colonne n'existe pas encore
+        for attr in ['photo_recto', 'photo_verso']:
+            photo_name = getattr(demande, attr, None)
+            if photo_name:
+                path = os.path.join(app.config['UPLOAD_FOLDER'], photo_name)
+                if os.path.exists(path):
+                    try: os.remove(path)
+                    except: pass
+
+    db.session.commit()
+    return redirect(url_for('admin_verifications'))
 
 
 @app.route("/boutique")

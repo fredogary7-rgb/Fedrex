@@ -1,236 +1,134 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Produits PepsiBet</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
-body{
-    background:#000b1d; /* Fond sombre PepsiBet */
-    color: #fff;
-    padding-bottom:100px;
-}
-
-/* ===== HEADER ===== */
-.header{
-    background: linear-gradient(180deg, #0056b3 0%, #000b1d 100%);
-    padding:30px 20px 60px;
-    color:#fff;
-    font-size:22px;
-    font-weight:700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-align: center;
-}
-
-/* ===== CONTAINER ===== */
-.container{
-    margin-top:-35px;
-    padding:0 15px;
-}
-
-/* ===== PRODUCT CARD ===== */
-.card{
-    background:#001a3d;
-    border-radius:22px;
-    padding:18px;
-    margin-bottom:20px;
-    box-shadow:0 10px 20px rgba(0,0,0,0.3);
-    position:relative;
-    border: 1px solid rgba(0, 86, 179, 0.3);
-    transition: 0.3s;
-}
-
-.card:active {
-    transform: scale(0.98);
-}
-
-/* Badge Pepsi Red */
-.badge{
-    position:absolute;
-    top:15px;
-    right:15px;
-    background:#e32219;
-    color:#fff;
-    font-size:10px;
-    font-weight: 700;
-    padding:5px 12px;
-    border-radius:20px;
-    text-transform: uppercase;
-    box-shadow: 0 0 10px rgba(227, 34, 25, 0.4);
-}
-
-/* Top section */
-.card-top{
-    display:flex;
-    gap:15px;
-}
-
-.card img{
-    width:100px;
-    height:100px;
-    border-radius:18px;
-    object-fit:cover;
-    border: 2px solid #0056b3;
-}
-
-/* Product content */
-.card-content{
-    flex:1;
-}
-
-.card-content h3{
-    font-size:16px;
-    margin-bottom:6px;
-    color: #fff;
-}
-
-.price{
-    font-size:18px;
-    font-weight:700;
-    color:#00d4ff; /* Bleu électrique PepsiBet */
-    margin-bottom:8px;
-}
-
-.details{
-    font-size:12px;
-    color:#94a3b8;
-    margin-bottom:5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.details i {
-    color: #0056b3;
-    width: 14px;
-}
-
-/* Divider */
-.divider{
-    height:1px;
-    background:rgba(255,255,255,0.05);
-    margin:15px 0;
-}
-
-/* Bottom row */
-.card-bottom{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.total{
-    font-size:13px;
-    font-weight:500;
-    color: #94a3b8;
-}
-
-.total span {
-    display: block;
-    color: #fff;
-    font-weight: 700;
-    font-size: 14px;
-}
-
-.btn-buy{
-    background:#e32219;
-    color:#fff;
-    padding:12px 25px;
-    border-radius:15px;
-    text-decoration:none;
-    font-size:13px;
-    font-weight:700;
-    text-transform: uppercase;
-    transition:0.3s;
-    box-shadow: 0 4px 12px rgba(227, 34, 25, 0.3);
-}
-
-.btn-buy:hover{
-    background: #c4120b;
-}
-
-/* ===== EMPTY STATE ===== */
-.empty{
-    text-align:center;
-    margin-top:80px;
-    color:#64748b;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Produits - Modern Threads</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
+<body class="bg-[#121212] text-gray-100 font-sans">
 
-<body>
-
-<div class="header">
-    Paris Rapides
-</div>
-
-<div class="container">
-
-{% if produits %}
-{% for p in produits %}
-<div class="card">
-
-    <div class="badge">
-        VIP Rentable
-    </div>
-
-    <div class="card-top">
-        <img src="{{ url_for('static', filename='images/' + (p.image if p.image else 'p.jpg')) }}">
-
-        <div class="card-content">
-            <h3>{{ p.nom }}</h3>
-            <div class="price">{{ "{:,.0f}".format(p.prix) }} XOF</div>
-
-            <div class="details">
-                <i class="fa-regular fa-clock"></i>
-                Cycle : 60 jours
+    <div class="flex h-screen">
+        <aside class="w-64 bg-[#1e1e1e] border-r border-gray-800 p-6 flex flex-col">
+            <div class="flex items-center gap-2 mb-10">
+                <i data-lucide="layers" class="text-blue-500"></i>
+                <span class="text-xl font-bold tracking-tight">MODERN THREADS</span>
             </div>
 
-            <div class="details">
-                <i class="fa-solid fa-chart-line"></i>
-                Gain/jour : {{ "{:,.0f}".format(p.revenu_journalier) }} XOF
+            <nav class="space-y-4 flex-1">
+                <a href="/dashboard" class="flex items-center gap-3 p-2 text-gray-400 hover:text-white"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                <a href="/produits" class="flex items-center gap-3 p-2 bg-blue-600 rounded-lg text-white font-medium"><i data-lucide="shopping-bag"></i> Produits</a>
+                <a href="/commandes" class="flex items-center gap-3 p-2 text-gray-400 hover:text-white"><i data-lucide="shopping-cart"></i> Commandes</a>
+                <a href="/parametres" class="flex items-center gap-3 p-2 text-gray-400 hover:text-white"><i data-lucide="settings"></i> Paramètres</a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto p-8">
+            <header class="mb-10 flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold">Gestion des Produits</h1>
+                    <p class="text-gray-400 mt-1">Ajoutez, modifiez ou supprimez les articles de votre catalogue.</p>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <section class="lg:col-span-1">
+                    <div class="bg-[#1e1e1e] rounded-2xl border border-gray-800 p-6 sticky top-8">
+                        <h2 class="text-xl font-semibold mb-6 flex items-center gap-2">
+                            <i data-lucide="plus-circle" class="text-blue-500"></i> Nouveau Produit
+                        </h2>
+                        
+                        <form action="/ajouter-produit" method="POST" class="space-y-4">
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Nom du produit</label>
+                                <input type="text" name="nom" placeholder="ex: Chemise Slim Fit" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none">
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2">Prix (€)</label>
+                                    <input type="number" name="prix" step="0.01" placeholder="0.00" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2">Quantité</label>
+                                    <input type="number" name="quantite" placeholder="Stock" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Image (URL)</label>
+                                <input type="text" name="image" placeholder="Lien de l'image" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none">
+                            </div>
+
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg mt-4 transition-colors">
+                                Ajouter au catalogue
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+                <section class="lg:col-span-2">
+                    <div class="bg-[#1e1e1e] rounded-2xl border border-gray-800 overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-[#2a2a2a] text-gray-400 text-sm uppercase">
+                                    <th class="p-4 font-medium">Produit</th>
+                                    <th class="p-4 font-medium">Prix</th>
+                                    <th class="p-4 font-medium">Stock</th>
+                                    <th class="p-4 font-medium text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800">
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="p-4 flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-lg bg-gray-700 overflow-hidden">
+                                            <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=100" class="w-full h-full object-cover">
+                                        </div>
+                                        <span class="font-medium">Veste en Cuir Premium</span>
+                                    </td>
+                                    <td class="p-4">129,00 €</td>
+                                    <td class="p-4">
+                                        <span class="bg-green-500/10 text-green-500 px-2 py-1 rounded-md text-xs font-bold">8 unités</span>
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <div class="flex justify-end gap-2">
+                                            <button title="Modifier" class="p-2 text-gray-400 hover:text-white"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                                            <button title="Supprimer" class="p-2 text-red-500 hover:bg-red-500/10 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-white/5 transition-colors">
+                                    <td class="p-4 flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-lg bg-gray-700 overflow-hidden">
+                                            <img src="https://images.unsplash.com/photo-1515347648492-b604bb9a5ca8?w=100" class="w-full h-full object-cover">
+                                        </div>
+                                        <span class="font-medium">Robe de Soirée Ébène</span>
+                                    </td>
+                                    <td class="p-4">85,00 €</td>
+                                    <td class="p-4">
+                                        <span class="bg-orange-500/10 text-orange-500 px-2 py-1 rounded-md text-xs font-bold">3 unités</span>
+                                    </td>
+                                    <td class="p-4 text-right">
+                                        <div class="flex justify-end gap-2">
+                                            <button title="Modifier" class="p-2 text-gray-400 hover:text-white"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                                            <button title="Supprimer" class="p-2 text-red-500 hover:bg-red-500/10 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
             </div>
-        </div>
+        </main>
     </div>
 
-    <div class="divider"></div>
-
-    <div class="card-bottom">
-        <div class="total">
-            Revenu Total
-            <span>{{ "{:,.0f}".format(p.revenu_journalier * 60) }} XOF</span>
-        </div>
-
-        <a href="/produits_rapide/confirmer/{{ p.id }}" class="btn-buy">
-            Parier
-        </a>
-    </div>
-
-</div>
-{% endfor %}
-{% else %}
-
-<div class="empty">
-    <i class="fa-solid fa-ghost" style="font-size:45px;margin-bottom:15px; opacity:0.5;"></i>
-    <p>Aucun produit PepsiBet disponible</p>
-</div>
-
-{% endif %}
-
-</div>
-
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
 

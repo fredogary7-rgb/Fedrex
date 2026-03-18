@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X-Express - Plateforme de Finance & Business</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #080808; color: #fff; }
+        .hero-gradient { background: radial-gradient(circle at 50% -20%, rgba(59, 130, 246, 0.15) 0%, rgba(8, 8, 8, 0) 60%); }
+        .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); }
+        .text-gradient { background: linear-gradient(to right, #fff, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="hero-gradient min-h-screen">
+
+    <nav class="flex justify-between items-center px-6 py-6 max-w-7xl mx-auto">
+        <div class="flex items-center gap-2">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/30">
+                <i data-lucide="shield-check" class="text-white w-6 h-6"></i>
+            </div>
+            <span class="text-2xl font-black italic tracking-tighter">X-EXPRESS</span>
+        </div>
+        <div class="hidden md:flex gap-8 text-sm font-bold uppercase tracking-widest text-gray-400">
+            <a href="#" class="hover:text-blue-500 transition-colors">Services</a>
+            <a href="#" class="hover:text-blue-500 transition-colors">Import-Export</a>
+            <a href="#" class="hover:text-blue-500 transition-colors">À propos</a>
+        </div>
+        <div class="flex gap-4">
+            <a href="/connexion" class="px-6 py-3 text-xs font-black uppercase tracking-widest hover:text-blue-500 transition-colors">Connexion</a>
+            <a href="/inscription" class="px-6 py-3 bg-blue-600 rounded-full text-xs font-black uppercase tracking-widest shadow-xl shadow-blue-600/20 hover:bg-blue-500 transition-all">S'inscrire</a>
+        </div>
+    </nav>
+
+    <section class="max-w-4xl mx-auto text-center px-6 pt-20 pb-16">
+        <div class="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-600/20 px-4 py-2 rounded-full mb-8">
+            <span class="w-2 h-2 bg-blue-500 rounded-full animate-ping"></span>
+            <span class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">Plateforme N°1 en Togo</span>
+        </div>
+        <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tighter">
+            Propulsez vos <span class="text-gradient">Affaires Digitales</span> en un clic.
+        </h1>
+        <p class="text-gray-500 text-lg mb-10 max-w-2xl mx-auto font-medium">
+            Gérez vos investissements, boostez votre boutique en ligne et facilitez vos échanges import-export avec la technologie X-Express.
+        </p>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+            <a href="/inscription" class="w-full md:w-auto px-10 py-5 bg-white text-black font-black rounded-2xl text-sm uppercase tracking-widest hover:scale-105 transition-transform">
+                Créer mon compte gratuitement
+            </a>
+            <a href="#" class="w-full md:w-auto px-10 py-5 glass-card font-black rounded-2xl text-sm uppercase tracking-widest flex items-center justify-center gap-2">
+                Voir les démo <i data-lucide="play-circle" class="w-4 h-4"></i>
+            </a>
+        </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-6 py-20">
+        <div class="grid md:grid-cols-3 gap-8">
+            
+            <div class="glass-card p-8 rounded-[2.5rem] hover:border-blue-500/50 transition-all group">
+                <div class="w-14 h-14 bg-blue-600/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
+                    <i data-lucide="shopping-bag" class="text-blue-500 group-hover:text-white w-7 h-7"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-4 italic">Boutique Digitale</h3>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6">Vendez vos produits et services partout avec un tableau de bord ultra-simplifié.</p>
+                <img src="https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&q=80&w=400" alt="Boutique" class="rounded-2xl opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all">
+            </div>
+
+            <div class="glass-card p-8 rounded-[2.5rem] hover:border-blue-500/50 transition-all group">
+                <div class="w-14 h-14 bg-blue-600/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
+                    <i data-lucide="ship" class="text-blue-500 group-hover:text-white w-7 h-7"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-4 italic">Import-Export</h3>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6">Suivez vos marchandises et gérez vos flux logistiques entre le Togo et l'international.</p>
+                <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&q=80&w=400" alt="Import Export" class="rounded-2xl opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all">
+            </div>
+
+            <div class="glass-card p-8 rounded-[2.5rem] hover:border-blue-500/50 transition-all group">
+                <div class="w-14 h-14 bg-blue-600/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
+                    <i data-lucide="repeat" class="text-blue-500 group-hover:text-white w-7 h-7"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-4 italic">Échange & Finance</h3>
+                <p class="text-gray-500 text-sm leading-relaxed mb-6">Convertissez vos gains et transférez vos fonds en toute sécurité.</p>
+                <img src="https://images.unsplash.com/photo-1621416848446-99112a83a804?auto=format&fit=crop&q=80&w=400" alt="Echange Finance" class="rounded-2xl opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all">
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="border-t border-white/5 py-10 text-center">
+        <p class="text-gray-600 text-[10px] font-black uppercase tracking-[0.4em]">© 2026 X-EXPRESS PRO PROTOCOL. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
+

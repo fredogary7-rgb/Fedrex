@@ -1,209 +1,114 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inscription - PepsiBet</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-
-body {
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background: radial-gradient(circle at top left, #005cb4, #000b1d);
-    color:#333;
-    padding: 20px;
-}
-
-.container {
-    width: 100%;
-    max-width: 450px;
-    background: #ffffff;
-    padding: 35px 25px;
-    border-radius: 30px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-    animation: slideUp 0.6s ease-out;
-    border-top: 6px solid #e32219;
-}
-
-.logo-area {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.logo-area i {
-    font-size: 40px;
-    color: #005cb4;
-}
-
-h2 {
-    text-align:center;
-    margin-bottom: 25px;
-    color: #002d72;
-    font-weight: 800;
-    text-transform: uppercase;
-    font-size: 22px;
-}
-
-label { display:block; margin-bottom:6px; font-weight:600; color:#002d72; font-size: 12px; text-transform: uppercase; }
-
-input, select {
-    width:100%;
-    padding:14px 15px;
-    margin-bottom:15px;
-    border: 2px solid #f1f1f1;
-    border-radius:12px;
-    outline:none;
-    transition: all 0.3s ease;
-    background: #f8f9fa;
-    font-size: 14px;
-}
-
-input:focus, select:focus {
-    border-color:#005cb4;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0,92,180,0.1);
-}
-
-/* OTP Styling */
-.otp-container { display:flex; gap: 10px; margin-bottom: 15px; }
-.otp-container input { flex:2; margin-bottom: 0; }
-.otp-container button {
-    flex:1;
-    background:#005cb4;
-    color:#fff;
-    border:none;
-    border-radius:12px;
-    font-weight: 600;
-    font-size: 13px;
-    cursor:pointer;
-    transition: 0.3s;
-}
-
-.submit-btn {
-    width:100%;
-    padding:16px;
-    background:#e32219;
-    color:#fff;
-    border:none;
-    border-radius:15px;
-    font-size:15px;
-    font-weight: 700;
-    cursor:pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(227, 34, 25, 0.3);
-    margin-top: 10px;
-}
-
-.submit-btn:hover { background:#c4120b; transform: translateY(-2px); }
-
-.login-link { text-align:center; margin-top:20px; font-size:13px; color: #666; }
-.login-link a { color:#005cb4; font-weight:700; text-decoration:none; }
-
-@keyframes slideUp {
-    from {opacity:0; transform: translateY(20px);}
-    to {opacity:1; transform: translateY(0);}
-}
-
-.flash-message {
-    padding:12px;
-    border-radius:12px;
-    margin-bottom:20px;
-    font-size: 13px;
-    text-align: center;
-}
-.flash-danger { background:#fff5f5; color:#c4120b; border: 1px solid #feb2b2; }
-.flash-success { background:#f0fff4; color:#2f855a; border: 1px solid #9ae6b4; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - X-Express</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f0f0f; color: #fff; overflow-x: hidden; }
+        .glow-bg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 500px; background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(15, 15, 15, 0) 70%); z-index: -1; }
+        .glass { background: rgba(26, 26, 26, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); }
+        .input-group { position: relative; }
+        .input-group i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #4b5563; }
+        .input-field {
+            width: 100%; background: #161616; border: 1px solid #262626; border-radius: 20px;
+            padding: 14px 14px 14px 48px; outline: none; transition: all 0.3s; color: white;
+        }
+        .input-field:focus { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.1); background: #1a1a1a; }
+        .loader { display: none; width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.2); border-radius: 50%; border-top-color: #fff; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn-loading .loader { display: block; }
+        .btn-loading .btn-text { display: none; }
+        .logo-text { background: linear-gradient(to right, #fff, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
 </head>
-<body>
+<body class="min-h-screen flex items-center justify-center p-6 py-12">
+    <div class="glow-bg"></div>
 
-<div class="container">
-    <div class="logo-area">
-        <h2>PepsiBet</h2>
-    </div>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, msg in messages %}
-          <div class="flash-message {% if category == 'success' %}flash-success{% else %}flash-danger{% endif %}">
-            {{ msg.message if msg is mapping else msg }}
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-
-    <form method="POST">
-        <label><i class="fa-solid fa-earth-africa"></i> Pays de résidence</label>
-        <select name="pays" required>
-            <option value="">Choisir votre pays</option>
-            <option value="Bénin">🇧🇯 Bénin</option>
-            <option value="Burkina Faso">🇧🇫 Burkina Faso</option>
-            <option value="Cameroun">🇨🇲 Cameroun</option>
-            <option value="Côte d'Ivoire">🇨🇮 Côte d'Ivoire</option>
-            <option value="Gabon">🇬🇦 Gabon</option>
-            <option value="Guinée">🇬🇳 Guinée</option>
-            <option value="Guinée-Bissau">🇬🇼 Guinée-Bissau</option>
-            <option value="Mali">🇲🇱 Mali</option>
-            <option value="Niger">🇳🇪 Niger</option>
-            <option value="Sénégal">🇸🇳 Sénégal</option>
-            <option value="Togo">🇹🇬 Togo</option>
-        </select>
-
-        <label><i class="fa-solid fa-phone"></i> Numéro Mobile Money</label>
-        <input type="text" name="phone" placeholder="Ex: 0102030405" required>
-
-        <label><i class="fa-solid fa-lock"></i> Mot de passe</label>
-        <input type="password" name="password" placeholder="Créer un mot de passe" required>
-
-        <label><i class="fa-solid fa-shield"></i> Confirmation</label>
-        <input type="password" name="confirm_password" placeholder="Confirmer le mot de passe" required>
-
-        <label><i class="fa-solid fa-user-plus"></i> Code d'invitation (Optionnel)</label>
-        <input type="text" name="code_invitation" placeholder="Code parrain" value="{{ code_ref if code_ref }}">
-
-        <label><i class="fa-solid fa-envelope-open-text"></i> Code OTP</label>
-        <div class="otp-container">
-            <input type="text" id="otp" name="otp" placeholder="Code à 4 chiffres" required>
-            <button type="button" onclick="sendOTP()">OBTENIR</button>
+    <div class="w-full max-w-md">
+        <div class="flex flex-col items-center mb-10">
+            <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-600/30 mb-4 rotate-3">
+                <i data-lucide="user-plus" class="text-white w-7 h-7"></i>
+            </div>
+            <h2 class="text-3xl font-black tracking-tighter logo-text italic uppercase text-center">X-Express</h2>
         </div>
 
-        <button type="submit" class="submit-btn">CRÉER MON COMPTE VIP</button>
-    </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="glass border-l-4 border-red-500 p-4 rounded-2xl mb-6 flex items-center gap-3 animate-pulse">
+                <i data-lucide="octagon-alert" class="w-4 h-4 text-red-500"></i>
+                <p class="text-[11px] font-bold text-white">{{ message }}</p>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 
-    <p class="login-link">
-        Déjà un compte ? <a href="{{ url_for('connexion_page') }}">Se connecter ici</a>
-    </p>
+        <div class="glass p-8 rounded-[2.5rem] shadow-2xl">
+            <h1 class="text-xl font-black text-white mb-6 italic uppercase tracking-tight">Créer un profil</h1>
 
-</div>
+            <form id="regForm" action="/inscription" method="POST" class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] ml-2">Prénom</label>
+                        <input type="text" name="prenom" placeholder="Marc" required class="input-field font-bold text-xs !pl-5">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] ml-2">Nom</label>
+                        <input type="text" name="nom" placeholder="Koffi" required class="input-field font-bold text-xs !pl-5">
+                    </div>
+                </div>
 
-<script>
-function sendOTP() {
-    const btn = event.target;
-    btn.innerText = "Envoi...";
-    btn.disabled = true;
+                <div class="space-y-1">
+                    <label class="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] ml-2">Audit Email (OTP)</label>
+                    <div class="input-group">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                        <input type="email" name="email" placeholder="contact@exemple.com" required class="input-field font-bold text-xs">
+                    </div>
+                </div>
 
-    fetch('/generate-otp')
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('otp').value = data.otp;
-        alert("PepsiBet Security : Votre code de validation est " + data.otp);
-        btn.innerText = "Renvoyer";
-        btn.disabled = false;
-    })
-    .catch(err => {
-        console.error(err);
-        btn.innerText = "Erreur";
-        btn.disabled = false;
-    });
-}
-</script>
+                <div class="space-y-1">
+                    <label class="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] ml-2">Identifiant Mobile</label>
+                    <div class="input-group">
+                        <i data-lucide="smartphone" class="w-4 h-4"></i>
+                        <input type="tel" name="phone" placeholder="90 00 00 00" required class="input-field font-bold text-xs">
+                    </div>
+                </div>
 
+                <div class="space-y-1">
+                    <label class="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] ml-2">Code Secret</label>
+                    <div class="input-group">
+                        <i data-lucide="lock" class="w-4 h-4"></i>
+                        <input type="password" name="password" placeholder="••••••••" required class="input-field font-bold text-xs">
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-5 rounded-2xl transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-3 uppercase text-[10px] tracking-[0.2em] mt-4">
+                    <span class="btn-text">Générer Accès OTP</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4 btn-text"></i>
+                    <div class="loader"></div>
+                </button>
+            </form>
+        </div>
+
+        <div class="text-center mt-8">
+            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest">
+                Déjà membre ? <a href="/connexion" class="text-blue-500 font-black hover:text-white ml-1 transition-colors">Se connecter</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        document.getElementById('regForm').addEventListener('submit', function() {
+            const btn = document.getElementById('submitBtn');
+            btn.classList.add('btn-loading');
+            btn.disabled = true;
+        });
+    </script>
 </body>
 </html>
 

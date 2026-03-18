@@ -1,209 +1,179 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Connexion - PepsiBet</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - X-Express</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #0f0f0f; 
+            color: #fff; 
+            overflow-x: hidden;
+        }
 
-<style>
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+        /* Effet de lueur en arrière-plan */
+        .glow-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(15, 15, 15, 0) 70%);
+            z-index: -1;
+        }
 
-body {
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background: radial-gradient(circle at top right, #005cb4, #000b1d);
-    color:#333;
-    padding: 20px;
-}
+        .glass { 
+            background: rgba(26, 26, 26, 0.6); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255,255,255,0.05); 
+        }
 
-.container {
-    width: 100%;
-    max-width: 400px;
-    background: #ffffff;
-    padding: 40px 30px;
-    border-radius: 30px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    animation: fadeIn 0.8s ease-out;
-    border-top: 8px solid #e32219;
-}
+        .input-group { position: relative; }
+        
+        .input-group i { 
+            position: absolute; 
+            left: 20px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            color: #4b5563; 
+            transition: color 0.3s;
+        }
 
-.logo-area {
-    text-align: center;
-    margin-bottom: 30px;
-}
+        .input-field {
+            width: 100%; 
+            background: #161616; 
+            border: 1px solid #262626; 
+            border-radius: 24px;
+            padding: 20px 20px 20px 60px; 
+            outline: none; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            color: white;
+            font-size: 15px;
+        }
 
-.logo-area h1 {
-    color: #002d72;
-    font-size: 28px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: -1px;
-}
+        .input-field:focus { 
+            border-color: #3b82f6; 
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+            background: #1a1a1a;
+        }
 
-.logo-area span { color: #e32219; }
+        .input-field:focus + i {
+            color: #3b82f6;
+        }
 
-h2 {
-    text-align:center;
-    margin-bottom: 25px;
-    color: #002d72;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 18px;
-    letter-spacing: 1px;
-}
+        .loader { 
+            display: none; 
+            width: 22px; 
+            height: 22px; 
+            border: 3px solid rgba(255, 255, 255, 0.2); 
+            border-radius: 50%; 
+            border-top-color: #fff; 
+            animation: spin 0.8s cubic-bezier(0.6, 0.2, 0.4, 0.8) infinite; 
+        }
 
-label { display:block; margin-bottom:6px; font-weight:600; color:#002d72; font-size: 12px; text-transform: uppercase; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-input, select {
-    width:100%;
-    padding:14px 15px;
-    margin-bottom:18px;
-    border: 2px solid #eee;
-    border-radius:12px;
-    outline:none;
-    transition: all 0.3s ease;
-    background: #f8f9fa;
-    font-size: 14px;
-}
-
-input:focus, select:focus {
-    border-color:#005cb4;
-    background: #fff;
-    box-shadow: 0 0 0 4px rgba(0,92,180,0.1);
-}
-
-.otp-container { display:flex; gap: 10px; margin-bottom: 18px; }
-.otp-container input { flex:2; margin-bottom: 0; }
-.otp-container button {
-    flex:1;
-    background:#005cb4;
-    color:#fff;
-    border:none;
-    border-radius:12px;
-    font-weight: 600;
-    font-size: 13px;
-    cursor:pointer;
-    transition: 0.3s;
-}
-.otp-container button:hover { background:#002d72; }
-
-button.submit-btn {
-    width:100%;
-    padding:15px;
-    background:#e32219;
-    color:#fff;
-    border:none;
-    border-radius:12px;
-    font-size:16px;
-    font-weight: 700;
-    cursor:pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(227, 34, 25, 0.3);
-    text-transform: uppercase;
-}
-
-button.submit-btn:hover {
-    background:#c4120b;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(227, 34, 25, 0.4);
-}
-
-p.register-link { text-align:center; margin-top:20px; font-size:13px; color: #666; }
-p.register-link a { color:#005cb4; font-weight:700; text-decoration:none; }
-
-@keyframes fadeIn { from {opacity:0; transform: translateY(-20px);} to {opacity:1; transform: translateY(0);} }
-
-.flash-message {
-    padding:12px;
-    border-radius:12px;
-    margin-bottom:20px;
-    text-align:center;
-    font-size: 13px;
-    border-left: 5px solid #e32219;
-}
-.flash-danger { background:#fff5f5; color:#c4120b; }
-.flash-success { background:#f0fff4; color:#2f855a; border-left-color: #48bb78; }
-</style>
+        .btn-loading .loader { display: block; }
+        .btn-loading .btn-text { display: none; }
+        
+        .logo-text {
+            background: linear-gradient(to right, #fff, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen flex items-center justify-center p-6">
+    <div class="glow-bg"></div>
 
-<div class="container">
-    <div class="logo-area">
-        <h1>Pepsi<span>Bet</span></h1>
-    </div>
-
-    <h2>Ravi de vous revoir !</h2>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, msg in messages %}
-          <div class="flash-message {% if category == 'success' %}flash-success{% else %}flash-danger{% endif %}">
-            {{ msg.message if msg is mapping else msg }}
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-
-    <form method="POST">
-        <label><i class="fa-solid fa-earth-africa"></i> Votre Pays</label>
-        <select name="pays" required>
-            <option value="">Sélectionnez votre pays</option>
-            <option value="Bénin">🇧🇯 Bénin</option>
-            <option value="Burkina Faso">🇧🇫 Burkina Faso</option>
-            <option value="Cameroun">🇨🇲 Cameroun</option>
-            <option value="Côte d'Ivoire">🇨🇮 Côte d'Ivoire</option>
-            <option value="Gabon">🇬🇦 Gabon</option>
-            <option value="Guinée">🇬🇳 Guinée</option>
-            <option value="Guinée-Bissau">🇬🇼 Guinée-Bissau</option>
-            <option value="Mali">🇲🇱 Mali</option>
-            <option value="Niger">🇳🇪 Niger</option>
-            <option value="Sénégal">🇸🇳 Sénégal</option>
-            <option value="Togo">🇹🇬 Togo</option>
-        </select>
-
-        <label><i class="fa-solid fa-phone"></i> Numéro de téléphone</label>
-        <input type="text" name="phone" placeholder="Numéro sans indicatif" required>
-
-        <label><i class="fa-solid fa-lock"></i> Mot de passe</label>
-        <input type="password" name="password" placeholder="••••••••" required>
-
-        <label><i class="fa-solid fa-shield-halved"></i> Validation</label>
-        <div class="otp-container">
-            <input type="text" id="otp" name="otp" placeholder="Code OTP">
-            <button type="button" onclick="sendOTP()">OBTENIR</button>
+    <div class="w-full max-w-md">
+        <div class="flex flex-col items-center mb-12">
+            <div class="w-16 h-16 bg-blue-600 rounded-[2rem] flex items-center justify-center shadow-2xl shadow-blue-600/40 mb-4 rotate-3 hover:rotate-0 transition-transform duration-500">
+                <i data-lucide="shield-check" class="text-white w-9 h-9"></i>
+            </div>
+            <h2 class="text-4xl font-black tracking-tighter logo-text italic">X-EXPRESS</h2>
+            <div class="flex items-center gap-2 mt-2">
+                <span class="h-[1px] w-8 bg-gray-800"></span>
+                <p class="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em]">Protocol Secure</p>
+                <span class="h-[1px] w-8 bg-gray-800"></span>
+            </div>
         </div>
 
-        <button type="submit" class="submit-btn">Accéder au Dashboard</button>
-    </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="glass border-l-4 border-red-500 p-5 rounded-3xl mb-8 flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-300">
+                <div class="bg-red-500/20 p-2 rounded-xl">
+                    <i data-lucide="octagon-alert" class="w-5 h-5 text-red-500"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase font-black text-gray-500">Erreur système</p>
+                    <p class="text-sm font-bold text-white">{{ message }}</p>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 
-    <p class="register-link">
-        Nouveau parieur ? <a href="{{ url_for('inscription_page') }}">Créer mon compte VIP</a>
-    </p>
-</div>
+        <div class="glass p-8 rounded-[2.5rem] shadow-2xl">
+            <h1 class="text-2xl font-black text-white mb-8 italic uppercase tracking-tight">Accès Compte</h1>
 
-<script>
-function sendOTP() {
-    const btn = event.target;
-    btn.innerText = "...";
-    
-    fetch('/generate-otp')
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('otp').value = data.otp;
-        alert("PepsiBet Security : Votre code de connexion est " + data.otp);
-        btn.innerText = "OK";
-    })
-    .catch(err => {
-        console.error(err);
-        btn.innerText = "Erreur";
-    });
-}
-</script>
+            <form id="authForm" action="/connexion" method="POST" class="space-y-6">
+                <div class="space-y-3">
+                    <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Identifiant Mobile</label>
+                    <div class="input-group">
+                        <i data-lucide="smartphone" class="w-5 h-5"></i>
+                        <input type="tel" name="phone" placeholder="Numéro de téléphone" required 
+                               class="input-field font-bold placeholder:text-gray-700">
+                    </div>
+                </div>
 
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center px-4">
+                        <label class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Code Secret</label>
+                        <a href="/mot-de-passe-oublie" class="text-[10px] text-blue-500 font-black uppercase hover:text-blue-400 transition-colors">Perdu ?</a>
+                    </div>
+                    <div class="input-group">
+                        <i data-lucide="key-round" class="w-5 h-5"></i>
+                        <input type="password" name="password" placeholder="••••••••" required 
+                               class="input-field font-bold placeholder:text-gray-700">
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" 
+                        class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-5 rounded-[1.5rem] transition-all duration-300 shadow-lg shadow-blue-600/25 flex items-center justify-center gap-3 uppercase text-[11px] tracking-[0.2em] group">
+                    <span class="btn-text">Vérification Identity</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 btn-text group-hover:translate-x-1 transition-transform"></i>
+                    <div class="loader"></div>
+                </button>
+            </form>
+        </div>
+
+        <div class="text-center mt-10">
+            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest">
+                Pas encore de compte ?
+                <a href="/inscription" class="text-blue-500 font-black hover:text-white transition-colors ml-2">Rejoindre X-Express</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Initialisation des icônes
+        lucide.createIcons();
+
+        // Gestion de l'état de chargement
+        document.getElementById('authForm').addEventListener('submit', function() {
+            const btn = document.getElementById('submitBtn');
+            btn.classList.add('btn-loading');
+            btn.disabled = true;
+        });
+    </script>
 </body>
 </html>
 

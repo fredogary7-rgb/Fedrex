@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code de Sécurité T-Express</title>
+    <style>
+        /* Styles de base pour la compatibilité avec les clients mails */
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f0f0f; color: #eee; margin: 0; padding: 20px; }
+        .email-card { 
+            max-w: 600px; mx: auto;
+            background: rgba(26, 26, 26, 0.8); 
+            border-radius: 20px; 
+            padding: 40px; 
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        .logo-group { text-align: center; margin-bottom: 30px; }
+        .logo-x { font-size: 32px; font-weight: 800; color: #3b82f6; font-style: italic; }
+        .logo-express { font-size: 28px; font-weight: 700; color: #ffffff; font-style: italic; }
+        
+        h1 { font-size: 20px; font-weight: 800; text-transform: uppercase; color: #ffffff; margin-bottom: 5px; font-style: italic; }
+        p { font-size: 14px; line-height: 1.6; color: #aaa; margin-bottom: 20px; }
+        
+        .otp-code { 
+            font-size: 40px; font-weight: 900; color: #3b82f6; text-align: center; 
+            letter-spacing: 0.5em; padding: 20px; background: rgba(59, 130, 246, 0.05); 
+            border-radius: 15px; margin: 30px 0; border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+        
+        .footer { 
+            border-top: 1px solid rgba(255,255,255,0.05); 
+            margin-top: 30px; padding-top: 20px; 
+            font-size: 12px; color: #666; text-align: center;
+        }
+        .footer-logo { font-size: 14px; font-weight: 800; color: #ffffff; font-style: italic; }
+        
+        a { color: #3b82f6; text-decoration: none; font-weight: 700; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="email-card">
+        <div class="logo-group">
+            <svg width="60" height="60" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 18L35 35L18 52" stroke="#3b82f6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M52 18L35 35L52 52" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <p><span class="logo-x">X-</span><span class="logo-express">Express</span></p>
+        </div>
+
+        <h1>Code de {{ "Sécurité" if session.get('mode') == 'inscription' else "Connexion" }}</h1>
+        
+        <p>Bonjour,</p>
+        
+        <p>
+            Une {{ "tentative de connexion a été détectée" if session.get('mode') == 'connexion' else "demande d'inscription a été effectuée" }} 
+            sur votre compte T-Express ({{ user_email }}). Voici votre code unique :
+        </p>
+
+        <div class="otp-code">{{ otp_code }}</div>
+        
+        <p>Ce code est valable pendant 10 minutes.</p>
+        
+        <p>
+            Si vous n'êtes pas à l'origine de cette demande, ignorez cet email et sécurisez votre compte.
+        </p>
+
+        <p>
+            Pour toute question, contactez notre support:
+            <a href="mailto:support@t-express.com">support@t-express.com</a>
+        </p>
+
+        <div class="footer">
+            <p><span class="footer-logo">T-Express Protocol v4.0</span> <br>
+            Votre plateforme de e-commerce technologique
+            <br>
+            <a href="http://t-express.com">t-express.com</a>
+        </p>
+        </div>
+    </div>
+</body>
+</html>
+

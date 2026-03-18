@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X-ExpressAI | En attente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020202; color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .glass { background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); }
+        
+        .pulse-blue {
+            animation: pulse-blue 2s infinite;
+        }
+        @keyframes pulse-blue {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+    </style>
+</head>
+<body class="p-6">
+
+    <div class="max-w-md w-full glass rounded-[2.5rem] p-10 text-center space-y-8 shadow-2xl">
+        
+        <div class="relative w-20 h-20 mx-auto bg-blue-600/10 rounded-full flex items-center justify-center pulse-blue">
+            <i data-lucide="clock-loader" class="text-blue-500 w-10 h-10 animate-spin-slow"></i>
+        </div>
+
+        <div class="space-y-3">
+            <h1 class="text-2xl font-black uppercase italic tracking-tighter">Examen <span class="text-blue-500">en cours</span></h1>
+            <p class="text-gray-400 text-sm leading-relaxed">
+                Vos documents ont été analysés par l'IA et sont maintenant entre les mains de notre équipe administrative pour la validation finale.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-3">
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center gap-4">
+                <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
+                    <i data-lucide="check-circle-2" class="text-green-500 w-5 h-5"></i>
+                </div>
+                <div class="text-left">
+                    <p class="text-[10px] font-black uppercase text-gray-500">Audit Bio-Vision</p>
+                    <p class="text-xs font-bold text-green-400 uppercase">Complété ✅</p>
+                </div>
+            </div>
+
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center gap-4">
+                <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                    <i data-lucide="shield-ellipsis" class="text-blue-500 w-5 h-5 animate-pulse"></i>
+                </div>
+                <div class="text-left">
+                    <p class="text-[10px] font-black uppercase text-gray-500">Vérification Humaine</p>
+                    <p class="text-xs font-bold text-blue-400 uppercase italic">En attente...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-4">
+            <p class="text-[10px] text-gray-600 font-bold uppercase tracking-widest">Temps estimé : 2h - 24h</p>
+        </div>
+
+        <a href="/dashboard" class="block w-full bg-white/5 border border-white/10 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all">
+            Retour à l'accueil
+        </a>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
+

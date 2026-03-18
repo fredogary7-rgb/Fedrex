@@ -1,323 +1,231 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard - PepsiBet</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - Modern Threads</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0f0f0f; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 10px; }
+        .glass-card { background: rgba(22, 22, 22, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
-body{
-    background:#000b1d; /* Fond sombre typique Betting */
-    color: #fff;
-}
-
-/* ===== APP ===== */
-.app{
-    max-width:480px;
-    margin:auto;
-    min-height:100vh;
-    padding-bottom:90px;
-}
-
-/* ===== HEADER PEPSIBET ===== */
-.header{
-    background: linear-gradient(180deg, #0056b3 0%, #000b1d 100%);
-    padding:20px 15px 50px;
-    text-align: center;
-}
-
-.header img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 86, 179, 0.5);
-    border: 1px solid rgba(255,255,255,0.1);
-}
-
-/* ===== BALANCE BOX (Neon Style) ===== */
-.balance-box{
-    display:flex;
-    justify-content:space-around;
-    margin:-35px 15px 15px 15px;
-    padding:20px 10px;
-    background: #001a3d;
-    border-radius:20px;
-    border: 1px solid #0056b3;
-    box-shadow: 0 0 15px rgba(0, 86, 179, 0.4);
-}
-
-.balance-item{
-    text-align:center;
-    flex: 1;
-}
-
-.balance-item strong{
-    font-size:15px;
-    color:#00d4ff; /* Bleu électrique */
-    display:block;
-}
-
-.balance-item small{
-    font-size:10px;
-    color:#94a3b8;
-    text-transform: uppercase;
-    font-weight: 600;
-}
-
-/* ===== MENU (Boutons Pepsi) ===== */
-.menu{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:10px;
-    margin:20px 15px;
-}
-
-.menu-item{
-    background:#001a3d;
-    border-radius:15px;
-    padding:15px 5px;
-    text-align:center;
-    border: 1px solid rgba(255,255,255,0.05);
-    transition: 0.3s;
-}
-
-.menu-item:active {
-    transform: scale(0.9);
-    background: #0056b3;
-}
-
-.menu-item i{
-    font-size:22px;
-    margin-bottom:8px;
-    color: #fff;
-}
-
-.menu-item span{
-    font-size:11px;
-    font-weight:500;
-    color: #e2e8f0;
-    display: block;
-}
-
-/* ===== BONUS CARD (Pepsi Red) ===== */
-.bonus-card{
-    background: linear-gradient(90deg, #e32219, #9b140f);
-    border-radius:20px;
-    padding:18px;
-    margin:0 15px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow: 0 4px 15px rgba(227, 34, 25, 0.3);
-}
-
-.bonus-card p {
-    font-size:13px;
-    color: #fff;
-}
-
-.bonus-card a{
-    padding:8px 15px;
-    border-radius:12px;
-    background: #fff;
-    color: #e32219;
-    text-decoration:none;
-    font-weight:700;
-    font-size:12px;
-    text-transform: uppercase;
-}
-
-/* ===== RÈGLES ===== */
-.rules-card{
-    background: #001a3d;
-    border-radius:20px;
-    padding:20px;
-    margin:0 15px 20px;
-    color:#cbd5e1;
-    font-size: 13px;
-    line-height:1.6;
-    border-left: 4px solid #e32219;
-}
-
-.rules-card strong{
-    display:block;
-    margin-bottom:8px;
-    color: #fff;
-    font-size: 14px;
-}
-
-/* ===== BOTTOM NAV ===== */
-.bottom-nav{
-    position:fixed;
-    bottom:0;
-    left:50%;
-    transform: translateX(-50%);
-    width:100%;
-    max-width:480px;
-    background:#001a3d;
-    display:flex;
-    justify-content:space-around;
-    padding:12px 0;
-    border-top: 1px solid rgba(255,255,255,0.1);
-}
-
-.bottom-nav a{
-    text-decoration:none;
-    color:#94a3b8;
-    font-size:11px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-}
-
-.bottom-nav a.active{
-    color:#00d4ff;
-}
-
-.bottom-nav i{
-    font-size: 18px;
-    margin-bottom:4px;
-}
-
-/* ===== TELEGRAM POPUP ===== */
-.tg-overlay{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.85);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:9999;
-}
-
-.tg-box{
-    background:#001a3d;
-    width:85%;
-    max-width:380px;
-    border-radius:25px;
-    padding:35px 20px 25px;
-    text-align:center;
-    border: 1px solid #0056b3;
-}
-
-.tg-logo{
-    width:70px;
-    height:70px;
-    margin:-70px auto 15px;
-    background:#0056b3;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow: 0 0 20px #0056b3;
-}
-
-.tg-logo img{ width:35px; filter: brightness(0) invert(1); }
-
-.tg-main-btn{
-    display:block;
-    padding:14px;
-    border-radius:15px;
-    text-decoration:none;
-    color:#fff;
-    font-weight:700;
-    background:#0056b3;
-    margin-top: 20px;
-}
-</style>
+        /* Animation Drawer Mobile */
+        #mobile-sidebar { transition: transform 0.3s ease-in-out; }
+        .sidebar-overlay { transition: opacity 0.3s ease-in-out; }
+    </style>
 </head>
+<body class="bg-[#0f0f0f] text-gray-200 antialiased custom-scrollbar overflow-hidden">
 
-<body>
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 z-40 hidden opacity-0 sidebar-overlay lg:hidden"></div>
 
-<div id="telegramPopup" class="tg-overlay">
-    <div class="tg-box">
-        <div class="tg-logo">
-            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png">
-        </div>
-        <h2 style="font-size:18px; color:#fff; margin-bottom:10px;">PEPSI CO OFFICIEL</h2>
-        <p style="color:#94a3b8; font-size:14px; margin-bottom:20px;">Rejoignez le canal pour les pronostics et les bonus exclusifs !</p>
-        <div class="tg-buttons">
-            <a href="https://t.me/+nuNaFX35JKtlYmI0" target="_blank" class="tg-main-btn">REJOINDRE LE CANAL</a>
-            <button onclick="closeTelegram()" style="background:none; border:none; color:#64748b; margin-top:15px; cursor:pointer;">Fermer</button>
-        </div>
+    <div class="flex h-screen overflow-hidden">
+
+        <aside id="mobile-sidebar" class="fixed inset-y-0 left-0 w-72 bg-[#121212] border-r border-gray-800 flex flex-col z-50 -translate-x-full lg:translate-x-0 lg:static lg:flex transition-transform">
+            <div class="p-8 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
+                        <i data-lucide="zap" class="text-white fill-current w-6 h-6"></i>
+                    </div>
+                    <span class="text-xl font-bold tracking-tighter text-white uppercase">Modern Threads</span>
+                </div>
+                <button onclick="toggleSidebar()" class="lg:hidden p-2 text-gray-400">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <nav class="flex-1 px-6 space-y-2">
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4 ml-4">Menu Principal</p>
+                
+                <a href="/dashboard" class="flex items-center gap-3 px-4 py-3.5 bg-blue-600 text-white rounded-2xl font-semibold shadow-xl shadow-blue-600/10">
+                    <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
+                </a>
+
+                <a href="/produits" class="flex items-center gap-3 px-4 py-3.5 text-gray-400 hover:bg-white/5 hover:text-white rounded-2xl transition-all group">
+                    <i data-lucide="package" class="w-5 h-5 group-hover:scale-110 transition-transform"></i> Mes Produits
+                </a>
+
+                <a href="/mes-messages" class="flex items-center justify-between px-4 py-3.5 text-gray-400 hover:bg-white/5 hover:text-white rounded-2xl transition-all group">
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="mail" class="w-5 h-5 group-hover:scale-110 transition-transform"></i> Mes Messages
+                    </div>
+                    {% if total_messages > 0 %}
+                    <span class="bg-red-500 text-[10px] text-white font-bold px-2 py-0.5 rounded-full">{{ total_messages }}</span>
+                    {% endif %}
+                </a>
+
+                <a href="/mes-commandes" class="flex items-center gap-3 px-4 py-3.5 text-gray-400 hover:bg-white/5 hover:text-white rounded-2xl transition-all group">
+                    <i data-lucide="shopping-cart" class="w-5 h-5 group-hover:scale-110 transition-transform"></i> Mes Commandes
+                </a>
+
+                <div class="pt-4 mt-4 border-t border-gray-800">
+                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-4 ml-4">Préférences</p>
+                    
+                    <a href="/parametres" class="flex items-center gap-3 px-4 py-3.5 text-gray-400 hover:bg-white/5 hover:text-white rounded-2xl transition-all group">
+                        <i data-lucide="settings" class="w-5 h-5 group-hover:rotate-45 transition-transform"></i> Paramètres
+                    </a>
+
+                    <a href="/logout" class="flex items-center gap-3 px-4 py-3.5 text-red-500/80 hover:bg-red-500/10 hover:text-red-500 rounded-2xl transition-all group">
+                        <i data-lucide="log-out" class="w-5 h-5"></i> Déconnexion
+                    </a>
+                </div>
+            </nav>
+
+            <div class="p-6">
+                <div class="bg-gradient-to-br from-blue-600/20 to-purple-600/20 p-5 rounded-3xl border border-white/5">
+                    <p class="text-xs text-blue-400 font-bold mb-1">Code Parrainage</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-lg font-mono font-bold text-white">{{ user.code_parrainage }}</span>
+                        <button onclick="navigator.clipboard.writeText('{{ user.code_parrainage }}')" class="p-2 hover:bg-white/10 rounded-lg transition-colors">
+                            <i data-lucide="copy" class="w-4 h-4 text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto relative h-screen">
+
+            <header class="sticky top-0 z-30 glass-card px-6 lg:px-8 py-6 flex justify-between items-center border-b border-gray-800">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2 bg-gray-800 rounded-xl text-white">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-xl lg:text-2xl font-bold text-white tracking-tight">Bonjour, {{ user.phone }}</h1>
+                        <p class="text-xs lg:text-sm text-gray-500">Gérez votre boutique Modern Threads.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-sm font-bold text-white">Vendeur Togo</p>
+                        <p class="text-xs text-blue-500 font-medium tracking-wide">{{ user.wallet_operator }}</p>
+                    </div>
+                    <div class="h-10 w-10 lg:h-12 lg:w-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-blue-400 flex items-center justify-center font-bold text-white lg:text-xl shadow-lg shadow-blue-600/20">
+                        {{ user.phone[:1] }}
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-6 lg:p-8 space-y-8">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                    <div class="glass-card p-6 rounded-[2rem] relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-blue-600/10 rounded-full blur-2xl group-hover:bg-blue-600/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="p-3 bg-blue-600 rounded-2xl"><i data-lucide="bar-chart-3" class="w-6 h-6 text-white"></i></div>
+                        </div>
+                        <p class="text-gray-500 text-sm font-medium">Valeur Stock</p>
+                        <h3 class="text-3xl font-bold mt-2 text-white">{{ "{:,.0f}".format(chiffre_affaire) }} <span class="text-blue-500 text-sm font-normal">XOF</span></h3>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-[2rem] relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-green-600/10 rounded-full blur-2xl group-hover:bg-green-600/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="p-3 bg-green-600 rounded-2xl"><i data-lucide="wallet" class="w-6 h-6 text-white"></i></div>
+                        </div>
+                        <p class="text-gray-500 text-sm font-medium">Solde Revenu</p>
+                        <h3 class="text-3xl font-bold mt-2 text-white">{{ "{:,.0f}".format(user.solde_revenu) }} <span class="text-green-500 text-sm font-normal">XOF</span></h3>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-[2rem] relative overflow-hidden group border-blue-500/20 bg-blue-600/5">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="p-3 bg-white/5 rounded-2xl text-blue-500"><i data-lucide="users" class="w-6 h-6"></i></div>
+                        </div>
+                        <p class="text-gray-500 text-sm font-medium">Commissions</p>
+                        <h3 class="text-3xl font-bold mt-2 text-white">{{ "{:,.0f}".format(user.solde_parrainage) }} <span class="text-blue-400 text-sm font-normal">XOF</span></h3>
+                    </div>
+
+                    <div class="glass-card p-6 rounded-[2rem] relative overflow-hidden group">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="p-3 bg-orange-600 rounded-2xl"><i data-lucide="message-circle" class="w-6 h-6 text-white"></i></div>
+                        </div>
+                        <p class="text-gray-500 text-sm font-medium">Messages Reçus</p>
+                        <h3 class="text-3xl font-bold mt-2 text-white">{{ total_messages }}</h3>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center px-2">
+                        <div>
+                            <h2 class="text-xl font-bold text-white">Mes Articles</h2>
+                            <p class="text-xs text-gray-500 uppercase tracking-widest mt-1">Inventaire actuel</p>
+                        </div>
+                        <a href="/produits" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-2xl font-bold transition-all shadow-lg shadow-blue-600/20 flex items-center gap-2">
+                            <i data-lucide="plus" class="w-5 h-5"></i> <span class="hidden sm:inline">Nouveau</span>
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {% for p in produits %}
+                        <div class="glass-card rounded-[2rem] overflow-hidden group hover:translate-y-[-8px] transition-all duration-300 relative">
+                            <div class="absolute top-4 right-4 z-10 flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+                                <i data-lucide="eye" class="w-3.5 h-3.5 text-blue-400"></i>
+                                <span class="text-[11px] font-black text-white">{{ p.vues if p.vues else 0 }}</span>
+                            </div>
+
+                            <div class="h-56 relative">
+                                {% set imgs = p.images.split(',') %}
+                                <img src="{{ url_for('static', filename='vlogs/' + imgs[0].strip()) }}" 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                     alt="{{ p.nom }}"
+                                     onerror="this.src='https://placehold.co/600x400/121212/blue?text=Pas+d+image'">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                <div class="absolute bottom-4 left-4">
+                                    <span class="bg-blue-600 text-[10px] font-bold px-3 py-1 rounded-full text-white uppercase">{{ p.pays if p.pays else 'TG' }}</span>
+                                </div>
+                            </div>
+
+                            <div class="p-6">
+                                <h4 class="font-bold text-lg text-white truncate">{{ p.nom }}</h4>
+                                <div class="flex items-center justify-between mt-5">
+                                    <span class="text-blue-400 font-bold font-mono text-sm">
+                                        {{ "{:,.0f}".format(p.prix) }} <span class="text-[10px] opacity-70">XOF</span>
+                                    </span>
+                                    <div class="flex gap-2">
+                                        <a href="/achat/{{ p.slug }}" class="p-2 bg-white/5 hover:bg-blue-600/20 hover:text-blue-400 rounded-xl transition-all">
+                                            <i data-lucide="external-link" class="w-4 h-4"></i>
+                                        </a>
+                                        <a href="/supprimer/{{ p.id }}" onclick="return confirm('Supprimer ?')" class="p-2 bg-red-500/10 hover:bg-red-500 rounded-xl transition-all group/del">
+                                            <i data-lucide="trash-2" class="w-4 h-4 text-red-500 group-hover/del:text-white transition-colors"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-</div>
 
-<div class="app">
+    <script>
+        lucide.createIcons();
 
-    <div class="header">
-        <img src="{{ url_for('static', filename='images/p2.jpg') }}" alt="PepsiBet">
-    </div>
-
-    <div class="balance-box">
-        <div class="balance-item">
-            <strong>{{ user.solde_total or 0 }} F</strong>
-            <small>Recharge</small>
-        </div>
-        <div class="balance-item">
-            <strong>{{ user.solde_revenu or 0 }} F</strong>
-            <small>Gains</small>
-        </div>
-        <div class="balance-item">
-            <strong>{{ user.solde_parrainage or 0 }} F</strong>
-            <small>Bonus</small>
-        </div>
-    </div>
-
-    <div class="menu">
-        <div class="menu-item" onclick="location.href='/deposit'">
-            <i class="fa-solid fa-wallet" style="color:#00d4ff;"></i>
-            <span>Dépôt</span>
-        </div>
-        <div class="menu-item" onclick="location.href='/retrait'">
-            <i class="fa-solid fa-money-bill-transfer" style="color:#e32219;"></i>
-            <span>Retrait</span>
-        </div>
-    </div>
-
-    <div class="bonus-card">
-        <p>
-            <strong>PARRAINAGE PEPSIBET</strong><br>
-            +15% sur chaque invitation
-        </p>
-        <a href="/team">Inviter</a>
-    </div>
-
-    <div class="rules-card">
-        <strong>Règles d'Utilisation</strong>
-        • Les retraits sont traités sous 24h.<br>
-        • Un seul compte par utilisateur PepsiBet.<br>
-        • Bonus de parrainage crédité instantanément.
-    </div>
-</div>
-
-<div class="bottom-nav">
-    <a href="/dashboard" class="active"><i class="fa-solid fa-gamepad"></i>Accueil</a>
-    <a href="/produits_rapide"><i class="fa-solid fa-bolt"></i>Paris</a>
-    <a href="/team"><i class="fa-solid fa-user-group"></i>Équipe</a>
-    <a href="/profile"><i class="fa-solid fa-circle-user"></i>Moi</a>
-</div>
-
-<script>
-function closeTelegram(){
-    document.getElementById("telegramPopup").style.display = "none";
-}
-</script>
-
+        // FONCTION POUR OUVRIR/FERMER LA BARRE LATÉRALE SUR MOBILE
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mobile-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                // Ouvrir
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.add('opacity-100'), 10);
+            } else {
+                // Fermer
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.remove('opacity-100');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+        }
+    </script>
 </body>
 </html>
 
